@@ -25,5 +25,12 @@ def partition(number):
 def checkConstant():
     print("Hello from checkConstant!")
 
+# Create and populate a list of Z up to number.
+numList = list()
+for k in range(1, n + 1):
+    numList.append(k)
+
+print(numList)
+
 answer = partition(n)
 print answer
