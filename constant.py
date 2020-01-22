@@ -60,7 +60,8 @@ def checkConstant(calcNum, calcPart, calcPerm):
     return sums
 
 # ----------------------------Main Program------------------------------------ #
-
+partSumSet = set()
+partSet = set()
 # Create and populate a list of Z up to number.
 numList = list()
 for k in range(1, n + 1):
@@ -82,7 +83,13 @@ for perm in all_perms(numList):
 # Check if a particular partition is constant-sum
 for part in partList:
     for perm in permList:
-        tempSet = checkConstant(n, part, perm)
-        if len(tempSet) == 1:
-            # print temSet
-            print('%03d' % n + " : " + str(part) +" : " + str(perm) + " : " + str(min(tempSet)))
+        sumSet = checkConstant(n, part, perm)
+        # print perm
+        if len(sumSet) == 1:
+            x = min(sumSet)
+            if not x in partSumSet or not tuple(part) in partSet:
+                partSet.add(tuple(part))
+                partSumSet.add(x)
+                print('n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
+
+            # for a in
