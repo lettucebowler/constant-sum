@@ -5,9 +5,9 @@ import subprocess;
 import argparse
 
 parser = argparse.ArgumentParser(description='A parser')
-parser.add_argument("--n", default=2, help='the number to partition', type=int)
+parser.add_argument("--n", dest='number', default=2, help='the number to partition', type=int)
 args = parser.parse_args();
-n = args.n
+n = args.number
 
 # Returns a set of all partitions of number, made up of only even numbers.
 # If number is odd, returns an empty set.
