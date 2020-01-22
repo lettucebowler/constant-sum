@@ -11,15 +11,6 @@ n = args.n
 
 # Returns a set of all partitions of number, made up of only even numbers.
 # If number is odd, returns an empty set.
-# def partition(number):
-#     answer = set()
-#     if(number % 2 == 0):
-#         answer.add((number, ))
-#         for x in range(2, number):
-#             for y in partition(number - x):
-#                 if(x % 2 == 0):
-#                     answer.add(tuple(sorted((x, ) + y)))
-#     return answer
 def partition(number):
         a = [0 for i in range(n + 1)]
         k = 1
