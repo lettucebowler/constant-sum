@@ -44,7 +44,7 @@ def all_perms(elements):
                 yield perm[:i] + elements[0:1] + perm[i:]
 
 # Calculates the sum of each group in a partition, given a permutation.
-def checkConstant(num, calcPart, calcPerm):
+def checkConstant(calcNum, calcPart, calcPerm):
     start = 0
     end = 0
     sum = 0
@@ -54,16 +54,16 @@ def checkConstant(num, calcPart, calcPerm):
         end += group
         for num in calcPerm[start:end]:
             sum += num
+        sum = sum % calcNum
         sums.add(sum)
         start += group
-        end += group
     return sums
 
 # ----------------------------Main Program------------------------------------ #
 
 # Create and populate a list of Z up to number.
 numList = list()
-for k in range(0, n):
+for k in range(1, n + 1):
     numList.append(k)
 
 # Generate list of all even-cardinality partitions of n
@@ -85,4 +85,4 @@ for part in partList:
         tempSet = checkConstant(n, part, perm)
         if len(tempSet) == 1:
             # print temSet
-            print('%03d' % n + " : " + str(part) +" : " + str(perm) + " : " + tempSet[0])
+            print('%03d' % n + " : " + str(part) +" : " + str(perm) + " : " + str(min(tempSet)))
