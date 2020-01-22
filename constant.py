@@ -11,15 +11,34 @@ n = args.n
 
 # Returns a set of all partitions of number, made up of only even numbers.
 # If number is odd, returns an empty set.
+# def partition(number):
+#     answer = set()
+#     if(number % 2 == 0):
+#         answer.add((number, ))
+#         for x in range(2, number):
+#             for y in partition(number - x):
+#                 if(x % 2 == 0):
+#                     answer.add(tuple(sorted((x, ) + y)))
+#     return answer
 def partition(number):
-    answer = set()
-    if(number % 2 == 0):
-        answer.add((number, ))
-        for x in range(2, number):
-            for y in partition(number - x):
-                if(x % 2 == 0):
-                    answer.add(tuple(sorted((x, ) + y)))
-    return answer
+        a = [0 for i in range(n + 1)]
+        k = 1
+        a[1] = n
+        while k != 0:
+            x = a[k - 1] + 1
+            y = a[k] - 1
+            k -= 1
+            while x <= y:
+                a[k] = x
+                y -= x
+                k += 1
+            a[k] = x + y
+            isEven = True
+            for g in a[:k+1]:
+                if g % 2 != 0:
+                    isEven = False
+            if isEven == True:
+                yield a[:k + 1]
 
 # Checks if a partition is constant-sum, and returns boolean.
 def checkConstant():
@@ -30,7 +49,7 @@ numList = list()
 for k in range(1, n + 1):
     numList.append(k)
 
-print(numList)
-
-answer = partition(n)
+answer = list()
+for num in partition(n):
+    answer.append(num)
 print answer
