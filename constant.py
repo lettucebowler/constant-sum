@@ -5,6 +5,7 @@ import subprocess;
 import argparse
 import itertools
 
+# Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
 parser.add_argument("-n", dest='number', default=2, help='the number to partition', type=int)
 args = parser.parse_args();
@@ -32,6 +33,7 @@ def partition(number):
             if isEven == True:
                 yield a[:k + 1]
 
+# Generate a list of all permutations of provided list.
 def all_perms(elements):
     if len(elements) <=1:
         yield elements
@@ -41,14 +43,15 @@ def all_perms(elements):
                 # nb elements[0:1] works in both string and list contexts
                 yield perm[:i] + elements[0:1] + perm[i:]
 
-
 # Checks if a partition is constant-sum, and returns boolean.
 def checkConstant():
     print("Hello from checkConstant!")
 
+# ----------------------------Main Program------------------------------------ #
+
 # Create and populate a list of Z up to number.
 numList = list()
-for k in range(1, n + 1):
+for k in range(0, n):
     numList.append(k)
 
 partList = list()
@@ -58,3 +61,4 @@ for part in partition(n):
 permList = list()
 for perm in all_perms(numList):
     permList.append(perm)
+print permList
