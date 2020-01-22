@@ -3,6 +3,7 @@ import os;
 import sys
 import subprocess;
 import argparse
+import itertools
 
 parser = argparse.ArgumentParser(description='A parser')
 parser.add_argument("-n", dest='number', default=2, help='the number to partition', type=int)
@@ -31,6 +32,16 @@ def partition(number):
             if isEven == True:
                 yield a[:k + 1]
 
+def all_perms(elements):
+    if len(elements) <=1:
+        yield elements
+    else:
+        for perm in all_perms(elements[1:]):
+            for i in range(len(elements)):
+                # nb elements[0:1] works in both string and list contexts
+                yield perm[:i] + elements[0:1] + perm[i:]
+
+
 # Checks if a partition is constant-sum, and returns boolean.
 def checkConstant():
     print("Hello from checkConstant!")
@@ -40,7 +51,10 @@ numList = list()
 for k in range(1, n + 1):
     numList.append(k)
 
-answer = list()
-for num in partition(n):
-    answer.append(num)
-print(str(n) + " : " + str(answer))
+partList = list()
+for part in partition(n):
+    partList.append(part)
+# print('%03d' % n + " : " + str(partList))
+permList = list()
+for perm in all_perms(numList):
+    permList.append(perm)
