@@ -43,4 +43,4 @@ for k in range(1, n + 1):
 answer = list()
 for num in partition(n):
     answer.append(num)
-print answer
+print(str(n) + " : " + str(answer))
