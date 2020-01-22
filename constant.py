@@ -43,9 +43,21 @@ def all_perms(elements):
                 # nb elements[0:1] works in both string and list contexts
                 yield perm[:i] + elements[0:1] + perm[i:]
 
-# Checks if a partition is constant-sum, and returns boolean.
-def checkConstant():
-    print("Hello from checkConstant!")
+# Calculates the sum of each group in a partition, given a permutation.
+def checkConstant(num, calcPart, calcPerm):
+    start = 0
+    end = 0
+    sum = 0
+    sums = set()
+    for group in calcPart:
+        sum = 0
+        end += group
+        for num in calcPerm[start:end]:
+            sum += num
+        sums.add(sum)
+        start += group
+        end += group
+    return sums
 
 # ----------------------------Main Program------------------------------------ #
 
@@ -54,11 +66,23 @@ numList = list()
 for k in range(0, n):
     numList.append(k)
 
+# Generate list of all even-cardinality partitions of n
 partList = list()
 for part in partition(n):
-    partList.append(part)
+    if len(part) > 1:
+        partList.append(part)
 # print('%03d' % n + " : " + str(partList))
+
+# Generate list of all permutations of 0-(n-1)
 permList = list()
 for perm in all_perms(numList):
     permList.append(perm)
-print permList
+# print permList
+
+# Check if a particular partition is constant-sum
+for part in partList:
+    for perm in permList:
+        tempSet = checkConstant(n, part, perm)
+        if len(tempSet) == 1:
+            # print temSet
+            print('%03d' % n + " : " + str(part) +" : " + str(perm) + " : " + tempSet[0])
