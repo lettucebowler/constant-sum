@@ -7,7 +7,7 @@ import itertools
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
-parser.add_argument("-n", dest='number', default=2, help='the number to partition', type=int)
+parser.add_argument("-n", dest='number', default=2, help='number to partition', type=int)
 args = parser.parse_args();
 n = args.number
 
@@ -79,21 +79,15 @@ permList = list()
 for perm in all_perms(numList):
     permList.append(perm)
 permList.sort()
-for wiggle in permList:
-    print(str(permList.index(wiggle)) + " : " + str(wiggle))
-# print permListgit
+# for wiggle in permList:
+#     print(str(permList.index(wiggle)) + " : " + str(wiggle))
 
 # Check if a particular partition is constant-sum
+count = 0
 for part in partList:
     for perm in permList:
         sumSet = checkConstant(n, part, perm)
-        # print perm
         if len(sumSet) == 1:
-            # print(str(permList.index(perm)) + ", ", end='')
+            count += 1
             x = min(sumSet)
-            # if not x in partSumSet or not tuple(part) in partSet:
-            #     partSet.add(tuple(part))
-            #     partSumSet.add(x)
-            # print('n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
-
-            # for a in
+            print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
