@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import os;
 import sys
 import subprocess;
@@ -14,9 +14,9 @@ n = args.number
 # Returns a set of all partitions of number, made up of only even numbers.
 # If number is odd, returns an empty set.
 def partition(number):
-        a = [0 for i in range(n + 1)]
+        a = [0 for i in range(number + 1)]
         k = 1
-        a[1] = n
+        a[1] = number
         while k != 0:
             x = a[k - 1] + 1
             y = a[k] - 1
@@ -78,7 +78,10 @@ for part in partition(n):
 permList = list()
 for perm in all_perms(numList):
     permList.append(perm)
-# print permList
+permList.sort()
+for wiggle in permList:
+    print(str(permList.index(wiggle)) + " : " + str(wiggle))
+# print permListgit
 
 # Check if a particular partition is constant-sum
 for part in partList:
@@ -86,10 +89,11 @@ for part in partList:
         sumSet = checkConstant(n, part, perm)
         # print perm
         if len(sumSet) == 1:
+            # print(str(permList.index(perm)) + ", ", end='')
             x = min(sumSet)
-            if not x in partSumSet or not tuple(part) in partSet:
-                partSet.add(tuple(part))
-                partSumSet.add(x)
-                print('n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
+            # if not x in partSumSet or not tuple(part) in partSet:
+            #     partSet.add(tuple(part))
+            #     partSumSet.add(x)
+            # print('n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
 
             # for a in
