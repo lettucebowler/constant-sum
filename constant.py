@@ -70,7 +70,6 @@ class csp():
     def to_string(self):
         return(str(self.base) + " : " + str(self.partNum) + " : " + str(self.sum) + " : " + str(self.part) + " : " + str(self.perm))
 
-
 # ----------------------------Main Program------------------------------------ #
 cspList = list()
 # Create and populate a list of Z up to number.
@@ -120,6 +119,6 @@ if len(cspList) > 0:
     print("List of non-obvious constant-sum-partitions of " + str(n) + ":")
 else:
     print("Provided number has no non-obvious constant-sum-partitions.")
-for const in cspList:
-    count += 1
-    print(str(count) + " : " + const.to_string())
+# for const in cspList:
+#     count += 1
+#     print(str(count) + " : " + const.to_string())
