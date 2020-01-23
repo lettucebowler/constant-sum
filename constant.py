@@ -60,8 +60,7 @@ def checkConstant(calcNum, calcPart, calcPerm):
     return sums
 
 # ----------------------------Main Program------------------------------------ #
-partSumSet = set()
-partSet = set()
+
 # Create and populate a list of Z up to number.
 numList = list()
 for k in range(1, n + 1):
@@ -71,7 +70,13 @@ for k in range(1, n + 1):
 partList = list()
 for part in partition(n):
     if len(part) > 1:
-        partList.append(part)
+        cur = part[0]
+        same = True
+        for h in part:
+            if h != cur:
+                same = False
+        if same == False:
+                partList.append(part)
 # print('%03d' % n + " : " + str(partList))
 
 # Generate list of all permutations of 0-(n-1)
@@ -82,12 +87,16 @@ permList.sort()
 # for wiggle in permList:
 #     print(str(permList.index(wiggle)) + " : " + str(wiggle))
 
-# Check if a particular partition is constant-sum
-count = 0
-for part in partList:
-    for perm in permList:
-        sumSet = checkConstant(n, part, perm)
-        if len(sumSet) == 1:
-            count += 1
-            x = min(sumSet)
-            print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
+# # Check if a particular partition is constant-sum
+# count = 0
+# if len(partList) > 0:
+#     print("List of non-obvious constant-sum-partitions of " + str(n) + ":")
+# else:
+#     print("Provided number has no non-obvious constant-sum-partitions.")
+# for part in partList:
+#     for perm in permList:
+#         sumSet = checkConstant(n, part, perm)
+#         if len(sumSet) == 1:
+#             count += 1
+#             x = min(sumSet)
+#             print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
