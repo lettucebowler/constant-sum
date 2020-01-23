@@ -84,14 +84,14 @@ for part in partition(n):
     if len(part) > 1:
     # if len(part) > 0:
         cur = part[0]
-        # same = False
-        isBad = True
-        for h in part:
-            if h != cur:
-                isBad = False
-        if(n/2 % 2 == 1):
-            if len(part) % 2 == 0:
-                isBad = True
+        isBad = False
+        # isBad = True
+        # for h in part:
+        #     if h != cur:
+        #         isBad = False
+        # if(n/2 % 2 == 1):
+        #     if len(part) % 2 == 0:
+        #         isBad = True
         if isBad == False:
                 partList.append(part)
 
