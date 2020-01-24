@@ -98,7 +98,7 @@ for part in partition(n):
         if isBad == False:
                 partList.append(part)
 
-print("Relevant even-cardinality partitions of " + str(n) + " : " + str(partList))
+print("Partitions of " + str(n) + " tested : " + str(partList))
 
 # Generate list of all permutations of 0-(n-1)
 permList = list()
