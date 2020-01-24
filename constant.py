@@ -43,9 +43,14 @@ def all_perms(elements):
                 # nb elements[0:1] works in both string and list contexts
                 yield perm[:i] + elements[0:1] + perm[i:]
 
-def all_combs(combPart, ):
-    if len(elements) <=1:
-        yield elements
+# def all_combs(combPart, combNumList):
+#     combSet = set()
+#     if len(elements) <=1:
+#         yield elements
+#     else:
+#         for a in combPart:
+#             for b in itertools.combinations(combNumList, a):
+#                 curNumList -= set(b)
 
 # Calculates the sum of each group in a partition, given a permutation.
 def checkConstant(calcNum, calcPart, calcPerm):
@@ -95,8 +100,6 @@ for part in partition(n):
         if isBad == False:
                 partList.append(part)
 
-
-
 # Generate list of all permutations of 0-(n-1)
 permList = list()
 for perm in all_perms(numList):
@@ -117,12 +120,13 @@ for part in partList:
                 # print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
 
 # Print Results
-if len(partList) > 0:
-    print("Partitions of " + str(n) + " tested : " + str(partList))
-if len(cspList) > 0:
-    print("Non-obvious constant-sum-partitions of " + str(n) + ":")
-else:
-    print("Provided number has no non-obvious constant-sum-partitions.")
-for const in cspList:
-    count += 1
-    print(str(count) + " : " + const.to_string())
+print(str(list(itertools.combinations(numList, 2))))
+# if len(partList) > 0:
+#     print("Partitions of " + str(n) + " tested : " + str(partList))
+# if len(cspList) > 0:
+#     print("Non-obvious constant-sum-partitions of " + str(n) + ":")
+# else:
+#     print("Provided number has no non-obvious constant-sum-partitions.")
+# for const in cspList:
+#     count += 1
+#     print(str(count) + " : " + const.to_string())
