@@ -95,7 +95,7 @@ for part in partition(n):
         if isBad == False:
                 partList.append(part)
 
-print("Partitions of " + str(n) + " tested : " + str(partList))
+
 
 # Generate list of all permutations of 0-(n-1)
 permList = list()
@@ -117,6 +117,8 @@ for part in partList:
                 # print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
 
 # Print Results
+if len(partList) > 0:
+    print("Partitions of " + str(n) + " tested : " + str(partList))
 if len(cspList) > 0:
     print("Non-obvious constant-sum-partitions of " + str(n) + ":")
 else:
