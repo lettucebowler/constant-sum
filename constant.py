@@ -11,7 +11,7 @@ parser.add_argument("-n", dest='number', default=2, help='number to partition', 
 args = parser.parse_args();
 n = args.number
 
-# Returns a set of all partitions of number, made up of only even numbers.
+# Returns a list of all partitions of number, made up of only even numbers.
 # If number is odd, returns an empty set.
 def partition(number):
         a = [0 for i in range(number + 1)]
@@ -42,6 +42,10 @@ def all_perms(elements):
             for i in range(len(elements)):
                 # nb elements[0:1] works in both string and list contexts
                 yield perm[:i] + elements[0:1] + perm[i:]
+
+def all_combs(combPart, ):
+    if len(elements) <=1:
+        yield elements
 
 # Calculates the sum of each group in a partition, given a permutation.
 def checkConstant(calcNum, calcPart, calcPerm):
@@ -80,7 +84,7 @@ for k in range(1, n + 1):
 # Generate list of all even-cardinality partitions of n
 partList = list()
 for part in partition(n):
-    if len(part) > 1:
+    if len(part) > 0:
     # if len(part) > 0:
         cur = part[0]
         isBad = False
@@ -94,7 +98,7 @@ for part in partition(n):
         if isBad == False:
                 partList.append(part)
 
-print("Partitions of " + str(n) + " potentially containing non-obvious constant-sum-partitions : " + str(partList))
+print("Relevant even-cardinality partitions of " + str(n) + " : " + str(partList))
 
 # Generate list of all permutations of 0-(n-1)
 permList = list()
@@ -107,18 +111,19 @@ permList.sort()
 # Check if a particular partition is constant-sum
 count = 0
 for part in partList:
-    for perm in permList:
-        sumSet = checkConstant(n, part, perm)
-        if len(sumSet) == 1:
-            x = min(sumSet)
-            cspList.append(csp(n, len(part), min(sumSet), part, perm))
-            # print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
+    if len(part) > 1:
+        for perm in permList:
+            sumSet = checkConstant(n, part, perm)
+            if len(sumSet) == 1:
+                x = min(sumSet)
+                cspList.append(csp(n, len(part), min(sumSet), part, perm))
+                # print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
 
 # Print Results
 if len(cspList) > 0:
-    print("List of non-obvious constant-sum-partitions of " + str(n) + ":")
+    print("Non-obvious constant-sum-partitions of " + str(n) + ":")
 else:
     print("Provided number has no non-obvious constant-sum-partitions.")
-# for const in cspList:
-#     count += 1
-#     print(str(count) + " : " + const.to_string())
+for const in cspList:
+    count += 1
+    print(str(count) + " : " + const.to_string())
