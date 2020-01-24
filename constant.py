@@ -76,12 +76,9 @@ class csp():
 
 # ----------------------------Main Program------------------------------------ #
 cspList = list()
-# Create and populate a list of Z up to number.
-numList = list()
-for k in range(1, n + 1):
-    numList.append(k)
+numList = list(range(1, n+1))
 
-# Generate list of all even-cardinality partitions of n
+# Populate partition list and filter out irrelevant partitions.
 partList = list()
 for part in partition(n):
     if len(part) > 0:
