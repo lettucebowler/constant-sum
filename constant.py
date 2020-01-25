@@ -71,7 +71,7 @@ class csp():
         self.perm = perm
 
     def to_string(self):
-        return(str(self.base) + " : " + str(self.partNum) + " : " + str(self.sum) + " : " + str(self.part) + " : " + str(self.perm))
+        return("p=" + str(self.partNum) + ", g=" + str(self.sum) + ", part=" + str(self.part) + ", group=" + str(self.perm))
 
 # ----------------------------Main Program------------------------------------ #
 cspList = list() # list of constant-sum partitions
@@ -136,4 +136,5 @@ for part in partList:
 #     print("Provided number has no non-obvious constant-sum-partitions.")
 for const in cspList:
     count += 1
-    print(str(count) + " : " + const.to_string())
+    # print(str(count) + " : " + const.to_string())
+    print("%03d" % count + " : " + const.to_string())
