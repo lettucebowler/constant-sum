@@ -4,6 +4,7 @@ import sys
 import subprocess;
 import argparse
 import itertools
+import math
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -33,39 +34,32 @@ def partition(number):
             if isEven == True:
                 yield a[:k + 1]
 
-# Generate a list of all permutations of provided list.
-def all_perms(elements):
-    if len(elements) <=1:
-        yield elements
-    else:
-        for perm in all_perms(elements[1:]):
-            for i in range(len(elements)):
-                # nb elements[0:1] works in both string and list contexts
-                yield perm[:i] + elements[0:1] + perm[i:]
+def all_combs(seq, parts, indexes=None, res=[], cur=0):
+    if indexes is None: # indexes to use for combinations
+        indexes = range(len(seq))
 
-# def all_combs(combPart, combNumList):
-#     combSet = set()
-#     if len(elements) <=1:
-#         yield elements
-#     else:
-#         for a in combPart:
-#             for b in itertools.combinations(combNumList, a):
-#                 curNumList -= set(b)
+    if cur >= len(parts): # base case
+        yield [[seq[i] for i in g] for g in res]
+        return
+
+    for x in itertools.combinations(indexes, r=parts[cur]):
+        set_x = set(x)
+        new_indexes = [i for i in indexes if i not in set_x]
+        for comb in all_combs(seq, parts, new_indexes, res=res + [x], cur=cur + 1):
+            yield comb
+
+#Calculate number of groups of a partition.
+def calcGroups(calcTop, calcBottom):
+    tempCalc = math.factorial(calcTop)
+    for h in calcBottom:
+        tempCalc //= math.factorial(h)
+    return tempCalc
 
 # Calculates the sum of each group in a partition, given a permutation.
-def checkConstant(calcNum, calcPart, calcPerm):
-    start = 0
-    end = 0
-    sum = 0
+def checkConstant(calcNum, calcGroup):
     sums = set()
-    for group in calcPart:
-        sum = 0
-        end += group
-        for num in calcPerm[start:end]:
-            sum += num
-        sum = sum % calcNum
-        sums.add(sum)
-        start += group
+    for a in calcGroup:
+        sums.add(sum(a) % calcNum)
     return sums
 
 class csp():
@@ -80,8 +74,12 @@ class csp():
         return(str(self.base) + " : " + str(self.partNum) + " : " + str(self.sum) + " : " + str(self.part) + " : " + str(self.perm))
 
 # ----------------------------Main Program------------------------------------ #
-cspList = list()
-numList = list(range(1, n+1))
+cspList = list() # list of constant-sum partitions
+numList = list(range(1, n+1)) # list of numbers 1 through n
+partSet = set()
+groupSet = set()
+sumSet = set()
+it = 0
 
 # Populate partition list and filter out irrelevant partitions.
 partList = list()
@@ -100,33 +98,42 @@ for part in partition(n):
         if isBad == False:
                 partList.append(part)
 
-# Generate list of all permutations of 0-(n-1)
-permList = list()
-for perm in all_perms(numList):
-    permList.append(perm)
-permList.sort()
-# for wiggle in permList:
-#     print(str(permList.index(wiggle)) + " : " + str(wiggle))
-
 # Check if a particular partition is constant-sum
 count = 0
 for part in partList:
-    if len(part) > 1:
-        for perm in permList:
-            sumSet = checkConstant(n, part, perm)
+    if len(part) > 0:
+        del partSet
+        del it
+        it = all_combs(numList, part)
+        partSet = set()
+        numGroup = calcGroups(n, part)
+
+        for i in range(numGroup):
+            del groupSet
+            groupSet = set()
+            for g in next(it):
+                groupSet.add(frozenset(g))
+            partSet.add(frozenset(groupSet))
+
+        for group in partSet:
+            del sumSet
+            sumSet = checkConstant(n, group)
             if len(sumSet) == 1:
+            # if checkConstant(n, group):
                 x = min(sumSet)
-                cspList.append(csp(n, len(part), min(sumSet), part, perm))
-                # print(str(count) + " : " + 'n : %03d' % n + ", p : " + str(len(part)) + ", part : " + str(part) +" : " + str(perm) + " : " + str(x))
+                temp = list()
+                for y in group:
+                    temp.append(sorted(list(y)))
+                    temp = sorted(temp)
+                cspList.append(csp(n, len(part), min(sumSet), part, temp))
 
 # Print Results
-print(str(list(itertools.combinations(numList, 2))))
 # if len(partList) > 0:
 #     print("Partitions of " + str(n) + " tested : " + str(partList))
 # if len(cspList) > 0:
 #     print("Non-obvious constant-sum-partitions of " + str(n) + ":")
 # else:
 #     print("Provided number has no non-obvious constant-sum-partitions.")
-# for const in cspList:
-#     count += 1
-#     print(str(count) + " : " + const.to_string())
+for const in cspList:
+    count += 1
+    print(str(count) + " : " + const.to_string())
