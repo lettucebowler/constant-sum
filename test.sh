@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-for i in {2..4..2}
-do
-  ./constant.py -n $i >> data/$i&
-done
+  rm start end
+  date +%s%3N > start
+  ./constant.py -n 10 >> test10
+  date +%s%3N > end
+  cat start
+  cat end
+
