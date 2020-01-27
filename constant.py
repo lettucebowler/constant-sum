@@ -97,6 +97,7 @@ for part in partition(n):
         #         isBad = True
         if isBad == False:
                 partList.append(part)
+partList.sort()
 
 # Check if a particular partition is constant-sum
 count = 0
