@@ -26,10 +26,10 @@ def partition(number):
                 k += 1
             a[k] = x + y
             isEven = True
-            # for g in a[:k+1]:
-                # if g % 2 != 0:
-                    # isEven = False
-            isEven=True
+            for g in a[:k+1]:
+                if g % 2 != 0:
+                    isEven = False
+            # isEven=True
             if isEven == True:
                 yield a[:k + 1]
 
