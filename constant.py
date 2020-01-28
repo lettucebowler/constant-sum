@@ -74,7 +74,7 @@ def genConstantSumPartition(part, g):
             print("half off")
             numList.remove((total + g) // 2)
 
-        if part.index(grouping) < len(part) - 1:
+        if groupIndex < len(part) - 1:
             print("if")
             # if groupIndex == 0 or g == numList[0] * 2:
             #     temp = numList[1]
@@ -100,8 +100,8 @@ def genConstantSumPartition(part, g):
             group.append(temp)
             numList.remove(temp)
 
-            if grouping > 2:
-                for gh in range(grouping // 2 - 1):
+            if part[groupIndex] > 2:
+                for gh in range(part[groupIndex] // 2 - 1):
                     cur = 0
                     while total - numList[cur] not in numList:
                         # print(str(numList) + " : " + str(total - numList[cur]))
