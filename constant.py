@@ -55,31 +55,34 @@ def genConstantSumPartition(part, g):
     groupList = list()
     group = list()
     if len(part) == 1:
-        return sorted(list(list(range(1, total+1))))
-
-
-
-    numList = list(range(1, total + 1))
-    for y in range(total):
-        del group
-        group = list()
+        group = list(range(1, total+1))
         groupList.append(group)
-        if (g + y) % total in numList and total - y in numList and g + y != total - y:
-            if y < len(part):
-                if len(groupList[y]) == 0 and g + y < (g + total) / 2:
-                    groupList[y].append((g + y) % total)
-                    groupList[y].append(total - y)
+    else:
+        numList = list(range(1, total + 1))
+        for y in range(total):
+            del group
+            group = list()
+            groupList.append(group)
+            if (g + y) % total in numList and total - y in numList and g + y != total - y:
+                if y < len(part):
+                    if len(groupList[y]) == 0 and g + y < (g + total) / 2:
+                        groupList[y].append((g + y) % total)
+                        groupList[y].append(total - y)
 
-    for set in groupList:
-        for item in set:
-            if item in numList:
-                numList.remove(item)
+            groupList = groupList[:len(part)]
+            for get in groupList:
+                if len(get) == 0:
+                    temp = numList[0]
+                    get.append(temp)
+                    get.append(g - temp)
+                    numList.remove(temp)
+                    numList.remove(g - temp)
 
-    groupList = groupList[:len(part)]
-    for get in groupList:
-        if len(get) == 0:
-            get.append(numList[0])
-            get.append(g - numList[0])
+        for set in groupList:
+            for item in set:
+                if item in numList:
+                    numList.remove(item)
+    # print(str(numList))
 
     # for z in range(len(groupList)):
     #     if part[z] > 2:
