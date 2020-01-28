@@ -54,7 +54,7 @@ def genConstantSumPartition(part, g):
     total = 0
     for x in part:
         total += x
-        
+
     numList = list(range(1, total + 1))
     for y in range(total):
         del group
@@ -77,18 +77,29 @@ def genConstantSumPartition(part, g):
             get.append(numList[0])
             get.append(g - numList[0])
 
-    return groupList
+    for z in range(len(groupList)):
+        if part[z] > 2:
+            for q in range((part[z] - 2) // 2):
+                temp = numList[0]
+                groupList[z].append(temp)
+                groupList[z].append(total - temp)
+                numList.remove(temp)
 
-class csp():
-    def __init__(self, base, partNum, sum, part, perm):
-        self.base = base
-        self.partNum = partNum
-        self.sum = sum
-        self.part = part
-        self.perm = perm
+    for k in groupList:
+        k.sort()
 
-    def to_string(self):
-        return("p=" + str(self.partNum) + ", g=" + str(self.sum) + ", part=" + str(self.part) + ", group=" + str(self.perm))
+    return sorted(groupList)
+
+# class csp():
+#     def __init__(self, base, partNum, sum, part, perm):
+#         self.base = base
+#         self.partNum = partNum
+#         self.sum = sum
+#         self.part = part
+#         self.perm = perm
+#
+#     def to_string(self):
+#         return("p=" + str(self.partNum) + ", g=" + str(self.sum) + ", part=" + str(self.part) + ", group=" + str(self.perm))
 
 # ----------------------------Main Program------------------------------------ #
 partList = list()
@@ -111,4 +122,5 @@ for part in partList:
     sumList = findPossibleSums(n, part)
     # print(str(part) + " : " + str(sumList))
     for sum in sumList:
-        print(str(part) + " : " + str(list(genConstantSumPartition(part, sum))))
+        print("n:" + str(n) + " p:" + str(len(part)) + " part:" + str(part)
+        + " csp:" + str(list(genConstantSumPartition(part, sum))) + " sum:" + str(sum))
