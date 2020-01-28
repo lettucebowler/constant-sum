@@ -50,11 +50,34 @@ def findPossibleSums(n, part):
 # Create a random constant-sum-partition from supplied partition
 def genConstantSumPartition(part, g):
     groupList = list()
+    group = list()
+    total = 0
+    for x in part:
+        total += x
+        
+    numList = list(range(1, total + 1))
+    for y in range(total):
+        del group
+        group = list()
+        groupList.append(group)
+        if (g + y) % total in numList and total - y in numList and g + y != total - y:
+            if y < len(part):
+                if len(groupList[y]) == 0 and g + y < (g + total) / 2:
+                    groupList[y].append((g + y) % total)
+                    groupList[y].append(total - y)
+
+    for set in groupList:
+        for item in set:
+            if item in numList:
+                numList.remove(item)
+
+    groupList = groupList[:len(part)]
+    for get in groupList:
+        if len(get) == 0:
+            get.append(numList[0])
+            get.append(g - numList[0])
+
     return groupList
-
-
-
-
 
 class csp():
     def __init__(self, base, partNum, sum, part, perm):
@@ -86,6 +109,6 @@ count = 0
 for part in partList:
     del sumList
     sumList = findPossibleSums(n, part)
-    print(str(part) + " : " + str(sumList))
+    # print(str(part) + " : " + str(sumList))
     for sum in sumList:
         print(str(part) + " : " + str(list(genConstantSumPartition(part, sum))))
