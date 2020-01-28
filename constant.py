@@ -123,4 +123,4 @@ for part in partList:
     # print(str(part) + " : " + str(sumList))
     for sum in sumList:
         print("n:" + str(n) + " p:" + str(len(part)) + " part:" + str(part)
-        + " csp:" + str(list(genConstantSumPartition(part, sum))) + " sum:" + str(sum))
+        + " csp:" + str(sorted(list(genConstantSumPartition(part, sum)), key=len)) + " sum:" + str(sum))
