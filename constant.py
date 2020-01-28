@@ -49,21 +49,17 @@ def findPossibleSums(n, part):
 
 # Create a random constant-sum-partition from supplied partition
 def genConstantSumPartition(part, g):
-    total = 0
-    for x in part:
-        total += x
-    # print("Total : "+ str(total))
-    p = len(part)
-    numList = list(range(1, total + 1))
     group = list()
     groupList = list()
-    if p % 2 == 0 and total % 4 == 2:
-        return groupList
-    # if g == 2:
-    #     numList.remove(1)
-    for grouping in part:
-        
-    return(sorted(groupList))
+    numList = list(range(1, n + 1))
+    for group in part:
+        if part.index(group) == 0:
+            del group
+            group = list()
+            group.append(g)
+            numList.remove(g)
+            group.append(16)
+            numList.remove(16)
 
 
 class csp():
