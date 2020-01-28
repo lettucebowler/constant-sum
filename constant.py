@@ -88,6 +88,11 @@ class csp():
 # ----------------------------Main Program------------------------------------ #
 partList = list()
 
+# Exit if n is odd.
+if n % 2 == 1:
+    print("This program is only designed for even numbers.")
+    exit()
+
 # Populate partition list and filter out irrelevant partitions.
 for part in partition(n):
     partList.append(part)
