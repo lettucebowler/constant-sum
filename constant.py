@@ -94,6 +94,11 @@ for part in partition(n):
 partList.sort(reverse=True, key=len)
 
 # Print partition and possible sums
+temp = list()
+count = 0
 for part in partList:
-    # print(str(part))
-    print("Partition : " + str(part) + " Possible g : " + str(findPossibleSums(n, part)))
+    del temp
+    temp = findPossibleSums(n, part)
+    count += len(temp)
+    print("Partition : " + str(part) + " Possible g : " + str(temp))
+print(str(count))
