@@ -54,11 +54,11 @@ def genConstantSumPartition(part, g):
         total += x
     groupList = list()
     group = list()
+    numList = list(range(1, total + 1))
     if len(part) == 1:
         group = list(range(1, total+1))
         groupList.append(group)
     else:
-        numList = list(range(1, total + 1))
         for y in range(total):
             del group
             group = list()
@@ -84,18 +84,40 @@ def genConstantSumPartition(part, g):
                     numList.remove(item)
     # print(str(numList))
 
-    # for z in range(len(groupList)):
-    #     if part[z] > 2:
-    #         for q in range((part[z] - 2) // 2):
-    #             temp = numList[0]
-    #             groupList[z].append(temp)
-    #             groupList[z].append(total - temp)
-    #             numList.remove(temp)
-
+        for z in range(len(groupList)):
+            if part[z] > 2:
+                group = groupList[z]
+                for h in numList:
+                    if len(group) < part[z]:
+                        if (total - h) in numList and (total - h) != h:
+                            # print(str(h) + " " + str(total - h) + " " + str(numList))
+                            group.append(h)
+                            group.append(total - h)
+                            numList.remove(h)
+                            numList.remove(total - h)
+                        if z == len(groupList) - 1:
+                            for b in numList:
+                                groupList[z].append(b)
+            # for q in range((part[z] - 2) // 2):
+            #     temp = numList[0]
+            #     groupList[z].append(temp)
+            #     groupList[z].append(total - temp)
+            #     numList.remove(temp)
+    checkSet = list()
     for k in groupList:
         k.sort()
+        for l in k:
+            if l not in checkSet:
+                checkSet.append(l)
+            else:
+                del groupList
+                groupList = list()
+        G = sum(k)
+        if G % total != g:
+            del groupList
+            groupList = list()
     groupList.sort(key=len)
-    return sorted(groupList)
+    return groupList
 
 # ----------------------------Main Program------------------------------------ #
 partList = list()
@@ -112,11 +134,16 @@ partList.sort(reverse=True, key=len)
 
 # Print partition and possible sums
 sumList = list()
+csp = list()
 count = 0
 for part in partList:
     del sumList
     sumList = findPossibleSums(n, part)
-    # print(str(part) + " : " + str(sumList))
-    for sum in sumList:
-        print("n:" + str(n) + " p:" + str(len(part)) + " part:" + str(part)
-        + " csp:" + str(list(genConstantSumPartition(part, sum))) + " sum:" + str(sum))
+    for possibleSum in sumList:
+        csp = list(genConstantSumPartition(part, possibleSum))
+        if len(csp) > 0:
+            print("n:" + str(n) + " p:" + str(len(part)) + " part:" + str(part)
+            + " csp:" + str(csp) + " sum:" + str(possibleSum))
+        else:
+            print("Algorithm Failure")
+            exit()
