@@ -5,7 +5,6 @@ import subprocess;
 import argparse
 import itertools
 import math
-import random
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -19,6 +18,7 @@ def partition(number):
         a = [0 for i in range(number + 1)]
         k = 1
         a[1] = number
+        i = 0
         while k != 0:
             x = a[k - 1] + 1
             y = a[k] - 1
@@ -33,6 +33,7 @@ def partition(number):
                 if g % 2 != 0:
                     isEven = False
             if isEven == True:
+                i += 1
                 yield a[:k + 1]
 
 # n : number program is checking
@@ -82,7 +83,6 @@ def genConstantSumPartition(part, g):
             for item in set:
                 if item in numList:
                     numList.remove(item)
-    # print(str(numList))
 
         for z in range(len(groupList)):
             if part[z] > 2:
@@ -90,7 +90,6 @@ def genConstantSumPartition(part, g):
                 for h in numList:
                     if len(group) < part[z]:
                         if (total - h) in numList and (total - h) != h:
-                            # print(str(h) + " " + str(total - h) + " " + str(numList))
                             group.append(h)
                             group.append(total - h)
                             numList.remove(h)
@@ -98,11 +97,7 @@ def genConstantSumPartition(part, g):
                         if z == len(groupList) - 1:
                             for b in numList:
                                 groupList[z].append(b)
-            # for q in range((part[z] - 2) // 2):
-            #     temp = numList[0]
-            #     groupList[z].append(temp)
-            #     groupList[z].append(total - temp)
-            #     numList.remove(temp)
+
     checkSet = list()
     for k in groupList:
         k.sort()
@@ -121,6 +116,7 @@ def genConstantSumPartition(part, g):
 
 # ----------------------------Main Program------------------------------------ #
 partList = list()
+partCount = 0
 
 # Exit if n is odd.
 if n % 2 == 1:
@@ -128,13 +124,17 @@ if n % 2 == 1:
     exit()
 
 # Populate partition list and filter out irrelevant partitions.
+print("Generating partitions.")
 for part in partition(n):
+    partCount += 1
+    # sys.stdout.write("\rEven-cardinality partitions found:%i" % partCount)
+    # sys.stdout.flush()
     partList.append(part)
 partList.sort(reverse=True, key=len)
 
 # Print partition and possible sums
 sumList = list()
-csp = list()
+cspList = list()
 count = 0
 for part in partList:
     del sumList
@@ -142,8 +142,14 @@ for part in partList:
     for possibleSum in sumList:
         csp = list(genConstantSumPartition(part, possibleSum))
         if len(csp) > 0:
-            print("n:" + str(n) + " p:" + str(len(part)) + " part:" + str(part)
-            + " csp:" + str(csp) + " sum:" + str(possibleSum))
+            cspList.append(csp)
         else:
             print("Algorithm Failure")
             exit()
+
+columns, rows = os.get_terminal_size(0)
+for col in range(columns):
+    print("-", end='')
+print('')
+for const in cspList:
+    print("n:" + str(n) + " p:" + str(len(const)) + " g:" + str(sum(const[0]) % n) + " part:" + str(const))
