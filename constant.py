@@ -97,17 +97,6 @@ def genConstantSumPartition(part, g):
     groupList.sort(key=len)
     return sorted(groupList)
 
-# class csp():
-#     def __init__(self, base, partNum, sum, part, perm):
-#         self.base = base
-#         self.partNum = partNum
-#         self.sum = sum
-#         self.part = part
-#         self.perm = perm
-#
-#     def to_string(self):
-#         return("p=" + str(self.partNum) + ", g=" + str(self.sum) + ", part=" + str(self.part) + ", group=" + str(self.perm))
-
 # ----------------------------Main Program------------------------------------ #
 partList = list()
 
