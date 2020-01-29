@@ -124,15 +124,12 @@ if n % 2 == 1:
     exit()
 
 # Populate partition list and filter out irrelevant partitions.
-print("Generating partitions.")
 for part in partition(n):
     partCount += 1
-    # sys.stdout.write("\rEven-cardinality partitions found:%i" % partCount)
-    # sys.stdout.flush()
     partList.append(part)
 partList.sort(reverse=True, key=len)
 
-# Print partition and possible sums
+# Calculate a csp for each partition and possible sum
 sumList = list()
 cspList = list()
 count = 0
@@ -147,9 +144,6 @@ for part in partList:
             print("Algorithm Failure")
             exit()
 
-columns, rows = os.get_terminal_size(0)
-for col in range(columns):
-    print("-", end='')
-print('')
+# Output data
 for const in cspList:
     print("n:" + str(n) + " p:" + str(len(const)) + " g:" + str(sum(const[0]) % n) + " part:" + str(const))
