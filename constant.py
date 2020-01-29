@@ -145,5 +145,10 @@ for part in partList:
             exit()
 
 # Output data
+lengths = list()
 for const in cspList:
-    print("n:" + str(n) + " p:" + str(len(const)) + " g:" + str(sum(const[0]) % n) + " part:" + str(const))
+    del lengths
+    lengths = list()
+    for u in const:
+        lengths.append(len(u))
+    print("n:" + str(n) + " p:" + str(len(const)) + " g:" + str(sum(const[0]) % n) + " part:" + str(lengths) + " csp:" + str(const))
