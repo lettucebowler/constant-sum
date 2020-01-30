@@ -48,6 +48,17 @@ def findPossibleSums(n, part):
             sumList.append(g)
     return sorted(sumList)
 
+class constantSumPartition():
+    def __init__(self, n, g, p, part, csp):
+        self.n = n
+        self.p = p
+        self.g = g
+        self.part = part
+        self.csp = csp
+
+    def to_string(self):
+        return("n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:" + str(self.csp))
+
 # Create a random constant-sum-partition from supplied partition
 def genConstantSumPartition(part, g):
     total = 0
@@ -56,16 +67,24 @@ def genConstantSumPartition(part, g):
     groupList = list()
     group = list()
     numList = list(range(1, total + 1))
+
+    # Populate groupList with empty lists
+    del group
+    group = list()
+    for i in range(len(part)):
+        groupList.append(list())
+
     # Check for trivial case p = 1
     if len(part) == 1:
         group = list(range(1, total + 1))
         groupList.append(group)
 
-    # # Check for trivial case all p in P are equal
-    # tempSet = set()
-    # for o in part:
-    #     tempSet.add(o)
-    # if len(tempSet) == 0
+    # Check for trivial case all p in P are equal
+    tempSet = set()
+    for o in part:
+        tempSet.add(o)
+    if len(tempSet) == 1:
+
     else:
     #     for y in range(total):
     #         del group
@@ -76,11 +95,7 @@ def genConstantSumPartition(part, g):
     #                 if len(groupList[y]) == 0 and g + y < (g + total) / 2:
     #                     groupList[y].append((g + y) % total)
     #                     groupList[y].append(total - y)
-        # Populate groupList with empty lists
-        del group
-        group = list()
-        for i in range(len(part)):
-            groupList.append(list())
+
 
         for a in range(len(part)):
             v = groupList[a]
@@ -154,21 +169,25 @@ sumList = list()
 cspList = list()
 count = 0
 for part in partList:
+    print(str(part))
+    # if len(part) % 2 == 0:
     del sumList
     sumList = findPossibleSums(n, part)
     for possibleSum in sumList:
+        print(str(possibleSum))
         csp = list(genConstantSumPartition(part, possibleSum))
         if len(csp) > 0:
-            cspList.append(csp)
+            print("append : " + str(part))
+            cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
         else:
             print("Algorithm Failure")
             exit()
 
 # Output data
-lengths = list()
+# lengths = list()
 for const in cspList:
-    del lengths
-    lengths = list()
-    for u in const:
-        lengths.append(len(u))
-    print("n:" + str(n) + " p:" + str(len(const)) + " g:" + str(sum(const[0]) % n) + " part:" + str(lengths) + " csp:" + str(const))
+#     del lengths
+#     lengths = list()
+#     for u in const:
+#         lengths.append(len(u))
+    print(const.to_string())
