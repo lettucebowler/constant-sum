@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+mkdir data
 for i in {2..48..2}
 do
 rm data/$i
