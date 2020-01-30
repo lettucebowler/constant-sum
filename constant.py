@@ -57,7 +57,7 @@ def genConstantSumPartition(part, g):
     group = list()
     numList = list(range(1, total + 1))
     if len(part) == 1:
-        group = list(range(1, total+1))
+        group = list(range(1, total + 1))
         groupList.append(group)
     else:
         for y in range(total):
@@ -97,7 +97,8 @@ def genConstantSumPartition(part, g):
                         if z == len(groupList) - 1:
                             for b in numList:
                                 groupList[z].append(b)
-
+                                
+    # Validate results before returning
     checkSet = list()
     for k in groupList:
         k.sort()
@@ -128,6 +129,7 @@ for part in partition(n):
     partCount += 1
     partList.append(part)
 partList.sort(reverse=True, key=len)
+# print(str(partList))
 
 # Calculate a csp for each partition and possible sum
 sumList = list()
