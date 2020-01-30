@@ -56,63 +56,82 @@ def genConstantSumPartition(part, g):
     groupList = list()
     group = list()
     numList = list(range(1, total + 1))
+    # Check for trivial case p = 1
     if len(part) == 1:
         group = list(range(1, total + 1))
         groupList.append(group)
+
+    # # Check for trivial case all p in P are equal
+    # tempSet = set()
+    # for o in part:
+    #     tempSet.add(o)
+    # if len(tempSet) == 0
     else:
-        for y in range(total):
-            del group
-            group = list()
-            groupList.append(group)
-            if (g + y) % total in numList and total - y in numList and g + y != total - y:
-                if y < len(part):
-                    if len(groupList[y]) == 0 and g + y < (g + total) / 2:
-                        groupList[y].append((g + y) % total)
-                        groupList[y].append(total - y)
+    #     for y in range(total):
+    #         del group
+    #         group = list()
+    #         groupList.append(group)
+    #         if (g + y) % total in numList and total - y in numList and g + y != total - y:
+    #             if y < len(part):
+    #                 if len(groupList[y]) == 0 and g + y < (g + total) / 2:
+    #                     groupList[y].append((g + y) % total)
+    #                     groupList[y].append(total - y)
+        # Populate groupList with empty lists
+        del group
+        group = list()
+        for i in range(len(part)):
+            groupList.append(list())
 
-            groupList = groupList[:len(part)]
-            for get in groupList:
-                if len(get) == 0:
-                    temp = numList[0]
-                    get.append(temp)
-                    get.append(g - temp)
-                    numList.remove(temp)
-                    numList.remove(g - temp)
+        for a in range(len(part)):
+            v = groupList[a]
 
-        for set in groupList:
-            for item in set:
-                if item in numList:
-                    numList.remove(item)
 
-        for z in range(len(groupList)):
-            if part[z] > 2:
-                group = groupList[z]
-                for h in numList:
-                    if len(group) < part[z]:
-                        if (total - h) in numList and (total - h) != h:
-                            group.append(h)
-                            group.append(total - h)
-                            numList.remove(h)
-                            numList.remove(total - h)
-                        if z == len(groupList) - 1:
-                            for b in numList:
-                                groupList[z].append(b)
-                                
+
+
+
+    #         groupList = groupList[:len(part)]
+    #         for get in groupList:
+    #             if len(get) == 0:
+    #                 temp = numList[0]
+    #                 get.append(temp)
+    #                 get.append(g - temp)
+    #                 numList.remove(temp)
+    #                 numList.remove(g - temp)
+
+    #     for set in groupList:
+    #         for item in set:
+    #             if item in numList:
+    #                 numList.remove(item)
+
+    #     for z in range(len(groupList)):
+    #         if part[z] > 2:
+    #             group = groupList[z]
+    #             for h in numList:
+    #                 if len(group) < part[z]:
+    #                     if (total - h) in numList and (total - h) != h:
+    #                         group.append(h)
+    #                         group.append(total - h)
+    #                         numList.remove(h)
+    #                         numList.remove(total - h)
+    #                     if z == len(groupList) - 1:
+    #                         for b in numList:
+    #                             groupList[z].append(b)
+
     # Validate results before returning
-    checkSet = list()
-    for k in groupList:
-        k.sort()
-        for l in k:
-            if l not in checkSet:
-                checkSet.append(l)
-            else:
-                del groupList
-                groupList = list()
-        G = sum(k)
-        if G % total != g:
-            del groupList
-            groupList = list()
-    groupList.sort(key=len)
+    # checkSet = list()
+    # for k in groupList:
+    #     k.sort()
+    #     for l in k:
+    #         if l not in checkSet:
+    #             checkSet.append(l)
+    #         else:
+    #             del groupList
+    #             groupList = list()
+    #     G = sum(k)
+    #     if G % total != g:
+    #         del groupList
+    #         groupList = list()
+    # groupList.sort(key=len)
     return groupList
 
 # ----------------------------Main Program------------------------------------ #
@@ -129,7 +148,6 @@ for part in partition(n):
     partCount += 1
     partList.append(part)
 partList.sort(reverse=True, key=len)
-# print(str(partList))
 
 # Calculate a csp for each partition and possible sum
 sumList = list()
