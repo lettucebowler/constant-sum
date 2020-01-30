@@ -43,9 +43,12 @@ def findPossibleSums(n, part):
     potentialSumList = list(range(1, n))
     sumList = list()
 
+    # Check each value in potentialSumList for validity as a constant sum
+    # If valid, add it to sumList
     for g in potentialSumList:
         if g * p % n == n/2:
             sumList.append(g)
+
     return sorted(sumList)
 
 class constantSumPartition():
@@ -59,7 +62,7 @@ class constantSumPartition():
     def to_string(self):
         return("n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:" + str(self.csp))
 
-# Create a random constant-sum-partition from supplied partition
+# Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(part, g):
     total = 0
     for x in part:
@@ -77,7 +80,9 @@ def genConstantSumPartition(part, g):
     # Check for trivial case where all p in P are equal
     tempSet = set()
     for o in part:
-        tempSet.add(o)
+        tempSet.add(o % 4)
+
+    # Split numList into two sub-lists that constain pars summing to g (MOD n)
     if len(tempSet) == 1:
         lista = list()
         listb = list()
@@ -90,7 +95,6 @@ def genConstantSumPartition(part, g):
                 lista.append(j)
             else:
                 listb.append(j)
-
         for sameP in range(len(part)):
             while len(groupList[sameP]) < part[sameP]:
                 if len(lista) >= 2:
@@ -104,20 +108,21 @@ def genConstantSumPartition(part, g):
 
 
 
-    if len(groupList[0]) == 0:
-    #     for y in range(total):
-    #         del group
-    #         group = list()
-    #         groupList.append(group)
-    #         if (g + y) % total in numList and total - y in numList and g + y != total - y:
-    #             if y < len(part):
-    #                 if len(groupList[y]) == 0 and g + y < (g + total) / 2:
-    #                     groupList[y].append((g + y) % total)
-    #                     groupList[y].append(total - y)
 
-
-        for a in range(len(part)):
-            v = groupList[a]
+    # if len(groupList[0]) == 0:
+    # #     for y in range(total):
+    # #         del group
+    # #         group = list()
+    # #         groupList.append(group)
+    # #         if (g + y) % total in numList and total - y in numList and g + y != total - y:
+    # #             if y < len(part):
+    # #                 if len(groupList[y]) == 0 and g + y < (g + total) / 2:
+    # #                     groupList[y].append((g + y) % total)
+    # #                     groupList[y].append(total - y)
+    #
+    #
+    #     for a in range(len(part)):
+    #         v = groupList[a]
 
 
 
@@ -188,25 +193,20 @@ sumList = list()
 cspList = list()
 count = 0
 for part in partList:
-    print(str(part))
+
     # if len(part) % 2 == 0:
     del sumList
     sumList = findPossibleSums(n, part)
+    if len(sumList) > 0:
+        print(str(part))
     for possibleSum in sumList:
-        # print(str(possibleSum))
         csp = list(genConstantSumPartition(part, possibleSum))
         if len(csp) > 0:
-            # print("append : " + str(part))
             cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
         else:
             print("Algorithm Failure")
             exit()
 
 # Output data
-# lengths = list()
 for const in cspList:
-#     del lengths
-#     lengths = list()
-#     for u in const:
-#         lengths.append(len(u))
     print(const.to_string())
