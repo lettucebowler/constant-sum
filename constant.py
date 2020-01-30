@@ -65,11 +65,13 @@ class constantSumPartition():
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(part, g):
     total = 0
-    for x in part:
-        total += x
     groupList = list()
     group = list()
     numList = list(range(1, total + 1))
+
+    # Derive n from sum of elements in part
+    for x in part:
+        total += x
 
     # Populate groupList with empty lists
     del group
@@ -77,26 +79,30 @@ def genConstantSumPartition(part, g):
     for i in range(len(part)):
         groupList.append(list())
 
-    # Check for trivial case where all p in P are equal
+    # Check for trivial case where all p in P are equal (MOD 4)
     tempSet = set()
     for o in part:
         tempSet.add(o % 4)
 
     # Split numList into two sub-lists that constain pars summing to g (MOD n)
     if len(tempSet) == 1:
+        print(str(tempSet))
         lista = list()
         listb = list()
-        if g % 2 ==1:
-            testValue = g
-        else:
-            testValue = g - 1
+        # if g % 2 == 1:
+        #     testValue = g
+        # else:
+        #     testValue = g - 1
+        testValue = g
         for j in numList:
             if j < testValue:
                 lista.append(j)
             else:
                 listb.append(j)
+        print(str(lista) + " " + str(listb))
         for sameP in range(len(part)):
             while len(groupList[sameP]) < part[sameP]:
+                print("while")
                 if len(lista) >= 2:
                         groupList[sameP].append(lista.pop(0))
                         groupList[sameP].append(lista.pop())
@@ -104,6 +110,8 @@ def genConstantSumPartition(part, g):
                     if len(listb) >= 2:
                         groupList[sameP].append(listb.pop(0))
                         groupList[sameP].append(listb.pop())
+                    else:
+                        break
 
 
 
