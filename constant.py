@@ -74,18 +74,37 @@ def genConstantSumPartition(part, g):
     for i in range(len(part)):
         groupList.append(list())
 
-    # Check for trivial case p = 1
-    if len(part) == 1:
-        group = list(range(1, total + 1))
-        groupList.append(group)
-
-    # Check for trivial case all p in P are equal
+    # Check for trivial case where all p in P are equal
     tempSet = set()
     for o in part:
         tempSet.add(o)
     if len(tempSet) == 1:
+        lista = list()
+        listb = list()
+        if g % 2 ==1:
+            testValue = g
+        else:
+            testValue = g - 1
+        for j in numList:
+            if j < testValue:
+                lista.append(j)
+            else:
+                listb.append(j)
 
-    else:
+        for sameP in range(len(part)):
+            while len(groupList[sameP]) < part[sameP]:
+                if len(lista) >= 2:
+                        groupList[sameP].append(lista.pop(0))
+                        groupList[sameP].append(lista.pop())
+                else:
+                    if len(listb) >= 2:
+                        groupList[sameP].append(listb.pop(0))
+                        groupList[sameP].append(listb.pop())
+
+
+
+
+    if len(groupList[0]) == 0:
     #     for y in range(total):
     #         del group
     #         group = list()
@@ -174,10 +193,10 @@ for part in partList:
     del sumList
     sumList = findPossibleSums(n, part)
     for possibleSum in sumList:
-        print(str(possibleSum))
+        # print(str(possibleSum))
         csp = list(genConstantSumPartition(part, possibleSum))
         if len(csp) > 0:
-            print("append : " + str(part))
+            # print("append : " + str(part))
             cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
         else:
             print("Algorithm Failure")
