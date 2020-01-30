@@ -89,10 +89,10 @@ def genConstantSumPartition(part, g):
         print(str(tempSet))
         lista = list()
         listb = list()
-        # if g % 2 == 1:
-        #     testValue = g
-        # else:
-        #     testValue = g - 1
+        if g % 2 == 1:
+            testValue = g
+        else:
+            testValue = g - 1
         testValue = g
         for j in numList:
             if j < testValue:
@@ -110,8 +110,6 @@ def genConstantSumPartition(part, g):
                     if len(listb) >= 2:
                         groupList[sameP].append(listb.pop(0))
                         groupList[sameP].append(listb.pop())
-                    else:
-                        break
 
 
 
