@@ -63,15 +63,10 @@ class constantSumPartition():
         return("n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:" + str(self.csp))
 
 # Create a constant-sum-partition from supplied partition
-def genConstantSumPartition(part, g):
-    total = 0
+def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
     numList = list(range(1, total + 1))
-
-    # Derive n from sum of elements in part
-    for x in part:
-        total += x
 
     # Populate groupList with empty lists
     del group
@@ -82,34 +77,47 @@ def genConstantSumPartition(part, g):
     # Check for trivial case where all p in P are equal (MOD 4)
     tempSet = set()
     for o in part:
-        tempSet.add(o % 4)
+        tempSet.add(o)
 
     # Split numList into two sub-lists that constain pars summing to g (MOD n)
     if len(tempSet) == 1:
-        print(str(tempSet))
-        lista = list()
-        listb = list()
-        if g % 2 == 1:
-            testValue = g
-        else:
-            testValue = g - 1
-        testValue = g
-        for j in numList:
-            if j < testValue:
-                lista.append(j)
-            else:
-                listb.append(j)
-        print(str(lista) + " " + str(listb))
         for sameP in range(len(part)):
             while len(groupList[sameP]) < part[sameP]:
-                print("while")
-                if len(lista) >= 2:
-                        groupList[sameP].append(lista.pop(0))
-                        groupList[sameP].append(lista.pop())
-                else:
-                    if len(listb) >= 2:
-                        groupList[sameP].append(listb.pop(0))
-                        groupList[sameP].append(listb.pop())
+                groupList[sameP].append(numList.pop(0))
+                groupList[sameP].append(numList.pop())
+
+        # lista = list()
+        # listb = list()
+        # if g % 2 == 1:
+        #     testValue = g
+        # else:
+        #     testValue = g - 1
+        # testValue = g
+        # for j in numList:
+        #     # print("j:" + str(j) + " test:" + str(testValue))
+        #     if j < testValue:
+        #         # print("a")
+        #         lista.append(j)
+        #     else:
+        #         # print("b")
+        #         listb.append(j)
+        # print(str(lista) + " " + str(listb))
+
+            # while len(groupList[sameP]) < part[sameP]:
+            #     if len(lista) >= 2:
+            #             # print(str(len(lista)))
+            #             groupList[sameP].append(lista.pop(0))
+            #             groupList[sameP].append(lista.pop())
+            #     else:
+            #         if len(listb) >= 2:
+            #             # print(str(len(listb)))
+            #             groupList[sameP].append(listb.pop(0))
+            #             groupList[sameP].append(listb.pop())
+            #         else:
+            #             if len(lista) == 1 and len(listb) == 1:
+            #                 groupList[sameP].append(lista.pop())
+            #                 groupList[sameP].append(listb.pop())
+            # print(str(lista) + " " + str(listb))
 
 
 
@@ -204,14 +212,14 @@ for part in partList:
     del sumList
     sumList = findPossibleSums(n, part)
     if len(sumList) > 0:
-        print(str(part))
-    for possibleSum in sumList:
-        csp = list(genConstantSumPartition(part, possibleSum))
-        if len(csp) > 0:
-            cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
-        else:
-            print("Algorithm Failure")
-            exit()
+        # print(str(part))
+        for possibleSum in sumList:
+            csp = list(genConstantSumPartition(n, part, possibleSum))
+            if len(csp) > 0:
+                cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
+            else:
+                print("Algorithm Failure")
+                exit()
 
 # Output data
 for const in cspList:
