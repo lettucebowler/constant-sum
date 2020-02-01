@@ -61,8 +61,9 @@ class constantSumPartition():
 
     def to_string(self):
         message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:"
-        # if len(self.csp) > 0:
         message += str(const.csp)
+        # if len(self.csp) > 0:
+            # message += str(const.csp)
         # else:
         #     message += "Algorithm Failure"
         return(message)
@@ -87,12 +88,12 @@ def genConstantSumPartition(total, part, g):
             while len(groupList[sameP]) < part[sameP]:
                 groupList[sameP].append(numList.pop(0))
                 groupList[sameP].append(numList.pop())
-        print("done")
+        # print("done")
         done = True
 
     # Check for case when all p in P = 2 (MOD n)
-    if all(elem % 4 == 2 for elem in part) and done == False and len(groupList[0]) != 0:
-        print("all % 2")
+    if all(elem % 4 == 2 for elem in part) and done == False and len(groupList[0]) == 0:
+        # print("all % 2")
         lista = list()
         listb = list()
         testValue = g
@@ -108,40 +109,61 @@ def genConstantSumPartition(total, part, g):
         del numList
 
         # Populate each p in P with a pair that sums to g (MOD n)
+        counter = 0
         for sameP in range(len(part)):
             # if part == [2, 14]:
             #     print("a:" + str(lista))
             #     print("b:" + str(listb))
-            if len(listb) >= 2:
-                groupList[sameP].append(listb.pop(0))
-                groupList[sameP].append(listb.pop())
+            if counter % 2 == 0:
+                if len(listb) >= 2:
+                    groupList[sameP].append(listb.pop(0))
+                    groupList[sameP].append(listb.pop())
+                else:
+                    if len(lista) >= 2:
+                        groupList[sameP].append(lista.pop(0))
+                        groupList[sameP].append(lista.pop())
+                    else:
+                        if len(lista) == 1 and len(listb) == 1:
+                            groupList[sameP].append(lista.pop())
+                            groupList[sameP].append(listb.pop())
             else:
                 if len(lista) >= 2:
                     groupList[sameP].append(lista.pop(0))
                     groupList[sameP].append(lista.pop())
                 else:
-                    if len(lista) == 1 and len(listb) == 1:
-                        groupList[sameP].append(lista.pop())
+                    if len(listb) >= 2:
+                        groupList[sameP].append(listb.pop(0))
                         groupList[sameP].append(listb.pop())
+                    else:
+                        if len(lista) == 1 and len(listb) == 1:
+                            groupList[sameP].append(lista.pop())
+                            groupList[sameP].append(listb.pop())
+            counter += 1
 
         # Combine the remaining elements in lista and listb back into numList
         numList = lista + listb
-        sort(numList)
-        for y in range(len(groupList)):
-            if y < (len(part) - 1):
-                while len(groupList[y]) < part[y]:
-                    temp = 0
-                    for wiggle in numList:
-                        if total - wiggle in numList:
-                            temp = wiggle
-                            break
-                    groupList[y].append(wiggle)
-                    groupList[y].append(total - wiggle)
-                    numList.remove(temp)
-                    numList.remove(total - temp)
-            else:
+        numList.sort()
+        index = 0
+        for y in groupList:
+            print(str(y))
+            if index == len(part) - 1:
                 for noomba in numList:
-                    groupList[y].append(noomba)
+                    y.append(noomba)
+            else:
+                # while len(y) < part[index]:
+                for namba in numList:
+                    print(str(len(y)) + " " + str(part[index]) + " " + str(namba))
+                    if len(y) < part[index]:
+                        print(str(namba) + str(numList))
+                        if (total - namba) in numList and total - namba != namba:
+                            print("if")
+                            y.append(namba)
+                            y.append(total - namba)
+                            numList.remove(namba)
+                            numList.remove(total - namba)
+            index += 1
+
+
 
 
 
@@ -198,36 +220,34 @@ def genConstantSumPartition(total, part, g):
 
     # Validate results before returning
     checkSet = list()
-    good = True
+    good = list()
 
-    # for k in groupList:
-    #     k.sort()
-    #     for l in k:
-    #         if l not in checkSet:
-    #             checkSet.append(l)
-    #         else:
-    #             print("duplicates")
-    #             good = False
-    #
-    #     G = sum(k)
-    #
-    #     if G % total != g:
-    #         print("sum " + str(G) + " " + str(g))
-    #         good = False
-    #
-    # for h in range(len(part)):
-    #     print(str(part))
-    #     print(str(h))
-    #     if len(groupList[h]) != part[h]:
-    #         print("length " + str(groupList[h]) + " " + str(part[h]))
-    #         good = False
-    #
-    # # Delete groupList if it does not pass validity checks
-    # if good == False:
-    #     del groupList
-    #     groupList = list()
+    for k in groupList:
+        k.sort()
+        for l in k:
+            if l not in checkSet:
+                checkSet.append(l)
+            else:
+                # print("duplicates")
+                good.append("duplicates")
 
+        G = sum(k)
+
+        if G % total != g:
+            # print("sum " + str(G) + " " + str(g))
+            good.append("sum")
+
+    for h in range(len(part)):
+        if len(groupList[h]) != part[h]:
+            # print("length " + str(groupList[h]) + " " + str(part[h]))
+            good.append("length")
+
+    # Delete groupList if it does not pass validity checks
     groupList.sort(key=len)
+    if len(good) != 0:
+        groupList.append(good)
+
+
     return groupList
 
 # ----------------------------Main Program------------------------------------ #
@@ -249,7 +269,7 @@ partList.sort(reverse=True, key=len)
 sumList = list()
 cspList = list()
 count = 0
-partList = [[2, 14]]
+partList = [[2, 2, 6, 6]]
 for part in partList:
     if True:
     # if len(part) % 2 == 0:
