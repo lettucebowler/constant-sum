@@ -74,13 +74,14 @@ def genConstantSumPartition(total, part, g):
     for i in range(len(part)):
         groupList.append(list())
 
-    # Check for trivial case where all p in P are equal (MOD 4)
-    tempSet = set()
-    for o in part:
-        tempSet.add(o)
-
-    # Split numList into two sub-lists that constain pars summing to g (MOD n)
-    if len(tempSet) == 1:
+    # # Check for trivial case where all p in P are equal (MOD 4)
+    # tempSet = set()
+    # for o in part:
+    #     tempSet.add(o)
+    #
+    # # Split numList into two sub-lists that constain pars summing to g (MOD n)
+    # if len(tempSet) == 1:
+    if all(elem in part == part[0])
         for sameP in range(len(part)):
             while len(groupList[sameP]) < part[sameP]:
                 groupList[sameP].append(numList.pop(0))
@@ -207,19 +208,18 @@ sumList = list()
 cspList = list()
 count = 0
 for part in partList:
-
-    # if len(part) % 2 == 0:
-    del sumList
-    sumList = findPossibleSums(n, part)
-    if len(sumList) > 0:
-        # print(str(part))
-        for possibleSum in sumList:
-            csp = list(genConstantSumPartition(n, part, possibleSum))
-            if len(csp) > 0:
-                cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
-            else:
-                print("Algorithm Failure")
-                exit()
+    if len(part) % 2 == 0:
+        del sumList
+        sumList = findPossibleSums(n, part)
+        if len(sumList) > 0:
+            # print(str(part))
+            for possibleSum in sumList:
+                csp = list(genConstantSumPartition(n, part, possibleSum))
+                if len(csp) > 0:
+                    cspList.append(constantSumPartition(n, possibleSum, len(part),  part, csp))
+                else:
+                    print("Algorithm Failure")
+                    exit()
 
 # Output data
 for const in cspList:
