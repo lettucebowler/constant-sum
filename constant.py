@@ -145,22 +145,38 @@ def genConstantSumPartition(total, part, g):
         numList.sort()
         index = 0
         for y in groupList:
-            print(str(y))
-            if index == len(part) - 1:
-                for noomba in numList:
-                    y.append(noomba)
-            else:
-                # while len(y) < part[index]:
-                for namba in numList:
-                    print(str(len(y)) + " " + str(part[index]) + " " + str(namba))
+            # print(str(y))
+            # if index == len(part) - 1:
+            #     for noomba in numList:
+            #         y.append(noomba)
+            # else:
+            #     # while len(y) < part[index]:
+            #     for namba in numList:
+            #         print(str(len(y)) + " " + str(part[index]) + " " + str(namba))
+            #         if len(y) < part[index]:
+            #             print(str(namba) + str(numList))
+            #             if (total - namba) in numList and total - namba != namba:
+            #                 print("if")
+            #                 y.append(namba)
+            #                 y.append(total - namba)
+            #                 numList.remove(namba)
+            #                 numList.remove(total - namba)
+
+            for noomber in numList:
+                print(str(noomber) + " " + str(numList))
+                if total - noomber in numList and total - noomber != noomber:
+                    # print("if and not")
                     if len(y) < part[index]:
-                        print(str(namba) + str(numList))
-                        if (total - namba) in numList and total - namba != namba:
-                            print("if")
-                            y.append(namba)
-                            y.append(total - namba)
-                            numList.remove(namba)
-                            numList.remove(total - namba)
+                        # print("still room")
+                        y.append(noomber)
+                        y.append(total - noomber)
+                        numList.remove(noomber)
+                        numList.remove(total - noomber)
+                else:
+                    if len(groupList[-1]) < part[-1]:
+                        # print("else")
+                        groupList[-1].append(noomber)
+                        numList.remove(noomber)
             index += 1
 
 
@@ -269,12 +285,13 @@ partList.sort(reverse=True, key=len)
 sumList = list()
 cspList = list()
 count = 0
-partList = [[2, 2, 6, 6]]
+# partList = [[2, 2, 6, 6]]
 for part in partList:
     if True:
     # if len(part) % 2 == 0:
         del sumList
         sumList = findPossibleSums(n, part)
+        # sumList = [6]
         if len(sumList) > 0:
             # print(str(part))
             for possibleSum in sumList:
