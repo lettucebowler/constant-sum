@@ -73,7 +73,7 @@ def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
     numList = list(range(1, total + 1))
-    done = False
+    allSame = False
 
     # Populate groupList with empty lists
     del group
@@ -84,19 +84,19 @@ def genConstantSumPartition(total, part, g):
     # Check for trivial case where all p in P are equal
     # if all(elem == part[0] for elem in part) and g % total == total // len(part) // 2:
     if all(elem == part[0] for elem in part):
-        for sameP in range(len(part)):
-            while len(groupList[sameP]) < part[sameP]:
-                groupList[sameP].append(numList.pop(0))
-                groupList[sameP].append(numList.pop())
-        # print("done")
-        done = True
+        allSame = True
 
     # Check for case when all p in P = 2 (MOD n)
-    if all(elem % 4 == 2 for elem in part) and done == False and len(groupList[0]) == 0:
-        # print("all % 2")
+    # if all(elem % 4 == 2 for elem in part):
+    if True:
         lista = list()
         listb = list()
-        testValue = g
+
+        # Determine spot to split list
+        if allSame:
+            testValue = g // (part[0] // 2)
+        else:
+            testValue = g
 
         # Split numList into two lists containing pairs summing to g (MOD P)
         for j in numList:
@@ -111,73 +111,24 @@ def genConstantSumPartition(total, part, g):
         # Populate each p in P with a pair that sums to g (MOD n)
         counter = 0
         for sameP in range(len(part)):
-            # if part == [2, 14]:
-            #     print("a:" + str(lista))
-            #     print("b:" + str(listb))
-            if counter % 2 == 0:
-                if len(listb) >= 2:
-                    groupList[sameP].append(listb.pop(0))
-                    groupList[sameP].append(listb.pop())
-                else:
-                    if len(lista) >= 2:
-                        groupList[sameP].append(lista.pop(0))
-                        groupList[sameP].append(lista.pop())
-                    else:
-                        if len(lista) == 1 and len(listb) == 1:
-                            groupList[sameP].append(lista.pop())
-                            groupList[sameP].append(listb.pop())
+            if len(listb) >= 2:
+                groupList[sameP].append(listb.pop(0))
+                groupList[sameP].append(listb.pop())
             else:
                 if len(lista) >= 2:
                     groupList[sameP].append(lista.pop(0))
                     groupList[sameP].append(lista.pop())
                 else:
-                    if len(listb) >= 2:
-                        groupList[sameP].append(listb.pop(0))
+                    if len(lista) == 1 and len(listb) == 1:
+                        groupList[sameP].append(lista.pop())
                         groupList[sameP].append(listb.pop())
-                    else:
-                        if len(lista) == 1 and len(listb) == 1:
-                            groupList[sameP].append(lista.pop())
-                            groupList[sameP].append(listb.pop())
-            counter += 1
 
         # Combine the remaining elements in lista and listb back into numList
         numList = lista + listb
         numList.sort()
-        index = 0
-        for y in groupList:
-            # print(str(y))
-            # if index == len(part) - 1:
-            #     for noomba in numList:
-            #         y.append(noomba)
-            # else:
-            #     # while len(y) < part[index]:
-            #     for namba in numList:
-            #         print(str(len(y)) + " " + str(part[index]) + " " + str(namba))
-            #         if len(y) < part[index]:
-            #             print(str(namba) + str(numList))
-            #             if (total - namba) in numList and total - namba != namba:
-            #                 print("if")
-            #                 y.append(namba)
-            #                 y.append(total - namba)
-            #                 numList.remove(namba)
-            #                 numList.remove(total - namba)
 
-            for noomber in numList:
-                print(str(noomber) + " " + str(numList))
-                if total - noomber in numList and total - noomber != noomber:
-                    # print("if and not")
-                    if len(y) < part[index]:
-                        # print("still room")
-                        y.append(noomber)
-                        y.append(total - noomber)
-                        numList.remove(noomber)
-                        numList.remove(total - noomber)
-                else:
-                    if len(groupList[-1]) < part[-1]:
-                        # print("else")
-                        groupList[-1].append(noomber)
-                        numList.remove(noomber)
-            index += 1
+        # for y in groupList:
+
 
 
 
