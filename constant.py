@@ -186,27 +186,23 @@ def genConstantSumPartition(total, part, g):
     #                             groupList[z].append(b)
 
     # Validate results before returning
-    checkSet = list()
+    checkList = list()
     good = list()
-
     for k in groupList:
         k.sort()
         for l in k:
-            if l not in checkSet:
+            if l not in checkList:
                 checkSet.append(l)
             else:
-                # print("duplicates")
                 good.append("duplicates")
 
         G = sum(k)
 
         if G % total != g:
-            # print("sum " + str(G) + " " + str(g))
             good.append("sum")
 
     for h in range(len(part)):
         if len(groupList[h]) != part[h]:
-            # print("length " + str(groupList[h]) + " " + str(part[h]))
             good.append("length")
 
     # Delete groupList if it does not pass validity checks
