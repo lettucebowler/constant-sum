@@ -74,50 +74,46 @@ def genConstantSumPartition(total, part, g):
     for i in range(len(part)):
         groupList.append(list())
 
-    # # Check for trivial case where all p in P are equal (MOD 4)
-    # tempSet = set()
-    # for o in part:
-    #     tempSet.add(o)
-    #
-    # # Split numList into two sub-lists that constain pars summing to g (MOD n)
-    # if len(tempSet) == 1:
-    if all(elem in part == part[0])
+    # Check for trivial case where all p in P are equal
+    if all(elem == part[0] for elem in part):
         for sameP in range(len(part)):
             while len(groupList[sameP]) < part[sameP]:
                 groupList[sameP].append(numList.pop(0))
                 groupList[sameP].append(numList.pop())
 
-        # lista = list()
-        # listb = list()
-        # if g % 2 == 1:
-        #     testValue = g
-        # else:
-        #     testValue = g - 1
-        # testValue = g
-        # for j in numList:
-        #     # print("j:" + str(j) + " test:" + str(testValue))
-        #     if j < testValue:
-        #         # print("a")
-        #         lista.append(j)
-        #     else:
-        #         # print("b")
-        #         listb.append(j)
+    if len(part) % 2 == 1 and all(elem % 4 == 2 for elem in part):
+        for sameP in range(len(part)):
+            lista = list()
+            listb = list()
+            if g % 2 == 1:
+                testValue = g
+            else:
+                testValue = g - 1
+            # testValue = g
+            for j in numList:
+            # print("j:" + str(j) + " test:" + str(testValue))
+                if j < testValue:
+                # print("a")
+                    lista.append(j)
+                else:
+                # print("b")
+                    listb.append(j)
         # print(str(lista) + " " + str(listb))
 
-            # while len(groupList[sameP]) < part[sameP]:
-            #     if len(lista) >= 2:
-            #             # print(str(len(lista)))
-            #             groupList[sameP].append(lista.pop(0))
-            #             groupList[sameP].append(lista.pop())
-            #     else:
-            #         if len(listb) >= 2:
-            #             # print(str(len(listb)))
-            #             groupList[sameP].append(listb.pop(0))
-            #             groupList[sameP].append(listb.pop())
-            #         else:
-            #             if len(lista) == 1 and len(listb) == 1:
-            #                 groupList[sameP].append(lista.pop())
-            #                 groupList[sameP].append(listb.pop())
+            while len(groupList[sameP]) < part[sameP]:
+                if len(lista) >= 2:
+                # print(str(len(lista)))
+                    groupList[sameP].append(lista.pop(0))
+                    groupList[sameP].append(lista.pop())
+                else:
+                    if len(listb) >= 2:
+                    # print(str(len(listb)))
+                        groupList[sameP].append(listb.pop(0))
+                        groupList[sameP].append(listb.pop())
+                    else:
+                        if len(lista) == 1 and len(listb) == 1:
+                            groupList[sameP].append(lista.pop())
+                            groupList[sameP].append(listb.pop())
             # print(str(lista) + " " + str(listb))
 
 
@@ -208,7 +204,8 @@ sumList = list()
 cspList = list()
 count = 0
 for part in partList:
-    if len(part) % 2 == 0:
+    if True:
+    # if len(part) % 2 == 0:
         del sumList
         sumList = findPossibleSums(n, part)
         if len(sumList) > 0:
