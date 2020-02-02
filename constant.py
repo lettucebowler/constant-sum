@@ -39,8 +39,7 @@ def partition(number):
 
 # n : number program is checking
 # part : partition of n to check for potential sums
-def findPossibleSums(n, part):
-    p = len(part)
+def findPossibleSums(n, p):
     potentialSumList = list(range(1, n))
     sumList = list()
 
@@ -145,42 +144,51 @@ def genConstantSumPartition(total, part, g):
         numList.sort()
         # print(str(part) + " " + str(numList))
 
-        temp = list()
-        for fill in range(len(part)):
-            if fill == len(part) - 1:
-                    groupList[-1] += numList
-            else:
-                if len(groupList[fill]) < part[fill]:
-            # Add to groupList[fill] in groups of 2 that sum to 0 (MOD N)
-                    if part[fill] % 4 == 0:
-                        for gah in range(part[fill] // 2 - 1):
-                            if len(numList) > 0:
-                                print(str(numList))
-                                # print(str(groupList[fill]) + " " +    str(part[fill]))
-                                del temp
-                                temp = smallestNSum(numList, n, 0)
-                                for el in temp:
-                                    groupList[fill].append(el)
-            # Add to groupList[fill] in groups of 4 that sum to 0 (MOD N)
-                    else:
-                        for guh in range(part[fill // 4 ]):
-                            if len(numList) > 1 and len(groupList[fill])  < part[fill]:
-                                temp = list()
-                                curNum1 = 0
-                                curNum2 = 0
-                                while len(temp) == 0:
-                                    tempTotal = 0
-                                    del temp
-                                    temp = list()
-                                    curNum1 = random.choice(numList)
-                                    curNum2 = 0
-                                    while curNum2 == curNum1:
-                                        curNum2 = random.choice(numList)
-                                    tempTotal = curNum1 + curNum2
-                                    temp = smallestNSum(numList, n, (total -    tempTotal) % n)
-                                temp.append(curNum1)
-                                temp.append(curNum2)
-                                groupList[fill] += temp
+        # temp = list()
+        # for fill in range(len(part)):
+        #     if fill == len(part) - 1:
+        #             groupList[-1] += numList
+        #     else:
+        #         if len(groupList[fill]) < part[fill]:
+        #     # Add to groupList[fill] in groups of 2 that sum to 0 (MOD N)
+        #             if part[fill] % 4 == 0:
+        #                 for gah in range(part[fill] // 2 - 1):
+        #                     if len(numList) > 0:
+        #                         print(str(numList))
+        #                         # print(str(groupList[fill]) + " " +    str(part[fill]))
+        #                         del temp
+        #                         temp = smallestNSum(numList, n, 0)
+        #                         for el in temp:
+        #                             groupList[fill].append(el)
+        #     # Add to groupList[fill] in groups of 4 that sum to 0 (MOD N)
+        #             else:
+        #                 for guh in range(part[fill // 4 ]):
+        #                     if len(numList) > 1 and len(groupList[fill])  < part[fill]:
+        #                         temp = list()
+        #                         curNum1 = 0
+        #                         curNum2 = 0
+        #                         while len(temp) == 0:
+        #                             tempTotal = 0
+        #                             del temp
+        #                             temp = list()
+        #                             curNum1 = random.choice(numList)
+        #                             curNum2 = random.choice(numList)
+        #                             while curNum2 == curNum1:
+        #                                 curNum2 = random.choice(numList)
+        #                             tempTotal = curNum1 + curNum2
+        #                             tempList = list()
+        #                             for e in numList:
+        #                                 if e != curNum1 and e != curNum2:
+        #                                     tempList.append(e)
+        #                             temp = smallestNSum(tempList, n, (total - tempTotal) % n)
+        #                         temp.append(curNum1)
+        #                         temp.append(curNum2)
+        #                         print(str(curNum1) + " " + str(curNum2))
+        #                         print(str(temp) + " " + str(numList))
+        #                         for u in temp:
+        #                             numList.remove(u)
+        #                         groupList[fill] += temp
+
                                 # print(str(numList))
                                 # del temp
                                 # temp = list()
@@ -264,6 +272,7 @@ def genConstantSumPartition(total, part, g):
     # groupList.sort(key=len)
     checkList = list()
     good = list()
+    groupList.sort(key=len)
     for k in groupList:
         k.sort()
         for l in k:
@@ -285,8 +294,6 @@ def genConstantSumPartition(total, part, g):
 
     if len(good) != 0:
         groupList.append(good)
-
-
     return groupList
 
 # ----------------------------Main Program------------------------------------ #
@@ -308,13 +315,13 @@ partList.sort(reverse=True, key=len)
 sumList = list()
 cspList = list()
 count = 0
-partList = [[2, 2, 6, 6]]
+# partList = [[2, 2, 6, 6]]
 for part in partList:
     # if True:
     if len(part) % 2 == 0:
         del sumList
-        sumList = findPossibleSums(n, part)
-        sumList = [6]
+        sumList = findPossibleSums(n, len(part))
+        # sumList = [6]
         if len(sumList) > 0:
             for possibleSum in sumList:
                 csp = list(genConstantSumPartition(n, part, possibleSum))
