@@ -60,13 +60,31 @@ class constantSumPartition():
         self.csp = csp
 
     def to_string(self):
-        message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:"
-        message += str(const.csp)
-        # if len(self.csp) > 0:
-            # message += str(const.csp)
-        # else:
-        #     message += "Algorithm Failure"
+        message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:" + str(const.csp)
+        # message += str(const.csp)
         return(message)
+
+# Return smallest number in list such that total - number is also in list
+# Else return -1
+def smallestNSum(numbers, total, mod):
+    tempList = list()
+    for no in numbers:
+        del tempList
+        tempList = list()
+        for maybe in numbers:
+            if maybe != no:
+                tempList.append(maybe)
+        # print("temp : " + str(tempList))
+        for yes in tempList:
+            # print(str(yes) + " " + str(no) + " " + str(total) + " " + str(mod))
+            if (yes + no) % total == mod:
+                returnList = list()
+                returnList.append(yes)
+                returnList.append(no)
+                numbers.remove(yes)
+                numbers.remove(no)
+                return returnList
+    return list()
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
@@ -82,7 +100,6 @@ def genConstantSumPartition(total, part, g):
         groupList.append(list())
 
     # Check for trivial case where all p in P are equal
-    # if all(elem == part[0] for elem in part) and g % total == total // len(part) // 2:
     if all(elem == part[0] for elem in part):
         allSame = True
 
@@ -106,26 +123,40 @@ def genConstantSumPartition(total, part, g):
             else:
                 if j not in lista or j not in listb:
                     listb.append(j)
-        del numList
 
         # Populate each p in P with a pair that sums to g (MOD n)
-        counter = 0
-        for sameP in range(len(part)):
-            if len(listb) >= 2:
-                groupList[sameP].append(listb.pop(0))
-                groupList[sameP].append(listb.pop())
+        for numeral in range(len(part)):
+            if allSame:
+                limit = part[0] // 2
             else:
-                if len(lista) >= 2:
-                    groupList[sameP].append(lista.pop(0))
-                    groupList[sameP].append(lista.pop())
+                limit = 1
+            for round in range(limit):
+                if len(listb) >= 2:
+                    groupList[numeral].append(listb.pop(0))
+                    groupList[numeral].append(listb.pop())
                 else:
-                    if len(lista) == 1 and len(listb) == 1:
-                        groupList[sameP].append(lista.pop())
-                        groupList[sameP].append(listb.pop())
+                    if len(lista) >= 2:
+                        groupList[numeral].append(lista.pop(0))
+                        groupList[numeral].append(lista.pop())
 
         # Combine the remaining elements in lista and listb back into numList
         numList = lista + listb
         numList.sort()
+        # print(str(part) + " " + str(numList))
+
+        temp = list()
+        if len(numList) > 0:
+            for fill in range(len(part)):
+                if part[fill] % 4 == 0:
+                    # while len(groupList[fill]) < part[fill]:
+                    print(str(groupList[fill]) + " " + str(part[fill]))
+                    del temp
+                    temp = smallestNSum(numList, n, 0)
+                    for el in temp:
+                        groupList[fill].append(el)
+
+
+
 
         # for y in groupList:
 
@@ -188,25 +219,25 @@ def genConstantSumPartition(total, part, g):
     # Validate results before returning
     checkList = list()
     good = list()
-    for k in groupList:
-        k.sort()
-        for l in k:
-            if l not in checkList:
-                checkSet.append(l)
-            else:
-                good.append("duplicates")
-
-        G = sum(k)
-
-        if G % total != g:
-            good.append("sum")
-
-    for h in range(len(part)):
-        if len(groupList[h]) != part[h]:
-            good.append("length")
+    # for k in groupList:
+    #     k.sort()
+    #     for l in k:
+    #         if l not in checkList:
+    #             checkList.append(l)
+    #         else:
+    #             good.append("duplicates")
+    #
+    #     G = sum(k)
+    #
+    #     if G % total != g:
+    #         good.append("sum")
+    #
+    # for h in range(len(part)):
+    #     if len(groupList[h]) != part[h]:
+    #         good.append("length")
 
     # Delete groupList if it does not pass validity checks
-    groupList.sort(key=len)
+    # groupList.sort(key=len)
     if len(good) != 0:
         groupList.append(good)
 
