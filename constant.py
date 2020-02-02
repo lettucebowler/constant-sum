@@ -5,6 +5,7 @@ import subprocess;
 import argparse
 import itertools
 import math
+import random
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -145,15 +146,58 @@ def genConstantSumPartition(total, part, g):
         # print(str(part) + " " + str(numList))
 
         temp = list()
-        if len(numList) > 0:
-            for fill in range(len(part)):
-                if part[fill] % 4 == 0:
-                    # while len(groupList[fill]) < part[fill]:
-                    print(str(groupList[fill]) + " " + str(part[fill]))
-                    del temp
-                    temp = smallestNSum(numList, n, 0)
-                    for el in temp:
-                        groupList[fill].append(el)
+        for fill in range(len(part)):
+            if fill == len(part) - 1:
+                    groupList[-1] += numList
+            else:
+                if len(groupList[fill]) < part[fill]:
+            # Add to groupList[fill] in groups of 2 that sum to 0 (MOD N)
+                    if part[fill] % 4 == 0:
+                        for gah in range(part[fill] // 2 - 1):
+                            if len(numList) > 0:
+                                print(str(numList))
+                                # print(str(groupList[fill]) + " " +    str(part[fill]))
+                                del temp
+                                temp = smallestNSum(numList, n, 0)
+                                for el in temp:
+                                    groupList[fill].append(el)
+            # Add to groupList[fill] in groups of 4 that sum to 0 (MOD N)
+                    else:
+                        for guh in range(part[fill // 4 ]):
+                            if len(numList) > 1 and len(groupList[fill])  < part[fill]:
+                                temp = list()
+                                curNum1 = 0
+                                curNum2 = 0
+                                while len(temp) == 0:
+                                    tempTotal = 0
+                                    del temp
+                                    temp = list()
+                                    curNum1 = random.choice(numList)
+                                    curNum2 = 0
+                                    while curNum2 == curNum1:
+                                        curNum2 = random.choice(numList)
+                                    tempTotal = curNum1 + curNum2
+                                    temp = smallestNSum(numList, n, (total -    tempTotal) % n)
+                                temp.append(curNum1)
+                                temp.append(curNum2)
+                                groupList[fill] += temp
+                                # print(str(numList))
+                                # del temp
+                                # temp = list()
+                                # tempSum = 0
+                                # curNum = random.choice(numList)
+                                # groupList[fill].append(curNum)
+                                # numList.remove(curNum)
+                                # tempSum += curNum
+                                # curNum = random.choice(numList)
+                                # groupList[fill].append(curNum)
+                                # numList.remove(curNum)
+                                # tempSum += curNum
+                                # print(str(tempSum))
+                                # temp = smallestNSum(numList, n, total - tempSum % n)
+                                # print(str(temp))
+                                # for el in temp:
+                                #     groupList[fill].append(el)
 
 
 
@@ -217,27 +261,28 @@ def genConstantSumPartition(total, part, g):
     #                             groupList[z].append(b)
 
     # Validate results before returning
+    # groupList.sort(key=len)
     checkList = list()
     good = list()
-    # for k in groupList:
-    #     k.sort()
-    #     for l in k:
-    #         if l not in checkList:
-    #             checkList.append(l)
-    #         else:
-    #             good.append("duplicates")
-    #
-    #     G = sum(k)
-    #
-    #     if G % total != g:
-    #         good.append("sum")
-    #
-    # for h in range(len(part)):
-    #     if len(groupList[h]) != part[h]:
-    #         good.append("length")
+    for k in groupList:
+        k.sort()
+        for l in k:
+            if l not in checkList:
+                checkList.append(l)
+            else:
+                good.append("duplicates")
+
+        G = sum(k)
+
+        if G % total != g:
+            good.append("sum")
+
+    for h in range(len(part)):
+        if len(groupList[h]) != part[h]:
+            good.append("length")
 
     # Delete groupList if it does not pass validity checks
-    # groupList.sort(key=len)
+
     if len(good) != 0:
         groupList.append(good)
 
@@ -263,15 +308,14 @@ partList.sort(reverse=True, key=len)
 sumList = list()
 cspList = list()
 count = 0
-# partList = [[2, 2, 6, 6]]
+partList = [[2, 2, 6, 6]]
 for part in partList:
-    if True:
-    # if len(part) % 2 == 0:
+    # if True:
+    if len(part) % 2 == 0:
         del sumList
         sumList = findPossibleSums(n, part)
-        # sumList = [6]
+        sumList = [6]
         if len(sumList) > 0:
-            # print(str(part))
             for possibleSum in sumList:
                 csp = list(genConstantSumPartition(n, part, possibleSum))
                 cspList.append(constantSumPartition(n, possibleSum, len(part),  part, csp))
