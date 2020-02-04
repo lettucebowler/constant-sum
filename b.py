@@ -25,18 +25,18 @@ def calcGroups(calcTop, calcBottom):
     for h in calcBottom:
         tempCalc /= math.factorial(h)
     return tempCalc
-n = 8
-part = [2, 3, 3]
+n = 24
+part = [2, 2, 2, 2, 2, 2, 2, 2, 4, 4]
 numGroup = int(calcGroups(n, part))
 numList = list(range(1, n+1))
 partSet = set()
 groupSet = set()
-it = all_combs(numList, part)
-for i in range(numGroup):
-    del(groupSet)
-    groupSet = set()
-    for g in next(it):
-        groupSet.add(frozenset(g))
-        # print(list(g))
-    partSet.add(frozenset(groupSet))
-print(numGroup)
+# it = all_combs(numList, part)
+# for i in range(numGroup):
+#     del(groupSet)
+#     groupSet = set()
+#     for g in next(it):
+#         groupSet.add(frozenset(g))
+#         # print(list(g))
+#     partSet.add(frozenset(groupSet))
+print(str(numGroup))
