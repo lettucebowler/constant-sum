@@ -66,31 +66,31 @@ class constantSumPartition():
 
 # Return smallest number in list such that total - number is also in list
 # Else return -1
-def smallestNSum(numbers, total, mod):
-    tempList = list()
-    for no in numbers:
-        del tempList
-        tempList = list()
-        for maybe in numbers:
-            if maybe != no:
-                tempList.append(maybe)
-        # print("temp : " + str(tempList))
-        for yes in tempList:
-            # print(str(yes) + " " + str(no) + " " + str(total) + " " + str(mod))
-            if (yes + no) % total == mod:
-                returnList = list()
-                returnList.append(yes)
-                returnList.append(no)
-                numbers.remove(yes)
-                numbers.remove(no)
-                return returnList
-    return list()
+# def smallestNSum(numbers, total, mod):
+#     tempList = list()
+#     for no in numbers:
+#         del tempList
+#         tempList = list()
+#         for maybe in numbers:
+#             if maybe != no:
+#                 tempList.append(maybe)
+#         # print("temp : " + str(tempList))
+#         for yes in tempList:
+#             # print(str(yes) + " " + str(no) + " " + str(total) + " " + str(mod))
+#             if (yes + no) % total == mod:
+#                 returnList = list()
+#                 returnList.append(yes)
+#                 returnList.append(no)
+#                 numbers.remove(yes)
+#                 numbers.remove(no)
+#                 return returnList
+#     return list()
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
-    numList = list(range(1, total + 1))
+    numList = list(range(total))
     allSame = False
 
     # Populate groupList with empty lists
@@ -117,7 +117,7 @@ def genConstantSumPartition(total, part, g):
 
         # Split numList into two lists containing pairs summing to g (MOD P)
         for j in numList:
-            if j < testValue:
+            if j > testValue:
                 if j not in lista or j not in listb:
                     lista.append(j)
             else:
