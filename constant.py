@@ -90,6 +90,8 @@ class constantSumPartition():
 def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
+    lista = list()
+    listb = list()
     numList = list(range(total))
     allSame = False
 
@@ -103,42 +105,47 @@ def genConstantSumPartition(total, part, g):
     if all(elem == part[0] for elem in part):
         allSame = True
 
-    # Check for case when all p in P = 2 (MOD n)
-    # if all(elem % 4 == 2 for elem in part):
-    if True:
-        lista = list()
-        listb = list()
+    # for each grouping in a partition:
+    #   1. If the groupings in the partition are all equal:
+    #     a. fill each grouping with pairs that sum to (g * 2 / |grouping|) (MOD n)
+    #   2. If the grouping = 2 (MOD 4)
+    #     a. add a pair that sums to g
+    #     b. fill the rest of the grouping with groups of 4 that add to 0 (MOD 16), such that when possible, no pair from the quartet sums to 0 (MOD 16)
+    #   3. if the grouping = 0 (MOD 4)
+    #     a. first fill the grouping with a quartet that sums to g (MOD n)
+    #     b. for any remaining spots in the grouping, fill it with quartets that sum to 0 (MOD n)
 
-        # Determine spot to split list
-        if allSame:
-            testValue = g // (part[0] // 2)
+
+    # Determine spot to split list
+    if allSame:
+        testValue = g * 2 // part[0]
+    else:
+        testValue = g
+    # Split numList into two lists containing pairs summing to g (MOD P)
+    for j in numList:
+        if j > testValue:
+            if j not in lista or j not in listb:
+                listb.append(j)
         else:
-            testValue = g
+            if j not in lista or j not in listb:
+                lista.append(j)
 
-        # Split numList into two lists containing pairs summing to g (MOD P)
-        for j in numList:
-            if j > testValue:
-                if j not in lista or j not in listb:
-                    lista.append(j)
+    # Populate each p in P with a pair that sums to g (MOD n)
+    for numeral in range(len(part)):
+        if allSame:
+            limit = part[0] // 2
+        elif part[numeral] % 4 == 2:
+            limit = 1
+        else:
+            limit = 0
+        for round in range(limit):
+            if len(lista) >= 2:
+                groupList[numeral].append(lista.pop(0))
+                groupList[numeral].append(lista.pop())
             else:
-                if j not in lista or j not in listb:
-                    listb.append(j)
-
-        # Populate each p in P with a pair that sums to g (MOD n)
-        for numeral in range(len(part)):
-            if allSame:
-                limit = part[0] // 2
-            else:
-                limit = 1
-            for round in range(limit):
                 if len(listb) >= 2:
                     groupList[numeral].append(listb.pop(0))
                     groupList[numeral].append(listb.pop())
-                else:
-                    if len(lista) >= 2:
-                        groupList[numeral].append(lista.pop(0))
-                        groupList[numeral].append(lista.pop())
-
         # Combine the remaining elements in lista and listb back into numList
         numList = lista + listb
         numList.sort()
