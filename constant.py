@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 import os;
 import sys
-import subprocess;
 import argparse
-import itertools
-import math
-import random
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
