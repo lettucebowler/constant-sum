@@ -64,27 +64,51 @@ class constantSumPartition():
         # message += str(const.csp)
         return(message)
 
-# Return smallest number in list such that total - number is also in list
-# Else return -1
-# def smallestNSum(numbers, total, mod):
-#     tempList = list()
-#     for no in numbers:
-#         del tempList
-#         tempList = list()
-#         for maybe in numbers:
-#             if maybe != no:
-#                 tempList.append(maybe)
-#         # print("temp : " + str(tempList))
-#         for yes in tempList:
-#             # print(str(yes) + " " + str(no) + " " + str(total) + " " + str(mod))
-#             if (yes + no) % total == mod:
-#                 returnList = list()
-#                 returnList.append(yes)
-#                 returnList.append(no)
-#                 numbers.remove(yes)
-#                 numbers.remove(no)
-#                 return returnList
-#     return list()
+# https://www.geeksforgeeks.org/find-four-numbers-with-sum-equal-to-given-sum/
+# This code is contributed by shreyanshi_arun
+# This code if modified by Grant Montgomery
+# A naive solution to print all combination
+# of 4 elements in A[] with sum equal to X
+def findFourElements(A, n, X):
+
+    # Fix the first element and find
+    # other three
+    tempList = list()
+    B = list()
+    for i in range(0,n-3):
+
+        # Fix the second element and
+        # find other two
+        for j in range(i+1,n-2):
+
+            # Fix the third element
+            # and find the fourth
+            for k in range(j+1,n-1):
+
+                # find the fourth
+                for l in range(k+1,n):
+
+                    if (A[i] + A[j] + A[k] + A[l]) % n == X:
+                        tempList = [A[i], A[j], A[k], A[l]]
+                        # B = list()
+                        # for y in A:
+                        #     if y not in tempList:
+                        #         B.append(y)
+                        # # print(str(tempList))
+                        # # print(str(B))
+                        # # print(str(findFourElements(B, len(B), 0)))
+                        # # print(str(X))
+                        #
+                        # if len(list(findFourElements(B, len(B), X))) > 0 or len(B) == 0:
+                            # print("temp : " + str(tempList))
+                        for tempVal in tempList:
+                            A.remove(tempVal)
+                        return tempList
+                    else:
+                        del tempList
+                        tempList = list()
+    return tempList
+
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
@@ -131,7 +155,7 @@ def genConstantSumPartition(total, part, g):
                 lista.append(j)
 
     # Populate each p in P with a pair that sums to g (MOD n)
-    for numeral in range(len(part)):
+    for numeral in range(len(part) - 1):
         if allSame:
             limit = part[0] // 2
         elif part[numeral] % 4 == 2:
@@ -146,9 +170,35 @@ def genConstantSumPartition(total, part, g):
                 if len(listb) >= 2:
                     groupList[numeral].append(listb.pop(0))
                     groupList[numeral].append(listb.pop())
-        # Combine the remaining elements in lista and listb back into numList
-        numList = lista + listb
-        numList.sort()
+
+    # Combine the remaining elements in lista and listb back into numList
+    numList = lista + listb
+    numList.sort()
+
+    # Add quartets to each grouping until they are the correct size for given
+    # partition.
+
+    quartList = list()
+    for integer in range(len(part) - 1):
+        if part[integer] % 4 == 0:
+            # Add a quartet that sums to g (MOD n)
+            quartList = list(findFourElements(numList, len(numList), g))
+            for v in quartList:
+                groupList[integer].append(v)
+            for schloop in range((part[integer] - len(groupList[integer])) // 4):
+            # while len(groupList[integer]) < part[integer]:
+                # Add a quartet that sums to 0 (MOD n)
+                quartList = list(findFourElements(numList, len(numList), 0))
+                if len(quartList) == 0:
+                    break
+                for v in quartList:
+                    groupList[integer].append(v)
+    # print(str(numList) + str(part[-1]))
+    # if len(numList) == part[-1]:
+    groupList[-1] += numList
+    return groupList
+
+
         # print(str(part) + " " + str(numList))
 
         # temp = list()
@@ -279,7 +329,7 @@ def genConstantSumPartition(total, part, g):
     # groupList.sort(key=len)
     checkList = list()
     good = list()
-    groupList.sort(key=len)
+    # groupList.sort(key=len)
     for k in groupList:
         k.sort()
         for l in k:
