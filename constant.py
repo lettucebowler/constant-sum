@@ -47,9 +47,30 @@ def findPossibleSums(n, p):
 
     return sorted(sumList)
 
+def makeGrid(gridNum):
+    numList = list(range(gridNum))
+    numArray = list()
+    tempList = list()
+    for x in range(len(numList) // 2):
+        del tempList
+        tempList = list()
+        tempVal = numList.pop(0)
+        tempList.append(tempVal)
+        if gridNum - tempVal in numList:
+            tempList.append(gridNum - tempVal)
+        else:
+            tempList.append(gridNum // 2)
+        numArray.append(tempList)
+    del numList
+    return numArray
+
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
+    numGrid = makeGrid(total)
+    for wah in numGrid:
+        print(str(wah))
+    print("")
 
     # Validate results before returning
     checkList = list()
