@@ -90,7 +90,7 @@ def all_combs(seq, parts, indexes=None, res=[], cur=0):
             yield comb
 
 n = 24
-partition = [2, 2, 2, 2, 2, 2, 2, 2, 4, 4]
+partition = [2, 2, 4, 4, 4, 4]
 g = 18
 numList = list(range(n))
 pairList = getSumpairs(n, partition, g)
