@@ -219,8 +219,8 @@ cspList = list()
 count = 0
 # partList = [[2, 2, 6, 6]]
 for part in partList:
-    # if True:
-    if len(part) % 2 == 0:
+    if True:
+    # if len(part) % 2 == 0:
         del sumList
         sumList = findPossibleSums(n, len(part))
         # sumList = [6]
