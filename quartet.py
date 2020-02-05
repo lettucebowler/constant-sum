@@ -106,6 +106,7 @@ print(str(numList))
 tempList = list()
 quartet = list()
 it = all_combs(pairList, [3])
+count = 0
 for z in range(1, numTimes + 1):
     for w in next(it):
         del tempList
@@ -118,5 +119,7 @@ for z in range(1, numTimes + 1):
         # print(str(findFourElements(tempList, n, g)))
         if len(quartet) > 0:
             if sum(quartet) % n == g and sum(tempList) % n == g:
+                count += 1
                 print(str(quartet) + " " + str(tempList))
+print(str(count))
         # print(str(z) + " " + str(w))

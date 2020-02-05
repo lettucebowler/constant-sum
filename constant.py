@@ -114,17 +114,6 @@ def genConstantSumPartition(total, part, g):
     if all(elem == part[0] for elem in part):
         allSame = True
 
-    # for each grouping in a partition:
-    #   1. If the groupings in the partition are all equal:
-    #     a. fill each grouping with pairs that sum to (g * 2 / |grouping|) (MOD n)
-    #   2. If the grouping = 2 (MOD 4)
-    #     a. add a pair that sums to g
-    #     b. fill the rest of the grouping with groups of 4 that add to 0 (MOD 16), such that when possible, no pair from the quartet sums to 0 (MOD 16)
-    #   3. if the grouping = 0 (MOD 4)
-    #     a. first fill the grouping with a quartet that sums to g (MOD n)
-    #     b. for any remaining spots in the grouping, fill it with quartets that sum to 0 (MOD n)
-
-
     # Determine spot to split list
     if allSame:
         testValue = g * 2 // part[0]
@@ -249,4 +238,5 @@ for part in partList:
 
 # Output data
 for const in cspList:
-    print(const.to_string())
+    if len(const.csp) > const.p:
+        print(const.to_string())
