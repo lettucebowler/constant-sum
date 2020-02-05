@@ -47,6 +47,7 @@ def findPossibleSums(n, p):
 
     return sorted(sumList)
 
+# Storage object for csp data
 class constantSumPartition():
     def __init__(self, n, g, p, part, csp):
         self.n = n
@@ -59,37 +60,6 @@ class constantSumPartition():
         message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:" + str(const.csp)
         # message += str(const.csp)
         return(message)
-
-# https://www.geeksforgeeks.org/find-four-numbers-with-sum-equal-to-given-sum/
-# This code is contributed by shreyanshi_arun
-# This code if modified by Grant Montgomery
-# A naive solution to print all combination
-# of 4 elements in A[] with sum equal to X
-def findFourElements(A, total, X, groupIndex, parts):
-    tempList = list()
-    a = len(A)
-    B = list()
-    # Fix the first element and find
-    # other three
-    for i in range(0,a-3):
-        # Fix the second element and
-        # find other two
-        for j in range(i+1,a-2):
-            # Fix the third element
-            # and find the fourth
-            for k in range(j+1,a-1):
-                # find the fourth
-                for l in range(k+1,a):
-                    tempList = [A[i], A[j], A[k], A[l]]
-                    if sum(tempList) % total == X:
-                        for tempVal in tempList:
-                            A.remove(tempVal)
-                        return tempList
-                    else:
-                        del tempList
-                        tempList = list()
-    return tempList
-
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
@@ -170,14 +140,14 @@ def genConstantSumPartition(total, part, g):
     # guaranteed to be constant-sum as well.
     groupList[-1] += numList
     del numList
-    # return groupList
 
     # Validate results before returning
-    # groupList.sort(key=len)
     checkList = list()
     good = list()
-    # groupList.sort(key=len)
+    groupList.sort(key=len)
     for k in groupList:
+
+        # Check for Duplicates in csp
         k.sort()
         for l in k:
             if l not in checkList:
@@ -185,22 +155,20 @@ def genConstantSumPartition(total, part, g):
             elif "duplicates" not in good:
                 good.append("duplicates")
 
+        # Check that all groupings add up to g (MOD n)
         G = sum(k)
-
         if G % total != g and "sum" not in good:
             good.append("sum")
 
+    # Check that each grouping is the write size for given partition of n
     for h in range(len(part)):
         if len(groupList[h]) != part[h] and "length" not in good:
             good.append("length")
-    # Append a list of the
+
+    # Append a list of the errors found to the csp list
     if len(good) != 0:
         groupList.append(good)
     return groupList
-
-# ----------------------------Main Program------------------------------------ #
-partList = list()
-partCount = 0
 
 # Exit if n is odd.
 if n % 2 == 1:
@@ -208,8 +176,8 @@ if n % 2 == 1:
     exit()
 
 # Populate partition list and filter out irrelevant partitions.
+partList = list()
 for part in partition(n):
-    partCount += 1
     partList.append(part)
 partList.sort(reverse=True, key=len)
 
@@ -219,19 +187,13 @@ cspList = list()
 count = 0
 # partList = [[2, 2, 6, 6]]
 for part in partList:
-    if True:
-    # if len(part) % 2 == 0:
-        del sumList
-        sumList = findPossibleSums(n, len(part))
-        # sumList = [6]
-        if len(sumList) > 0:
-            print(str(n) + " " + str(len(part)) + " " + str(sumList))
-            for possibleSum in sumList:
-                csp = list(genConstantSumPartition(n, part, possibleSum))
-                cspList.append(constantSumPartition(n, possibleSum, len(part),  part, csp))
-                # else:
-                #     print("Algorithm Failure")
-                #     exit()
+    del sumList
+    sumList = findPossibleSums(n, len(part))
+    # sumList = [6]
+    if len(sumList) > 0:
+        for possibleSum in sumList:
+            csp = list(genConstantSumPartition(n, part, possibleSum))
+            cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
 
 # Output data
 for const in cspList:
