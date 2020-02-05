@@ -69,19 +69,15 @@ def findFourElements(A, total, X, groupIndex, parts):
     tempList = list()
     a = len(A)
     B = list()
-
     # Fix the first element and find
     # other three
     for i in range(0,a-3):
-
         # Fix the second element and
         # find other two
         for j in range(i+1,a-2):
-
             # Fix the third element
             # and find the fourth
             for k in range(j+1,a-1):
-
                 # find the fourth
                 for l in range(k+1,a):
                     tempList = [A[i], A[j], A[k], A[l]]
