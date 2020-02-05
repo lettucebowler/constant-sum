@@ -64,82 +64,6 @@ class constantSumPartition():
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
-    group = list()
-    lista = list()
-    listb = list()
-    numList = list(range(total))
-    allSame = False
-
-    # Populate groupList with empty lists
-    del group
-    group = list()
-    for i in range(len(part)):
-        groupList.append(list())
-
-    # Check for trivial case where all p in P are equal
-    if all(elem == part[0] for elem in part):
-        allSame = True
-
-    # Determine spot to split list
-    if allSame:
-        testValue = g * 2 // part[0]
-    else:
-        testValue = g
-    # Split numList into two lists containing pairs summing to g (MOD P)
-    for j in numList:
-        if j > testValue:
-            if j not in lista or j not in listb:
-                listb.append(j)
-        else:
-            if j not in lista or j not in listb:
-                lista.append(j)
-
-    # Populate each p in P with a pair that sums to g (MOD n)
-    for numeral in range(len(part) - 1):
-        if allSame:
-            limit = part[0] // 2
-        elif part[numeral] % 4 == 2:
-            limit = 1
-        else:
-            limit = 0
-        for round in range(limit):
-            if len(lista) >= 2:
-                groupList[numeral].append(lista.pop(0))
-                groupList[numeral].append(lista.pop())
-            else:
-                if len(listb) >= 2:
-                    groupList[numeral].append(listb.pop(0))
-                    groupList[numeral].append(listb.pop())
-
-    # Combine the remaining elements in lista and listb back into numList
-    numList = lista + listb
-    numList.sort()
-
-    # Add quartets to each grouping until they are the correct size for given
-    # partition.
-
-    quartList = list()
-    for integer in range(len(part) - 1):
-        if part[integer] % 4 == 0 and len(groupList[integer]) < part[integer]:
-            # Add a quartet that sums to g (MOD n)
-            quartList = list(findFourElements(numList, n, g, integer, len(part)))
-            for v in quartList:
-                groupList[integer].append(v)
-        if part[integer] > 4:
-            for schloop in range((part[integer] - len(groupList[integer])) // 4):
-            # while len(groupList[integer]) < part[integer]:
-                # Add a quartet that sums to 0 (MOD n)
-                quartList = list(findFourElements(numList, n, 0, integer, len(part)))
-                if len(quartList) == 0:
-                    break
-                for v in quartList:
-                    groupList[integer].append(v)
-
-    # Add the rest of the numbers in numList to the final grouping, because if
-    # if the other groupings are all constant-sum, the remaining numbers are
-    # guaranteed to be constant-sum as well.
-    groupList[-1] += numList
-    del numList
 
     # Validate results before returning
     checkList = list()
@@ -193,7 +117,8 @@ for part in partList:
     if len(sumList) > 0:
         for possibleSum in sumList:
             csp = list(genConstantSumPartition(n, part, possibleSum))
-            cspList.append(constantSumPartition(n, possibleSum, len(part), part, csp))
+            newConst = constantSumPartition(n, possibleSum, len(part), part, csp)
+            cspList.append()
 
 # Output data
 for const in cspList:
