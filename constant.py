@@ -225,6 +225,7 @@ for part in partList:
         sumList = findPossibleSums(n, len(part))
         # sumList = [6]
         if len(sumList) > 0:
+            print(str(n) + " " + str(len(part)) + " " + str(sumList))
             for possibleSum in sumList:
                 csp = list(genConstantSumPartition(n, part, possibleSum))
                 cspList.append(constantSumPartition(n, possibleSum, len(part),  part, csp))

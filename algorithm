@@ -1,9 +1,5 @@
 for each grouping in a partition:
-  1. If the groupings in the partition are all equal:
-    a. fill each grouping with pairs that sum to (g * 2 / |grouping|) (MOD n)
-  2. If the grouping = 2 (MOD 4)
-    a. add a pair that sums to g
-    b. fill the rest of the grouping with groups of 4 that add to 0 (MOD 16), such that when possible, no pair from the quartet sums to 0 (MOD 16)
-  3. if the grouping = 0 (MOD 4)
-    a. first fill the grouping with a quartet that sums to g (MOD n)
-    b. for any remaining spots in the grouping, fill it with quartets that sum to 0 (MOD n)
+  1. Create a pairing that sums to g (MOD n) that results in the least number
+      of zero-sum pairs being destroyed.
+  2. Place all remaining zero-sum pairs into the groupings as you see fit to
+      create a particular even-cardinality partition.
