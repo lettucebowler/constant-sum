@@ -89,9 +89,9 @@ def all_combs(seq, parts, indexes=None, res=[], cur=0):
         for comb in all_combs(seq, parts, new_indexes, res=res + [x], cur=cur + 1):
             yield comb
 
-n = 24
+n = 20
 partition = [2, 2, 4, 4, 4, 4]
-g = 18
+g = 15
 numList = list(range(n))
 pairList = getSumpairs(n, partition, g)
 numPairs = len(pairList)
