@@ -47,20 +47,6 @@ def findPossibleSums(n, p):
 
     return sorted(sumList)
 
-# Storage object for csp data
-class constantSumPartition():
-    def __init__(self, n, g, p, part, csp):
-        self.n = n
-        self.p = p
-        self.g = g
-        self.part = part
-        self.csp = csp
-
-    def to_string(self):
-        message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " part:" + str(self.part) + " csp:" + str(const.csp)
-        # message += str(const.csp)
-        return(message)
-
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
@@ -85,7 +71,7 @@ def genConstantSumPartition(total, part, g):
             good.append("sum")
 
     # Check that each grouping is the write size for given partition of n
-    for h in range(len(part)):
+    for h in range(len(groupList)):
         if len(groupList[h]) != part[h] and "length" not in good:
             good.append("length")
 
@@ -94,33 +80,45 @@ def genConstantSumPartition(total, part, g):
         groupList.append(good)
     return groupList
 
+# Storage object for csp data
+class constantSumPartition():
+    def __init__(self, n, g, p, csp):
+        self.n = n
+        self.p = p
+        self.g = g
+        self.csp = csp
+
+    def to_string(self):
+        message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " csp:" + str(const.csp)
+        # message += str(const.csp)
+        return(message)
+
 # Exit if n is odd.
 if n % 2 == 1:
     print("This program is only designed for even numbers.")
     exit()
 
-# Populate partition list and filter out irrelevant partitions.
-partList = list()
-for part in partition(n):
-    partList.append(part)
-partList.sort(reverse=True, key=len)
+# # Populate partition list and filter out irrelevant partitions.
+# partList = list()
+# for part in partition(n):
+#     partList.append(part)
+# partList.sort(reverse=True, key=len)
 
 # Calculate a csp for each partition and possible sum
 sumList = list()
 cspList = list()
 count = 0
 # partList = [[2, 2, 6, 6]]
-for part in partList:
+for part in range(1, n // 2 + 1):
     del sumList
-    sumList = findPossibleSums(n, len(part))
+    sumList = findPossibleSums(n, part)
     # sumList = [6]
     if len(sumList) > 0:
         for possibleSum in sumList:
             csp = list(genConstantSumPartition(n, part, possibleSum))
-            newConst = constantSumPartition(n, possibleSum, len(part), part, csp)
-            cspList.append()
+            newConst = constantSumPartition(n, possibleSum, part, csp)
+            cspList.append(newConst)
 
 # Output data
 for const in cspList:
-    if len(const.csp) > const.p:
-        print(const.to_string())
+    print(const.to_string())
