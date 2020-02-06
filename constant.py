@@ -44,9 +44,9 @@ def findPossibleSums(n, p):
     for g in potentialSumList:
         if g * p % n == n/2:
             sumList.append(g)
-
     return sorted(sumList)
 
+# Organize numList into a 2 x n/2 grid, creating rows that sum to n.
 def makeGrid(gridNum):
     numList = list(range(gridNum))
     numArray = list()
@@ -67,10 +67,27 @@ def makeGrid(gridNum):
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
+    group = list()
     numGrid = makeGrid(total)
     for wah in numGrid:
         print(str(wah))
     print("")
+    group.append(0)
+    group.append(g)
+    groupList.append(group)
+    for row in numGrid:
+        if 0 in row:
+            row.remove(0)
+        if g in row:
+            row.remove(g)
+    for wah in numGrid:
+        print(str(wah))
+    print("")
+    for pair in range(part - 1):
+        del group
+        group = list()
+        groupList.append(group)
+
 
     # Validate results before returning
     checkList = list()
@@ -91,11 +108,6 @@ def genConstantSumPartition(total, part, g):
         if G % total != g and "sum" not in good:
             good.append("sum")
 
-    # Check that each grouping is the write size for given partition of n
-    for h in range(len(groupList)):
-        if len(groupList[h]) != part[h] and "length" not in good:
-            good.append("length")
-
     # Append a list of the errors found to the csp list
     if len(good) != 0:
         groupList.append(good)
@@ -110,7 +122,7 @@ class constantSumPartition():
         self.csp = csp
 
     def to_string(self):
-        message = "n:" + str(self.n) + " g:" + str(self.g) + " p:" + str(self.p) + " csp:" + str(const.csp)
+        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(const.csp)
         # message += str(const.csp)
         return(message)
 
