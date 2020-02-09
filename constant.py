@@ -64,6 +64,7 @@ def makeGrid(gridNum):
     del numList
     return numArray
 
+# Return the value in numGrid that sums with first to g (MOD n)
 def findOther(numGrid, first, total, gVal):
     returnVal = -1
     for wing in numGrid:
@@ -73,30 +74,18 @@ def findOther(numGrid, first, total, gVal):
                 break
     return returnVal
 
-
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
     numGrid = makeGrid(total)
-    print("p:" + str(part) + " g:" + str(g))
-    # for wah in numGrid:
-    #     print(str(wah))
-    # print("")
-    # group.append(0)
-    # group.append(g)
-    # groupList.append(group)
-    # for row in numGrid:
-    #     if 0 in row:
-    #         row.remove(0)
-    #     if g in row:
-    #         row.remove(g)
-    # for wah in numGrid:
-    #     print(str(wah))
-    # print("")
+
+    #Construct g-sum pairs
     for pair in range(part):
         del group
         group = list()
+
+        # Initial Case
         if all(len(elem) == 2 for elem in numGrid):
             group.append(0)
             group.append(g)
@@ -105,6 +94,9 @@ def genConstantSumPartition(total, part, g):
                     row.remove(0)
                 if g in row:
                     row.remove(g)
+
+        # Attempt to get rid of rows with only one element before destroying a
+        # zero-sum pair.
         elif any(len(elem) == 1 for elem in numGrid):
             for elem in numGrid:
                 if len(elem) == 1:
@@ -114,6 +106,8 @@ def genConstantSumPartition(total, part, g):
                         if group[-1] in row:
                             row.remove(group[-1])
                     break
+
+        # Destroy a zero-sum pair if necessary to create more g-sum pairs.
         elif all(len(elem) % 2 == 0 for elem in numGrid):
             for goop in numGrid:
                 if len(goop) > 0:
@@ -123,11 +117,15 @@ def genConstantSumPartition(total, part, g):
                         if group[-1] in row:
                             row.remove(group[-1])
                     break
-        for wah in numGrid:
-            print(str(wah))
-        print("")
         groupList.append(group)
 
+    # Clean up numGrid
+    temp = list()
+    for woog in numGrid:
+        if len(woog) > 0:
+            temp.append(woog)
+    del numGrid
+    numGrid = temp
 
     # Validate results before returning
     checkList = list()
@@ -151,31 +149,34 @@ def genConstantSumPartition(total, part, g):
     # Append a list of the errors found to the csp list
     if len(good) != 0:
         groupList.append(good)
-    return groupList
+
+    # Add groupList and numGrid to a returnList
+    returnList = list()
+    returnList.append(groupList)
+    returnList.append(numGrid)
+    return returnList
 
 # Storage object for csp data
 class constantSumPartition():
-    def __init__(self, n, g, p, csp):
+    def __init__(self, n, g, p, csp, zsp):
         self.n = n
         self.p = p
         self.g = g
         self.csp = csp
+        self.zsp = zsp
 
     def to_string(self):
         message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(const.csp)
-        # message += str(const.csp)
+        if len(self.zsp) > 0:
+            message += " zsp:" + str(self.zsp)
         return(message)
+
+# Begin Main Program
 
 # Exit if n is odd.
 if n % 2 == 1:
     print("This program is only designed for even numbers.")
     exit()
-
-# # Populate partition list and filter out irrelevant partitions.
-# partList = list()
-# for part in partition(n):
-#     partList.append(part)
-# partList.sort(reverse=True, key=len)
 
 # Calculate a csp for each partition and possible sum
 sumList = list()
@@ -189,9 +190,10 @@ for part in range(1, n // 2 + 1):
     if len(sumList) > 0:
         for possibleSum in sumList:
             csp = list(genConstantSumPartition(n, part, possibleSum))
-            newConst = constantSumPartition(n, possibleSum, part, csp)
+            newConst = constantSumPartition(n, possibleSum, part, csp[0], csp[1])
             cspList.append(newConst)
 
 # Output data
 for const in cspList:
     print(const.to_string())
+    print()
