@@ -64,28 +64,68 @@ def makeGrid(gridNum):
     del numList
     return numArray
 
+def findOther(numGrid, first, total, gVal):
+    returnVal = -1
+    for wing in numGrid:
+        for woop in wing:
+            if (woop + first) % total == gVal:
+                returnVal = woop
+                break
+    return returnVal
+
+
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
     numGrid = makeGrid(total)
-    for wah in numGrid:
-        print(str(wah))
-    print("")
-    group.append(0)
-    group.append(g)
-    groupList.append(group)
-    for row in numGrid:
-        if 0 in row:
-            row.remove(0)
-        if g in row:
-            row.remove(g)
-    for wah in numGrid:
-        print(str(wah))
-    print("")
-    for pair in range(part - 1):
+    print("p:" + str(part) + " g:" + str(g))
+    # for wah in numGrid:
+    #     print(str(wah))
+    # print("")
+    # group.append(0)
+    # group.append(g)
+    # groupList.append(group)
+    # for row in numGrid:
+    #     if 0 in row:
+    #         row.remove(0)
+    #     if g in row:
+    #         row.remove(g)
+    # for wah in numGrid:
+    #     print(str(wah))
+    # print("")
+    for pair in range(part):
         del group
         group = list()
+        if all(len(elem) == 2 for elem in numGrid):
+            group.append(0)
+            group.append(g)
+            for row in numGrid:
+                if 0 in row:
+                    row.remove(0)
+                if g in row:
+                    row.remove(g)
+        elif any(len(elem) == 1 for elem in numGrid):
+            for elem in numGrid:
+                if len(elem) == 1:
+                    group.append(elem.pop())
+                    group.append(findOther(numGrid, group[0], total, g))
+                    for row in numGrid:
+                        if group[-1] in row:
+                            row.remove(group[-1])
+                    break
+        elif all(len(elem) % 2 == 0 for elem in numGrid):
+            for goop in numGrid:
+                if len(goop) > 0:
+                    group.append(goop.pop())
+                    group.append(findOther(numGrid, group[0], total, g))
+                    for row in numGrid:
+                        if group[-1] in row:
+                            row.remove(group[-1])
+                    break
+        for wah in numGrid:
+            print(str(wah))
+        print("")
         groupList.append(group)
 
 
