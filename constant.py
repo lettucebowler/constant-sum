@@ -25,13 +25,13 @@ def partition(number):
                 y -= x
                 k += 1
             a[k] = x + y
-            isEven = True
-            for g in a[:k+1]:
-                if g % 2 != 0:
-                    isEven = False
-            if isEven == True:
-                i += 1
-                yield a[:k + 1]
+            # isEven = True
+            # for g in a[:k+1]:
+            #     if g % 2 != 0:
+            #         isEven = False
+            # if isEven == True:
+            i += 1
+            yield a[:k + 1]
 
 # n : number program is checking
 # part : partition of n to check for potential sums
@@ -187,10 +187,33 @@ count = 0
 for part in range(1, n // 2 + 1):
     del sumList
     sumList = findPossibleSums(n, part)
+
     # Check each possible g
     for possibleSum in sumList:
         csp = list(genConstantSumPartition(n, part, possibleSum))
-        newConst = constantSumPartition(n, possibleSum, part, csp[0], csp[1])
+        zsPairList = list()
+        csPairList = list()
+        for z in csp[-1]:
+            zsPairList.append(z)
+        for c in csp[0]:
+            csPairList.append(c)
+
+        # Create list possible ways to distrubute the zero-sum pairs
+        # in zsPairList
+        spreadList = list()
+        if len(zsPairList) > 0:
+            spreadList = list(partition(len(zsPairList)))
+        for distro in spreadList:
+            index = -1
+            if len(distro) <= len(csPairList):
+                for dist in distro:
+                    # for dis in range(dist):
+                    zero = zsPairList.pop()
+                    csPairList.append(zero.pop())
+                    csPairList.append(zero.pop())
+
+
+        newConst = constantSumPartition(n, possibleSum, part, csPairList, zsPairList)
         cspList.append(newConst)
 
 # Output data
