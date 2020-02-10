@@ -11,7 +11,7 @@ n = args.number
 
 # n : number program is checking
 # part : partition of n to check for potential sums
-def findPossibleSums(n, p):
+def findSums(n, p):
     potentialSumList = list(range(1, n))
     sumList = list()
 
@@ -56,58 +56,41 @@ def genConstantSumPartition(total, part, g):
     group = list()
     numGrid = makeGrid(total)
 
-    #Construct g-sum pairs
+    # Construct g-sum pairs
     for pair in range(part):
         del group
         group = list()
-
-        # Initial Case
-        if all(len(elem) == 2 for elem in numGrid):
-            group.append(0)
-            group.append(g)
-            for row in numGrid:
-                if 0 in row:
-                    row.remove(0)
-                if g in row:
-                    row.remove(g)
+        temp = list()
 
         # Attempt to get rid of rows with only one element before destroying a
         # zero-sum pair
-        elif any(len(elem) == 1 for elem in numGrid):
+        if any(len(elem) == 1 for elem in numGrid):
             for elem in numGrid:
                 if len(elem) == 1:
-                    group.append(elem.pop())
-                    group.append(findOther(numGrid, group[0], total, g))
-                    for row in numGrid:
-                        if group[-1] in row:
-                            row.remove(group[-1])
+                    temp = elem
                     break
 
         # Destroy a zero-sum pair if necessary to create more g-sum pairs
-        elif all(len(elem) % 2 == 0 for elem in numGrid):
-            for goop in numGrid:
-                if len(goop) > 0:
-                    group.append(goop.pop())
-                    group.append(findOther(numGrid, group[0], total, g))
-                    for row in numGrid:
-                        if group[-1] in row:
-                            row.remove(group[-1])
-                    break
+        else:
+            temp = numGrid[0]
+
+        # Use pair picked in previous if statements to create a new g-sum pair
+        group.append(temp.pop())
+        group.append(findOther(numGrid, group[0], total, g))
+        for row in numGrid:
+            if group[-1] in row:
+                row.remove(group[-1])
+
+        # Clean up numGrid
+        numGrid = [x for x in numGrid if x != []]
+
         # Add Created g-sum pair to groupList
         groupList.append(group)
-
-    # Clean up numGrid
-    temp = list()
-    for woog in numGrid:
-        if len(woog) > 0:
-            temp.append(woog)
-    del numGrid
-    numGrid = temp
 
     # Validate results before returning
     checkList = list()
     good = list()
-    groupList.sort(key=len)
+    groupList.sort()
     for k in groupList:
 
         # Check for Duplicates in csp
@@ -134,7 +117,7 @@ def genConstantSumPartition(total, part, g):
     return returnList
 
 # Storage object for csp data
-class constantSumPartition():
+class gSum():
     def __init__(self, n, g, p, csp, zsp):
         self.n = n
         self.p = p
@@ -158,20 +141,18 @@ if n % 2 == 1:
 # Calculate a csp for each partition and possible sum
 sumList = list()
 cspList = list()
-count = 0
 
 # Check each possible p
-for part in range(1, n // 2 + 1):
+for p in range(1, n // 2 + 1):
     del sumList
-    sumList = findPossibleSums(n, part)
+    sumList = findSums(n, p)
 
     # Check each possible g
     for possibleSum in sumList:
-        csp = list(genConstantSumPartition(n, part, possibleSum))
+        csp = list(genConstantSumPartition(n, p, possibleSum))
         zsPairList = csp.pop()
         csPairList = csp.pop()
-
-        newConst = constantSumPartition(n, possibleSum, part, csPairList, zsPairList)
+        newConst = gSum(n, possibleSum, p, csPairList, zsPairList)
         cspList.append(newConst)
 
 # Output data
