@@ -182,18 +182,17 @@ if n % 2 == 1:
 sumList = list()
 cspList = list()
 count = 0
-# partList = [[2, 2, 6, 6]]
+
+# Check each possible p
 for part in range(1, n // 2 + 1):
     del sumList
     sumList = findPossibleSums(n, part)
-    # sumList = [6]
-    if len(sumList) > 0:
-        for possibleSum in sumList:
-            csp = list(genConstantSumPartition(n, part, possibleSum))
-            newConst = constantSumPartition(n, possibleSum, part, csp[0], csp[1])
-            cspList.append(newConst)
+    # Check each possible g
+    for possibleSum in sumList:
+        csp = list(genConstantSumPartition(n, part, possibleSum))
+        newConst = constantSumPartition(n, possibleSum, part, csp[0], csp[1])
+        cspList.append(newConst)
 
 # Output data
 for const in cspList:
     print(const.to_string())
-    print()
