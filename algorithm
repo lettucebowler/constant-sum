@@ -1,5 +1,0 @@
-for each grouping in a partition:
-  1. Create a pairing that sums to g (MOD n) that results in the least number
-      of zero-sum pairs being destroyed.
-  2. Place all remaining zero-sum pairs into the groupings as you see fit to
-      create a particular even-cardinality partition.
