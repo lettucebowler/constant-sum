@@ -9,30 +9,6 @@ parser.add_argument("-n", dest='number', default=2, help='number to partition', 
 args = parser.parse_args();
 n = args.number
 
-# Returns a list of all partitions of number, made up of only even numbers.
-# If number is odd, returns an empty set.
-def partition(number):
-        a = [0 for i in range(number + 1)]
-        k = 1
-        a[1] = number
-        i = 0
-        while k != 0:
-            x = a[k - 1] + 1
-            y = a[k] - 1
-            k -= 1
-            while x <= y:
-                a[k] = x
-                y -= x
-                k += 1
-            a[k] = x + y
-            # isEven = True
-            # for g in a[:k+1]:
-            #     if g % 2 != 0:
-            #         isEven = False
-            # if isEven == True:
-            i += 1
-            yield a[:k + 1]
-
 # n : number program is checking
 # part : partition of n to check for potential sums
 def findPossibleSums(n, p):
@@ -46,7 +22,7 @@ def findPossibleSums(n, p):
             sumList.append(g)
     return sorted(sumList)
 
-# Organize numList into a 2 x n/2 grid, creating rows that sum to n.
+# Organize numList into a 2 x n/2 grid, creating rows that sum to n
 def makeGrid(gridNum):
     numList = list(range(gridNum))
     numArray = list()
@@ -96,7 +72,7 @@ def genConstantSumPartition(total, part, g):
                     row.remove(g)
 
         # Attempt to get rid of rows with only one element before destroying a
-        # zero-sum pair.
+        # zero-sum pair
         elif any(len(elem) == 1 for elem in numGrid):
             for elem in numGrid:
                 if len(elem) == 1:
@@ -107,7 +83,7 @@ def genConstantSumPartition(total, part, g):
                             row.remove(group[-1])
                     break
 
-        # Destroy a zero-sum pair if necessary to create more g-sum pairs.
+        # Destroy a zero-sum pair if necessary to create more g-sum pairs
         elif all(len(elem) % 2 == 0 for elem in numGrid):
             for goop in numGrid:
                 if len(goop) > 0:
@@ -117,6 +93,7 @@ def genConstantSumPartition(total, part, g):
                         if group[-1] in row:
                             row.remove(group[-1])
                     break
+        # Add Created g-sum pair to groupList
         groupList.append(group)
 
     # Clean up numGrid
@@ -191,27 +168,8 @@ for part in range(1, n // 2 + 1):
     # Check each possible g
     for possibleSum in sumList:
         csp = list(genConstantSumPartition(n, part, possibleSum))
-        zsPairList = list()
-        csPairList = list()
-        for z in csp[-1]:
-            zsPairList.append(z)
-        for c in csp[0]:
-            csPairList.append(c)
-
-        # Create list possible ways to distrubute the zero-sum pairs
-        # in zsPairList
-        spreadList = list()
-        if len(zsPairList) > 0:
-            spreadList = list(partition(len(zsPairList)))
-        for distro in spreadList:
-            index = -1
-            if len(distro) <= len(csPairList):
-                for dist in distro:
-                    # for dis in range(dist):
-                    zero = zsPairList.pop()
-                    csPairList.append(zero.pop())
-                    csPairList.append(zero.pop())
-
+        zsPairList = csp.pop()
+        csPairList = csp.pop()
 
         newConst = constantSumPartition(n, possibleSum, part, csPairList, zsPairList)
         cspList.append(newConst)
