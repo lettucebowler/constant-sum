@@ -57,42 +57,50 @@ def genConstantSumPartition(total, part, g):
     group = list()
     numGrid = list(range(total))
 
-    groupList.append([0, g])
-    numGrid.remove(0)
-    numGrid.remove(g)
-    if total % part == 0 and g != total // 2:
-        for pair in range(1, part):
-            group = list()
-            temp = (total//2 - (pair - 1) * g) % total
-            group.append(temp)
-            numGrid.remove(temp)
-            temp = (pair * g - (n//2)) % total
-            group.append(temp)
-            numGrid.remove(temp)
-            groupList.append(group)
+    # groupList.append([0, g])
+    # numGrid.remove(0)
+    # numGrid.remove(g)
+
+    leftList = list(range(0, -1 * (part - 1) * g - 1, -1 * g))
+    if len(leftList) == 0:
+        leftList.append(0)
+    print(str(leftList))
+    rightList = list(range(g, part * g + 1, g))
+    if len(rightList) == 0:
+        rightList.append(g)
+    print(str(rightList))
+
+    offsetList = list()
+    if g == total // 2:
+        for off in range(part + 1):
+            offsetList.append(off // 2)
+        offsetList.pop(0)
+
+    elif total % part != 0:
+        for off in range(part + 3):
+            offsetList.append(off // 4)
+        offsetList.pop(0)
+        offsetList.pop(0)
     else:
-        for pair in range(1, part):
-            group = list()
-            if part % 2 == 1:
-                offset = (pair + 1) // 2
-            else:
-                offset = (pair + 2) // 4
-            temp = ((total//2 - (pair - 1) * g + offset) % total)
-            group.append(temp)
-            numGrid.remove(temp)
-            temp = ((pair * g - (n//2) - offset) % total)
-            group.append(temp)
-            numGrid.remove(temp)
-            groupList.append(group)
+        for off in range(part):
+            offsetList.append(0)
+
+    print(str(offsetList))
+
+    for v in range(part):
+        groupList.append([(leftList[v] + offsetList[v]) % total, (rightList[v] - offsetList[v]) % total])
+        # groupList.append([(leftList[v] + offsetList[v]), (rightList[v] - offsetList[v])])
+
+
 
     # Validate results before returning
     checkList = list()
     good = list()
-    groupList.sort()
+    # groupList.sort()
     for k in groupList:
 
         # Check for Duplicates in csp
-        k.sort()
+        # k.sort()
         for l in k:
             if l not in checkList:
                 checkList.append(l)
