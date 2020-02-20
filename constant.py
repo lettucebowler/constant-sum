@@ -57,10 +57,6 @@ def genConstantSumPartition(total, part, g):
     group = list()
     numGrid = list(range(total))
 
-    # groupList.append([0, g])
-    # numGrid.remove(0)
-    # numGrid.remove(g)
-
     leftList = list(range(0, -1 * (part - 1) * g - 1, -1 * g))
     if len(leftList) == 0:
         leftList.append(0)
@@ -89,10 +85,7 @@ def genConstantSumPartition(total, part, g):
 
     for v in range(part):
         groupList.append([(leftList[v] + offsetList[v]) % total, (rightList[v] - offsetList[v]) % total])
-        # groupList.append([(leftList[v] + offsetList[v]), (rightList[v] - offsetList[v])])
-
-
-
+    
     # Validate results before returning
     checkList = list()
     good = list()
