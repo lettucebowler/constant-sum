@@ -25,34 +25,11 @@ def findPossibleSums(n, p):
 
     return sorted(sumList)
 
-print("0 MOD 8")
-for q in range(1, n + 1):
-    if q % 8 == 0:
-        if q <= n // 2:
-            print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
-        else:
-            print("p:" + str(q) + " " + str(list()))
-
-print("2 MOD 8")
-for q in range(1, n + 1):
-    if q % 8 == 2:
-        if q <= n // 2:
-            print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
-        else:
-            print("p:" + str(q) + " " + str(list()))
-
-print("4 MOD 8")
-for q in range(1, n + 1):
-    if q % 8 == 4:
-        if q <= n // 2:
-            print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
-        else:
-            print("p:" + str(q) + " " + str(list()))
-
-print("6 MOD 8")
-for q in range(1, n + 1):
-    if q % 8 == 6:
-        if q <= n // 2:
-            print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
-        else:
-            print("p:" + str(q) + " " + str(list()))
+for i in range(8):
+    print(str(i) + " MOD 8")
+    for q in range(1, n + 1):
+        if q % 8 == i:
+            if q <= n // 2:
+                print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
+            else:
+                print("p:" + str(q) + " " + str(list()))
