@@ -2,6 +2,7 @@
 import os;
 import sys
 import argparse
+import math
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -54,43 +55,35 @@ def findOther(numGrid, first, total, gVal):
 def genConstantSumPartition(total, part, g):
     groupList = list()
     group = list()
-    numGrid = makeGrid(total)
+    numGrid = list(range(total))
 
     groupList.append([0, g])
-    for pair in range(1, part):
-        group = [total//2 - (pair - 1) * g, pair * g - (n//2)]
-        groupList.append(group)
-
-    # # Construct g-sum pairs
-    # for pair in range(part):
-    #     del group
-    #     group = list()
-    #     temp = list()
-    #
-    #     # Attempt to get rid of rows with only one element before destroying a
-    #     # zero-sum pair
-    #     if any(len(elem) == 1 for elem in numGrid):
-    #         for elem in numGrid:
-    #             if len(elem) == 1:
-    #                 temp = elem
-    #                 break
-    #
-    #     # Destroy a zero-sum pair if necessary to create more g-sum pairs
-    #     else:
-    #         temp = numGrid[0]
-    #
-    #     # Use pair picked in previous if statements to create a new g-sum pair
-    #     group.append(temp.pop())
-    #     group.append(findOther(numGrid, group[0], total, g))
-    #     for row in numGrid:
-    #         if group[-1] in row:
-    #             row.remove(group[-1])
-    #
-    #     # Clean up numGrid
-    #     numGrid = [x for x in numGrid if x != []]
-    #
-    #     # Add Created g-sum pair to groupList
-    #     groupList.append(group)
+    numGrid.remove(0)
+    numGrid.remove(g)
+    if total % part == 0 and g != total // 2:
+        for pair in range(1, part):
+            group = list()
+            temp = (total//2 - (pair - 1) * g) % total
+            group.append(temp)
+            numGrid.remove(temp)
+            temp = (pair * g - (n//2)) % total
+            group.append(temp)
+            numGrid.remove(temp)
+            groupList.append(group)
+    else:
+        for pair in range(1, part):
+            group = list()
+            if part % 2 == 1:
+                offset = (pair + 1) // 2
+            else:
+                offset = (pair + 2) // 4
+            temp = ((total//2 - (pair - 1) * g + offset) % total)
+            group.append(temp)
+            numGrid.remove(temp)
+            temp = ((pair * g - (n//2) - offset) % total)
+            group.append(temp)
+            numGrid.remove(temp)
+            groupList.append(group)
 
     # Validate results before returning
     checkList = list()
