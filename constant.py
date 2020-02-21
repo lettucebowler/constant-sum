@@ -41,16 +41,6 @@ def makeGrid(gridNum):
     del numList
     return numArray
 
-# Return the value in numGrid that sums with first to g (MOD n)
-def findOther(numGrid, first, total, gVal):
-    returnVal = -1
-    for wing in numGrid:
-        for woop in wing:
-            if (woop + first) % total == gVal:
-                returnVal = woop
-                break
-    return returnVal
-
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
@@ -85,7 +75,7 @@ def genConstantSumPartition(total, part, g):
 
     for v in range(part):
         groupList.append([(leftList[v] + offsetList[v]) % total, (rightList[v] - offsetList[v]) % total])
-    
+
     # Validate results before returning
     checkList = list()
     good = list()
