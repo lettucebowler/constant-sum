@@ -23,6 +23,16 @@ def findSums(n, p):
             sumList.append(g)
     return sorted(sumList)
 
+def gcd(a,b):
+    """Compute the greatest common divisor of a and b"""
+    while b > 0:
+        a, b = b, a % b
+    return a
+
+def lcm(a, b):
+    """Compute the lowest common multiple of a and b"""
+    return a * b / gcd(a, b)
+
 # Organize numList into a 2 x n/2 grid, creating rows that sum to n
 def makeGrid(gridNum):
     numList = list(range(gridNum))
