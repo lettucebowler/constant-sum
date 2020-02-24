@@ -14,11 +14,7 @@ n = args.number
 # part : partition of n to check for potential sums
 def findSums(n, p):
     potentialSumList = list(range(1, n))
-    sumList = list()
-    for g in potentialSumList:
-        if g * p % n == n/2:
-            sumList.append(g)
-    return sorted(sumList)
+    return sorted(sum for sum in potentialSumList if sum * p % n == n // 2)
 
 def gcd(a,b):
     while b > 0:
@@ -56,12 +52,12 @@ def genConstantSumPartition(total, part, g):
     leftList = list(range(0, -1 * (part - 1) * g - 1, -1 * g))
     if len(leftList) == 0:
         leftList.append(0)
-    
+
     # Generate list of right-hand elements in each g-sum pair
     rightList = list(range(g, part * g + 1, g))
     if len(rightList) == 0:
         rightList.append(g)
-    
+
     # Generate list of offsets due to looping
     offsetList = list()
     lcmDiv = int(lcm(total, g) // g // 2)
@@ -80,7 +76,7 @@ def genConstantSumPartition(total, part, g):
         group.append(element)
         numGrid.remove(element)
         groupList.append(group)
-    
+
     # Combine remaining numbers into zero-sum pairs
     numList = list()
     for zero in range(len(numGrid)):
@@ -113,11 +109,7 @@ def genConstantSumPartition(total, part, g):
     if len(good) != 0:
         groupList.append(good)
 
-    # Add groupList and numGrid to a returnList
-    returnList = list()
-    returnList.append(groupList)
-    returnList.append(numGrid)
-    return returnList
+    return [groupList, numGrid]
 
 # Storage object for csp data
 class gSum():

@@ -15,15 +15,7 @@ n = args.number
 
 def findPossibleSums(n, p):
     potentialSumList = list(range(1, n))
-    sumList = list()
-
-    # Check each value in potentialSumList for validity as a constant sum
-    # If valid, add it to sumList
-    for g in potentialSumList:
-        if g * p % n == n/2:
-            sumList.append(g)
-
-    return sorted(sumList)
+    return sorted(sum for sum in potentialSumList if sum * p % n == n // 2)
 
 for i in range(8):
     print(str(i) + " MOD 8")
