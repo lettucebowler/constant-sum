@@ -68,7 +68,8 @@ def genConstantSumPartition(total, part, g):
     for set in range(lcmDiv):
         offsetList.pop(0)
 
-    # Combine each element from left and right list into a pair, applying offset to each.
+    # Combine each element from left and right list into a pair,
+    # applying offset to each.
     for v in range(part):
         group = list()
         element = (leftList[v] + offsetList[v]) % total
