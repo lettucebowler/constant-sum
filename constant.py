@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os;
+import os
 import sys
 import argparse
 import math
@@ -7,7 +7,7 @@ import math
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
 parser.add_argument("-n", dest='number', default=2, help='number to partition', type=int)
-args = parser.parse_args();
+args = parser.parse_args()
 n = args.number
 
 # n : number program is checking
