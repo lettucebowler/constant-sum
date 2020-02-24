@@ -54,7 +54,7 @@ def makeGrid(gridNum):
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
-    group = list()
+    # group = list()
     numGrid = list(range(total))
 
     leftList = list(range(0, -1 * (part - 1) * g - 1, -1 * g))
@@ -72,7 +72,7 @@ def genConstantSumPartition(total, part, g):
             offsetList.append(off // 2)
         offsetList.pop(0)
 
-    elif total % part != 0 or lcm(total, g) // g < part:
+    elif lcm(total, g) // g < part:
         for off in range(part + 3):
             offsetList.append(off // 4)
         offsetList.pop(0)
