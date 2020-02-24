@@ -80,11 +80,11 @@ def genConstantSumPartition(total, part, g):
     # Validate results before returning
     checkList = list()
     good = list()
-    # groupList.sort()
+    groupList.sort()
     for k in groupList:
 
         # Check for Duplicates in csp
-        # k.sort()
+        k.sort()
         for l in k:
             if l not in checkList:
                 checkList.append(l)
