@@ -71,14 +71,8 @@ def genConstantSumPartition(total, part, g):
     # Combine each element from left and right list into a pair,
     # applying offset to each.
     for v in range(part):
-        group = list()
-        element = (leftList[v] + offsetList[v]) % total
-        group.append(element)
-        numGrid.remove(element)
-        element = (rightList[v] - offsetList[v]) % total
-        group.append(element)
-        numGrid.remove(element)
-        groupList.append(group)
+        groupList.append([(leftList[v] + offsetList[v]) % total, (rightList[v] - offsetList[v]) % total])
+        numGrid = [x for x in numGrid if x not in groupList[-1]]
 
     # Combine remaining numbers into zero-sum pairs
     numList = list()
