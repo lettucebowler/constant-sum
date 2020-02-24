@@ -2,7 +2,6 @@
 import os
 import sys
 import argparse
-import math
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -104,9 +103,9 @@ class gSum():
         self.zsp = zsp
 
     def to_string(self):
-        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + "\n csp:" + str(const.csp)
+        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(const.csp)
         if len(self.zsp) > 0:
-            message += "\n zsp:" + str(self.zsp)
+            message += " zsp:" + str(self.zsp)
         return(message)
 
 # Begin Main Program
