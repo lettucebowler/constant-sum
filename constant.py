@@ -115,21 +115,13 @@ if n % 2 == 1:
     print("This program is only designed for even numbers.")
     exit()
 
-# Calculate a csp for each partition and possible sum
-sumList = list()
 cspList = list()
 
-# Check each possible p
+# Calculate a csp for each partition and possible sum
 for p in range(1, n // 2 + 1):
-    del sumList
-    sumList = findSums(n, p)
-
-    # Check each possible g
-    for possibleSum in sumList:
+    for possibleSum in findSums(n, p):
         csp = list(genConstantSumPartition(n, p, possibleSum))
-        zsPairList = csp.pop()
-        csPairList = csp.pop()
-        newConst = gSum(n, possibleSum, p, csPairList, zsPairList)
+        newConst = gSum(n, possibleSum, p, csp[0], csp[1])
         cspList.append(newConst)
 
 # # Output data
