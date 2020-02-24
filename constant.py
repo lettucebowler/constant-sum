@@ -72,11 +72,12 @@ def genConstantSumPartition(total, part, g):
             offsetList.append(off // 2)
         offsetList.pop(0)
 
-    elif total % part != 0:
+    elif total % part != 0 or lcm(total, g) // g < part:
         for off in range(part + 3):
             offsetList.append(off // 4)
         offsetList.pop(0)
         offsetList.pop(0)
+
     else:
         for off in range(part):
             offsetList.append(0)
