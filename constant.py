@@ -24,6 +24,27 @@ def gcd(a,b):
 def lcm(a, b):
     return a * b / gcd(a, b)
 
+# Validate list for constant-sum property
+def checkListForErrors(candidate, total, g):
+    checkList = list()
+    good = list()
+    candidate.sort()
+    for k in candidate:
+
+        # Check for Duplicates in csp
+        k.sort()
+        for l in k:
+            if l not in checkList:
+                checkList.append(l)
+            elif "duplicates" not in good:
+                good.append("duplicates")
+
+        # Check that all groupings add up to g (MOD n)
+        G = sum(k)
+        if G % total != g and "sum" not in good:
+            good.append("sum")
+    return good
+
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
@@ -68,28 +89,8 @@ def genConstantSumPartition(total, part, g):
             numList.append(temp)
     numGrid = numList
 
-    # Validate results before returning
-    checkList = list()
-    good = list()
-    groupList.sort()
-    for k in groupList:
-
-        # Check for Duplicates in csp
-        k.sort()
-        for l in k:
-            if l not in checkList:
-                checkList.append(l)
-            elif "duplicates" not in good:
-                good.append("duplicates")
-
-        # Check that all groupings add up to g (MOD n)
-        G = sum(k)
-        if G % total != g and "sum" not in good:
-            good.append("sum")
-
     # Append a list of the errors found to the csp list
-    if len(good) != 0:
-        groupList.append(good)
+    groupList += checkListForErrors(groupList, total, g)
 
     return [groupList, numGrid]
 
@@ -103,9 +104,9 @@ class gSum():
         self.zsp = zsp
 
     def to_string(self):
-        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(const.csp)
+        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + "\n csp:" + str(const.csp)
         if len(self.zsp) > 0:
-            message += " zsp:" + str(self.zsp)
+            message += "\n zsp:" + str(self.zsp)
         return(message)
 
 # Begin Main Program
