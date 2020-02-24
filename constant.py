@@ -22,25 +22,7 @@ def gcd(a,b):
     return a
 
 def lcm(a, b):
-    return a * b / gcd(a, b)
-
-# Organize numList into a 2 x n/2 grid, creating rows that sum to n
-def makeGrid(gridNum):
-    numList = list(range(gridNum))
-    numArray = list()
-    tempList = list()
-    for x in range(len(numList) // 2):
-        del tempList
-        tempList = list()
-        tempVal = numList.pop(0)
-        tempList.append(tempVal)
-        if gridNum - tempVal in numList:
-            tempList.append(gridNum - tempVal)
-        else:
-            tempList.append(gridNum // 2)
-        numArray.append(tempList)
-    del numList
-    return numArray
+    return a * b / gcd(a, b) 
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
