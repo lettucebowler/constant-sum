@@ -22,7 +22,7 @@ def gcd(a,b):
     return a
 
 def lcm(a, b):
-    return a * b / gcd(a, b) 
+    return a * b / gcd(a, b)
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
@@ -43,7 +43,7 @@ def genConstantSumPartition(total, part, g):
     # Generate list of offsets due to looping
     offsetList = list()
     lcmDiv = int(lcm(total, g) // g // 2)
-    for off in range(part + 1 + lcmDiv):
+    for off in range(part + lcmDiv):
         offsetList.append(off // (lcmDiv * 2))
     for set in range(lcmDiv):
         offsetList.pop(0)
@@ -132,6 +132,6 @@ for p in range(1, n // 2 + 1):
         newConst = gSum(n, possibleSum, p, csPairList, zsPairList)
         cspList.append(newConst)
 
-# Output data
+# # Output data
 for const in cspList:
     print(const.to_string())
