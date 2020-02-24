@@ -15,22 +15,17 @@ n = args.number
 def findSums(n, p):
     potentialSumList = list(range(1, n))
     sumList = list()
-
-    # Check each value in potentialSumList for validity as a constant sum
-    # If valid, add it to sumList
     for g in potentialSumList:
         if g * p % n == n/2:
             sumList.append(g)
     return sorted(sumList)
 
 def gcd(a,b):
-    """Compute the greatest common divisor of a and b"""
     while b > 0:
         a, b = b, a % b
     return a
 
 def lcm(a, b):
-    """Compute the lowest common multiple of a and b"""
     return a * b / gcd(a, b)
 
 # Organize numList into a 2 x n/2 grid, creating rows that sum to n
@@ -54,39 +49,33 @@ def makeGrid(gridNum):
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
     groupList = list()
-    # group = list()
+    group = list()
     numGrid = list(range(total))
 
+    # Generate list of left-hand elements in each g-sum pair
     leftList = list(range(0, -1 * (part - 1) * g - 1, -1 * g))
     if len(leftList) == 0:
         leftList.append(0)
-    print(str(leftList))
+    
+    # Generate list of right-hand elements in each g-sum pair
     rightList = list(range(g, part * g + 1, g))
     if len(rightList) == 0:
         rightList.append(g)
-    print(str(rightList))
-
+    
+    # Generate list of offsets due to looping
     offsetList = list()
     lcmDiv = int(lcm(total, g) // g // 2)
-    if g == total // 2:
-        for off in range(part + 1):
-            offsetList.append(off // 2)
+    for off in range(part + 1 + lcmDiv):
+        offsetList.append(off // (lcmDiv * 2))
+    for set in range(lcmDiv):
         offsetList.pop(0)
 
-    elif lcmDiv < part:
-        for off in range(part + 1 + lcmDiv):
-            offsetList.append(off // (lcmDiv * 2))
-        for set in range(lcmDiv):
-            offsetList.pop(0)
-
-    else:
-        for off in range(part):
-            offsetList.append(0)
-
-    print(str(offsetList))
-
+    # Combine each element from left and right list into a pair, applying offset to each.
     for v in range(part):
-        groupList.append([(leftList[v] + offsetList[v]) % total, (rightList[v] - offsetList[v]) % total])
+        group = list()
+        group.append((leftList[v] + offsetList[v]) % total)
+        group.append((rightList[v] - offsetList[v]) % total)
+        groupList.append(group)
 
     # Validate results before returning
     checkList = list()
