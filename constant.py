@@ -83,7 +83,7 @@ class gSum():
         self.zsp = zsp
 
     def to_string(self):
-        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(const.csp)
+        message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(self.csp)
         if len(self.zsp) > 0:
             message += " zsp:" + str(self.zsp)
         return(message)
@@ -100,8 +100,7 @@ for p in range(1, n // 2 + 1):
     for possibleSum in findSums(n, p):
         csp = list(genConstantSumPartition(n, p, possibleSum))
         newConst = gSum(n, possibleSum, p, csp[0], csp[1])
-        cspList.append(newConst)
+        cspList.append(newConst.to_string())
 
-# # Output data
-for const in cspList:
-    print(const.to_string())
+# Output results
+print(*cspList, sep='\n')
