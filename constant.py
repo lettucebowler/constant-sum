@@ -42,21 +42,14 @@ def checkListForErrors(candidate, total, g):
 
 # Create a constant-sum-partition from supplied partition
 def genConstantSumPartition(total, part, g):
-    groupList = list()
-    numGrid = list(range(total))
 
     # Generate list of left-hand elements in each g-sum pair
-    leftList = list(range(0, -1 * (part - 1) * g - 1, -1 * g))
-    if len(leftList) == 0:
-        leftList.append(0)
+    leftList = [c for c in range(0, -1 * (part - 1) * g - 1, -1 * g)]
 
     # Generate list of right-hand elements in each g-sum pair
-    rightList = list(range(g, part * g + 1, g))
-    if len(rightList) == 0:
-        rightList.append(g)
+    rightList = [b for b in range(g, part * g + 1, g)]
 
     # Generate list of offsets due to looping
-    offsetList = list()
     lcmDiv = int(lcm(total, g) // g // 2)
     offsetList = [(off + lcmDiv) // (lcmDiv * 2) for off in range(part)]
 
@@ -66,7 +59,8 @@ def genConstantSumPartition(total, part, g):
 
     # Replace numGrid list with 2 x (n - 2p) grid, where each row is
     # a zero-sum pair
-    numGrid = list(set(tuple(sorted((x, total - x))) for x in numGrid if not any(x in subList for subList in groupList)))
+    # numGrid = list(set(tuple(sorted((x, total - x))) for x in range(total) if not any(x in subList for subList in groupList)))
+    numGrid = list({tuple(sorted((x, total - x))) for x in range(total) if not any(x in subList for subList in groupList)})
 
     # Append a list of the errors found to the csp list
     groupList += checkListForErrors(groupList, total, g)
