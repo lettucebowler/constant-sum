@@ -58,20 +58,15 @@ def genConstantSumPartition(total, part, g):
     # Generate list of offsets due to looping
     offsetList = list()
     lcmDiv = int(lcm(total, g) // g // 2)
-    for off in range(part + lcmDiv):
-        offsetList.append(off // (lcmDiv * 2))
-    for off in range(lcmDiv):
-        offsetList.pop(0)
+    offsetList = [(off + lcmDiv) // (lcmDiv * 2) for off in range(part)]
 
     # Combine each element from left and right list into a pair,
     # applying offset to each.
     groupList = [((left + offset) % total, (right - offset) % total) for left, right, offset in zip(leftList, rightList, offsetList)]
-    for v in range(part):
-        # groupList.append(tuple(sorted([(leftList[v] + offsetList[v]) % total, (rightList[v] - offsetList[v]) % total])))
-        numGrid = [x for x in numGrid if x not in groupList[-1]]
 
-    # Combine remaining numbers into zero-sum pairs
-    numGrid = list(set(tuple(sorted((x, total - x))) for x in numGrid))
+    # Replace numGrid list with 2 x (n - 2p) grid, where each row is
+    # a zero-sum pair
+    numGrid = list(set(tuple(sorted((x, total - x))) for x in numGrid if not any(x in subList for subList in groupList)))
 
     # Append a list of the errors found to the csp list
     groupList += checkListForErrors(groupList, total, g)
@@ -92,8 +87,6 @@ class gSum():
         if len(self.zsp) > 0:
             message += " zsp:" + str(self.zsp)
         return(message)
-
-# Begin Main Program
 
 # Exit if n is odd.
 if n % 2 == 1:
