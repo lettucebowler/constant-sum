@@ -12,8 +12,7 @@ n = args.number
 # n : number program is checking
 # part : partition of n to check for potential sums
 def findSums(n, p):
-    potentialSumList = list(range(1, n))
-    return sorted(sum for sum in potentialSumList if sum * p % n == n // 2)
+    return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
 def gcd(a,b):
     while b > 0:
@@ -41,7 +40,7 @@ def checkListForErrors(candidate, total, g):
     return good
 
 # Create a constant-sum-partition from supplied partition
-def genConstantSumPartition(total, part, g):
+def getCSP(total, part, g):
 
     # Generate list of left-hand elements in each g-sum pair
     leftList = [c for c in range(0, -1 * (part - 1) * g - 1, -1 * g)]
@@ -62,7 +61,7 @@ def genConstantSumPartition(total, part, g):
     # Append a list of the errors found to the csp list
     groupList += checkListForErrors(groupList, total, g)
 
-    return [groupList, numGrid]
+    return gSum(total, g, part, groupList, numGrid)
 
 # Storage object for csp data
 class gSum():
@@ -84,14 +83,10 @@ if n % 2 == 1:
     print("This program is only designed for even numbers.")
     exit()
 
-cspList = list()
-
 # Calculate a csp for each partition and possible sum
-for p in range(1, n // 2 + 1):
-    for possibleSum in findSums(n, p):
-        csp = list(genConstantSumPartition(n, p, possibleSum))
-        newConst = gSum(n, possibleSum, p, csp[0], csp[1])
-        cspList.append(newConst.to_string())
+pList = [p for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
+gList = [sum for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
+cspList = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pList, gList)]
 
 # Output results
 print(*cspList, sep='\n')
