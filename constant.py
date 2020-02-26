@@ -66,15 +66,7 @@ class gSum():
         self.zsp = zsp
 
     def to_string(self):
-        # message = "n:" + str(self.n) + " p:" + str(self.p) + " g:" + str(self.g) + " csp:" + str(self.csp)
-        # if len(self.zsp) > 0:
-            # message += " zsp:" + str(self.zsp)
-        message1 = "n:{0!r} p:{1!r} t:{2!r}".format(self.n, self.p, self.g)
-        message2 = "csp:{0!r}".format(self.csp)
-        message3 = "zsp:{0!r}".format(self.zsp)
-        message4 = [" " for x in message1]
-        message5 = "\n" + ''.join(message4)
-        return "{message1} {message2} {message5} {message3}\n".format(message1=message1, message2=message2, message3=message3, message5=message5)
+        return "n:{0!r} p:{1!r} t:{2!r}\n   csp:{3!r}\n   zsp:{4!r}".format(self.n, self.p, self.g, self.csp, self.zsp)
 
 # Exit if n is odd.
 if n % 2 == 1:
