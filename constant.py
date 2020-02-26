@@ -5,7 +5,8 @@ import argparse
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
-parser.add_argument("-n", dest='number', default=2, help='number to partition', type=int)
+parser.add_argument("-n", dest='number', default=2, \
+    help='number to partition', type=int)
 args = parser.parse_args()
 n = args.number
 
@@ -24,8 +25,8 @@ def lcm(a, b):
 
 # Validate list for constant-sum property
 def checkListForErrors(candidate, total, g):
-    checkSet = {el for em in candidate for el in em}
     checkList = [el for em in candidate for el in em]
+    checkSet = set(checkList)
     good = []
     if len(checkSet) != len(checkList):
         good.append("duplicates")
@@ -47,10 +48,12 @@ def getCSP(total, part, g):
     offsetList = [(off + lcmDiv) // (lcmDiv * 2) for off in range(part)]
 
     # Combine lists with offset applied
-    groupList = [((left + offset) % total, (right - offset) % total) for left, right, offset in zip(leftList, rightList, offsetList)]
+    groupList = [((left + offset) % total, (right - offset) % total) \
+        for left, right, offset in zip(leftList, rightList, offsetList)]
 
     # Construct list of remaining zero-sum pairs
-    numGrid = list({tuple(sorted((x, total - x))) for x in range(total) if not any(x in subList for subList in groupList)})
+    numGrid = list({tuple(sorted((x, total - x))) for x in range(total) \
+        if not any(x in subList for subList in groupList)})
 
     # Check for errors and output results
     groupList += checkListForErrors(groupList, total, g)
@@ -66,7 +69,8 @@ class gSum():
         self.zsp = zsp
 
     def to_string(self):
-        return "n:{0!r} p:{1!r} t:{2!r}\n   csp:{3!r}\n   zsp:{4!r}".format(self.n, self.p, self.g, self.csp, self.zsp)
+        return "n:{0!r} p:{1!r} t:{2!r}\n   csp:{3!r}\n   zsp:{4!r}"\
+            .format(self.n, self.p, self.g, self.csp, self.zsp)
 
 # Exit if n is odd.
 if n % 2 == 1:
