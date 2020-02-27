@@ -38,26 +38,26 @@ def checkListForErrors(candidate, total, g):
 def getCSP(total, part, g):
 
     # Generate list of left-hand elements in each g-sum pair
-    leftList = [c for c in range(0, -1 * (part - 1) * g - 1, -1 * g)]
+    lL = [c for c in range(0, -part * g, -g)]
 
     # Generate list of right-hand elements in each g-sum pair
-    rightList = [b for b in range(g, part * g + 1, g)]
+    rL = [b for b in range(g, part * g + 1, g)]
 
     # Generate list of offsets
-    lcmDiv = int(lcm(total, g) // g // 2)
-    offsetList = [(off + lcmDiv) // (lcmDiv * 2) for off in range(part)]
+    lD = int(lcm(total, g) // g // 2)
+    oL = [(off + lD) // (lD * 2) for off in range(part)]
 
     # Combine lists with offset applied
-    groupList = [((left + offset) % total, (right - offset) % total) \
-        for left, right, offset in zip(leftList, rightList, offsetList)]
+    zL = zip(lL, rL, oL)
+    gL = [((l + o) % total, (r - o) % total) for l, r, o in zL]
 
     # Construct list of remaining zero-sum pairs
-    numGrid = list({tuple(sorted((x, total - x))) for x in range(total) \
-        if not any(x in subList for subList in groupList)})
+    nL = list({tuple(sorted((x, total - x))) for x in range(total) \
+        if not any(x in s for s in gL)})
 
     # Check for errors and output results
-    groupList += checkListForErrors(groupList, total, g)
-    return gSum(total, g, part, groupList, numGrid)
+    gL += checkListForErrors(gL, total, g)
+    return gSum(total, g, part, gL, nL)
 
 # Storage object for csp data
 class gSum():
@@ -78,9 +78,9 @@ if n % 2 == 1:
     exit()
 
 # Calculate a csp for each partition and possible sum
-pList = [p for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
-gList = [sum for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
-cspList = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pList, gList)]
+pL = [p for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
+gL = [sum for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
+cL = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pL, gL)]
 
 # Output results
-print(*cspList, sep='\n')
+print(*cL, sep='\n')
