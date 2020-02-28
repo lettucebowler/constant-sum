@@ -69,8 +69,11 @@ class gSum():
         self.zsp = zsp
 
     def to_string(self):
-        return "Partitions:{0!r} Sum:{1!r}\n   csp:{2!r}\n   zsp:{3!r}"\
-            .format(self.p, self.g, self.csp, self.zsp)
+        message = "Partitions:{0!r} Sum:{1!r}\n   csp:{2!r}"\
+            .format(self.p, self.g, self.csp)
+        if len(self.zsp) > 0:
+            message += "\n   zsp:{0!r}".format(self.zsp)
+        return message
 
 # Exit if n is odd.
 if n % 2 == 1:
