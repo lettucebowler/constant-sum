@@ -24,15 +24,15 @@ def lcm(a, b):
     return a * b / gcd(a, b)
 
 # Validate list for constant-sum property
-# def checkListForErrors(candidate, total, g):
-#     checkList = [el for em in candidate for el in em]
-#     checkSet = set(checkList)
-#     good = []
-#     if len(checkSet) != len(checkList):
-#         good.append("duplicates")
-#     if any(sum(k) % total != g for k in candidate):
-#         good.append("sum")
-#     return good
+def checkListForErrors(candidate, total, g):
+    checkList = [el for em in candidate for el in em]
+    checkSet = set(checkList)
+    good = []
+    if len(checkSet) != len(checkList):
+        good.append("duplicates")
+    if any(sum(k) % total != g for k in candidate):
+        good.append("sum")
+    return good
 
 # Create a constant-sum-partition from supplied partition
 def getCSP(total, part, g):
@@ -56,7 +56,7 @@ def getCSP(total, part, g):
         if not any(x in s for s in gL)})
 
     # Check for errors and output results
-    # gL += checkListForErrors(gL, total, g)
+    gL += checkListForErrors(gL, total, g)
     return gSum(total, g, part, gL, nL)
 
 # Storage object for csp data
