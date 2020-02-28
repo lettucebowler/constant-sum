@@ -52,7 +52,7 @@ def getCSP(total, part, g):
     gL = [((l + o) % total, (r - o) % total) for l, r, o in zL]
 
     # Construct list of remaining zero-sum pairs
-    nL = list({tuple(sorted((x, total - x))) for x in range(total) \
+    nL = list({sorted((x, total - x)) for x in range(total) \
         if not any(x in s for s in gL)})
 
     # Check for errors and output results
