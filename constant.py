@@ -19,7 +19,7 @@ def gcd(a,b):
     return a
 
 def lcm(a, b):
-    return a * b / gcd(a, b)
+    return a * b // gcd(a, b)
 
 # Validate list for constant-sum property
 def checkListForErrors(candidate, total, g):
@@ -33,42 +33,42 @@ def checkListForErrors(candidate, total, g):
     return good
 
 # Create a constant-sum-partition from supplied partition
-def getCSP(total, part, g):
+def getCSP(total, part, t):
 
     # Generate list of left-hand elements in each g-sum pair
-    lL = [c for c in range(0, -part * g, -g)]
+    lL = [c for c in range(0, -part * t, -t)]
 
     # Generate list of right-hand elements in each g-sum pair
-    rL = [b for b in range(g, part * g + 1, g)]
+    rL = [b for b in range(t, part * t + 1, t)]
 
     # Generate list of offsets
-    lD = int(lcm(total, g) // g // 2)
+    lD = lcm(total, t) // (t * 2)
     oL = [(off + lD) // (lD * 2) for off in range(part)]
 
     # Combine lists with offset applied
     zL = zip(lL, rL, oL)
-    gL = [((l + o) % total, (r - o) % total) for l, r, o in zL]
+    tL = [((l + o) % total, (r - o) % total) for l, r, o in zL]
 
     # Construct list of remaining zero-sum pairs
     nL = list({tuple(sorted((x, total - x))) for x in range(total) \
-        if not any(x in s for s in gL)})
+        if not any(x in s for s in tL)})
 
     # Check for errors and output results
-    gL += checkListForErrors(gL, total, g)
-    return gSum(total, g, part, gL, nL)
+    tL += checkListForErrors(tL, total, t)
+    return gSum(total, t, part, tL, nL)
 
 # Storage object for csp data
 class gSum():
-    def __init__(self, n, g, p, csp, zsp):
+    def __init__(self, n, t, p, csp, zsp):
         self.n = n
         self.p = p
-        self.g = g
+        self.t = t
         self.csp = csp
         self.zsp = zsp
 
     def to_string(self):
         message = "Partitions:{0!r} Sum:{1!r}\n   csp:{2!r}"\
-            .format(self.p, self.g, self.csp)
+            .format(self.p, self.t, self.csp)
         if len(self.zsp) > 0:
             message += "\n   zsp:{0!r}".format(self.zsp)
         return message
@@ -79,9 +79,11 @@ if n % 2 == 1:
     exit()
 
 # Calculate a csp for each partition and possible sum
-pL = [p for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
-gL = [sum for p in range(1, n // 2 + 1) for sum in findSums(n, p)]
-cL = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pL, gL)]
+# p : number of groups in a partition
+# t : constant sum of each group
+pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
+tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
+cL = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pL, tL)]
 
 # Output results
 print(*cL, sep='\n')
