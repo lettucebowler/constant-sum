@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # mkdir data
-for i in {2..512..2}
+for i in {2..128..2}
 do
 # rm data/$i
 # echo $i&
