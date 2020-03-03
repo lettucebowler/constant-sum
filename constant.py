@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+from math import gcd
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -12,11 +13,6 @@ n = args.number
 # part : partition of n to check for potential sums
 def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
-
-def gcd(a,b):
-    while b > 0:
-        a, b = b, a % b
-    return a
 
 def lcm(a, b):
     return a * b // gcd(a, b)
@@ -80,7 +76,6 @@ def getOdds(const):
         oddCount = [v for v in range(0, const.p + 1, 2)]
     else:
         oddCount= [0, 2]
-    # print(str(oddCount))
     return oddCount
 
 # Exit if n is odd.
