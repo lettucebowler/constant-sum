@@ -92,5 +92,5 @@ cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [getOdds(x) for x in cL]
 
 # Output results
-# for const in cL:
-    # print(const.to_string())
+for const in cL:
+    print(const.to_string())
