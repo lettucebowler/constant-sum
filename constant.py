@@ -60,10 +60,12 @@ def getCSP(total, part, t, odd):
     # Combine lists with offset applied
     zL = zip(lL, rL, oL)
     tL = [((l + o) % total, (r - o) % total) for l, r, o in zL]
+    tL = [[x for x in y] for y in tL]
 
     # Construct list of remaining zero-sum pairs
-    nL = list({tuple(sorted((x, total - x))) for x in range(total) \
+    nL = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in tL)})
+    nL = [[x for x in y] for y in nL]
 
     # Check for errors and output results
     tL += checkListForErrors(tL, total, t)
@@ -76,7 +78,25 @@ def getOdds(const):
         oddCount = [v for v in range(0, const.p + 1, 2)]
     else:
         oddCount= [0, 2]
-    return oddCount
+    withOdds = []
+    left = [x[0] for x in const.zsp]
+    right = [x[1] for x in const.zsp]
+    c = const.csp
+    z = const.zsp
+    for o in oddCount:
+        # for x in range(0, o + 1, 2):
+        c = [h for h in const.csp]
+        z = const.zsp
+        #substitute two elements with pairs that sum to them.
+        print('getOdds' + str(o))
+        if o == 0:
+            withOdds.append(const)
+        elif o == 2:
+            temp = [b for b in c]
+            temp[1].append(0)
+            temp[0].remove(0)
+            withOdds.append(gSum(const.n, const.t, const.p, temp, z))
+    return withOdds
 
 # Exit if n is odd.
 if n % 2 == 1:
@@ -92,5 +112,6 @@ cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [getOdds(x) for x in cL]
 
 # Output results
-for const in cL:
-    print(const.to_string())
+for const in oL:
+    for y in const:
+        print(y.to_string())
