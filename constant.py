@@ -21,6 +21,22 @@ def gcd(a,b):
 def lcm(a, b):
     return a * b // gcd(a, b)
 
+# Storage object for csp data
+class gSum():
+    def __init__(self, n, t, p, csp, zsp):
+        self.n = n
+        self.p = p
+        self.t = t
+        self.csp = csp
+        self.zsp = zsp
+
+    def to_string(self):
+        message = "Partitions:{0!r} Sum:{1!r}\n   csp:{2!r}"\
+            .format(self.p, self.t, self.csp)
+        if len(self.zsp) > 0:
+            message += "\n   zsp:{0!r}".format(self.zsp)
+        return message
+
 # Validate list for constant-sum property
 def checkListForErrors(candidate, total, g):
     checkList = [el for em in candidate for el in em]
@@ -33,7 +49,7 @@ def checkListForErrors(candidate, total, g):
     return good
 
 # Create a constant-sum-partition from supplied partition
-def getCSP(total, part, t):
+def getCSP(total, part, t, odd):
 
     # Generate list of left-hand elements in each g-sum pair
     lL = [c for c in range(0, -part * t, -t)]
@@ -57,21 +73,10 @@ def getCSP(total, part, t):
     tL += checkListForErrors(tL, total, t)
     return gSum(total, t, part, tL, nL)
 
-# Storage object for csp data
-class gSum():
-    def __init__(self, n, t, p, csp, zsp):
-        self.n = n
-        self.p = p
-        self.t = t
-        self.csp = csp
-        self.zsp = zsp
-
-    def to_string(self):
-        message = "Partitions:{0!r} Sum:{1!r}\n   csp:{2!r}"\
-            .format(self.p, self.t, self.csp)
-        if len(self.zsp) > 0:
-            message += "\n   zsp:{0!r}".format(self.zsp)
-        return message
+# Derive possible odd-cardinality csp from a given even-cardinality csp
+# I think it will only work if p <= n // 4
+def getOdds(const):
+    return 0
 
 # Exit if n is odd.
 if n % 2 == 1:
@@ -83,7 +88,7 @@ if n % 2 == 1:
 # t : constant sum of each group
 pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
-cL = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pL, tL)]
+cL = [getCSP(n, p, pSum, 0).to_string() for p, pSum in zip(pL, tL)]
 
 # Output results
 print(*cL, sep='\n')
