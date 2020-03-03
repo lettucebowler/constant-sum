@@ -76,7 +76,12 @@ def getCSP(total, part, t, odd):
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
-    return 0
+    if const.p <= const.n // 4:
+        oddCount = [v for v in range(0, const.p + 1, 2)]
+    else:
+        oddCount= [0, 2]
+    # print(str(oddCount))
+    return oddCount
 
 # Exit if n is odd.
 if n % 2 == 1:
@@ -88,7 +93,11 @@ if n % 2 == 1:
 # t : constant sum of each group
 pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
-cL = [getCSP(n, p, pSum, 0).to_string() for p, pSum in zip(pL, tL)]
+# cL = [getCSP(n, p, pSum, 0).to_string() for p, pSum in zip(pL, tL)]
+cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
+sL = [x.to_string() for x in cL]
+oL = [getOdds(x) for x in cL]
 
 # Output results
-print(*cL, sep='\n')
+print(*sL, sep='\n')
+
