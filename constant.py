@@ -80,10 +80,7 @@ def getOdds(const):
     withOdds = [const]
     if const.p == 1:
         return withOdds
-    elif const.p <= const.n // 4:
-        oddCount = [v for v in range(2, const.p + 1, 2)]
-    else:
-        oddCount = [2]
+    oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
     for o in oddCount:
         if o == 2:
             temp = const.csp[2: -1] + [[const.t], [0] + const.csp[1]]
