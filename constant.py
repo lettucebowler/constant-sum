@@ -88,11 +88,9 @@ if n % 2 == 1:
 # t : constant sum of each group
 pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
-# cL = [getCSP(n, p, pSum, 0).to_string() for p, pSum in zip(pL, tL)]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
-sL = [x.to_string() for x in cL]
 oL = [getOdds(x) for x in cL]
 
 # Output results
-print(*sL, sep='\n')
-
+for const in cL:
+    print(const.to_string())
