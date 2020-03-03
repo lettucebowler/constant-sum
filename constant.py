@@ -45,7 +45,7 @@ def checkListForErrors(candidate, total, g):
     return good
 
 # Create a constant-sum-partition from supplied partition
-def getCSP(total, part, t, odd):
+def getCSP(total, part, t):
 
     # Skip processing if result is obvious
     if part == 1:
@@ -82,8 +82,11 @@ def getOdds(const):
         return withOdds
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
     for o in oddCount:
+        for u in range(o-2, 1, -2):
+            print(str(o))
         if o == 2:
-            temp = const.csp[2: -1] + [[const.t], [0] + const.csp[1]]
+            temp = const.csp[1: -1] + [[const.t], [0] + const.csp[1]]
+            temp.sort(key=len)
             withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp))
     return withOdds
 
@@ -97,7 +100,7 @@ if n % 2 == 1:
 # t : constant sum of each group
 pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
-cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
+cL = [getCSP(n, p, pSum) for p, pSum in zip(pL, tL)]
 oL = [getOdds(x) for x in cL]
 
 # Output results
