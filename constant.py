@@ -47,6 +47,10 @@ def checkListForErrors(candidate, total, g):
 # Create a constant-sum-partition from supplied partition
 def getCSP(total, part, t, odd):
 
+    # Skip processing if result is obvious
+    if part == 1:
+        return gSum(total, t, part, list(range(total)), [])
+
     # Generate list of left-hand elements in each g-sum pair
     lL = [c for c in range(0, -part * t, -t)]
 
@@ -59,8 +63,7 @@ def getCSP(total, part, t, odd):
 
     # Combine lists with offset applied
     zL = zip(lL, rL, oL)
-    tL = [((l + o) % total, (r - o) % total) for l, r, o in zL]
-    tL = [[x for x in y] for y in tL]
+    tL = [[(l + o) % total, (r - o) % total] for l, r, o in zL]
 
     # Construct list of remaining zero-sum pairs
     nL = sorted({tuple(sorted((x, total - x))) for x in range(total) \
@@ -74,28 +77,17 @@ def getCSP(total, part, t, odd):
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
-    if const.p <= const.n // 4:
-        oddCount = [v for v in range(0, const.p + 1, 2)]
+    withOdds = [const]
+    if const.p == 1:
+        return withOdds
+    elif const.p <= const.n // 4:
+        oddCount = [v for v in range(2, const.p + 1, 2)]
     else:
-        oddCount= [0, 2]
-    withOdds = []
-    left = [x[0] for x in const.zsp]
-    right = [x[1] for x in const.zsp]
-    c = const.csp
-    z = const.zsp
+        oddCount = [2]
     for o in oddCount:
-        # for x in range(0, o + 1, 2):
-        c = [h for h in const.csp]
-        z = const.zsp
-        #substitute two elements with pairs that sum to them.
-        print('getOdds' + str(o))
-        if o == 0:
-            withOdds.append(const)
-        elif o == 2:
-            temp = [b for b in c]
-            temp[1].append(0)
-            temp[0].remove(0)
-            withOdds.append(gSum(const.n, const.t, const.p, temp, z))
+        if o == 2:
+            temp = const.csp[2: -1] + [[const.t], [0] + const.csp[1]]
+            withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp))
     return withOdds
 
 # Exit if n is odd.
