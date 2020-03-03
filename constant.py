@@ -86,4 +86,4 @@ tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 cL = [getCSP(n, p, pSum).to_string() for p, pSum in zip(pL, tL)]
 
 # Output results
-# print(*cL, sep='\n')
+print(*cL, sep='\n')
