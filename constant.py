@@ -19,16 +19,17 @@ def lcm(a, b):
 
 # Storage object for csp data
 class gSum():
-    def __init__(self, n, t, p, csp, zsp):
+    def __init__(self, n, t, p, csp, zsp, odds):
         self.n = n
         self.p = p
         self.t = t
         self.csp = csp
         self.zsp = zsp
+        self.odds = odds
 
     def to_string(self):
-        message = "Partitions:{0!r} Sum:{1!r}\n   csp:{2!r}"\
-            .format(self.p, self.t, self.csp)
+        message = "Partitions:{0!r} Sum:{1!r} Odds:{2!r}\n   csp:{3!r}"\
+            .format(self.p, self.t, self.odds, self.csp)
         if len(self.zsp) > 0:
             message += "\n   zsp:{0!r}".format(self.zsp)
         return message
@@ -45,11 +46,11 @@ def checkListForErrors(candidate, total, g):
     return good
 
 # Create a constant-sum-partition from supplied partition
-def getCSP(total, part, t):
+def getCSP(total, part, t, odds):
 
     # Skip processing if result is obvious
     if part == 1:
-        return gSum(total, t, part, list(range(total)), [])
+        return gSum(total, t, part, list(range(total)), [], 0)
 
     # Generate list of left-hand elements in each g-sum pair
     lL = [c for c in range(0, -part * t, -t)]
@@ -72,7 +73,7 @@ def getCSP(total, part, t):
 
     # Check for errors and output results
     tL += checkListForErrors(tL, total, t)
-    return gSum(total, t, part, tL, nL)
+    return gSum(total, t, part, tL, nL, 0)
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
@@ -87,7 +88,7 @@ def getOdds(const):
         if o == 2:
             temp = const.csp[1: -1] + [[const.t], [0] + const.csp[1]]
             temp.sort(key=len)
-            withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp))
+            withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))
     return withOdds
 
 # Exit if n is odd.
@@ -100,10 +101,9 @@ if n % 2 == 1:
 # t : constant sum of each group
 pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
-cL = [getCSP(n, p, pSum) for p, pSum in zip(pL, tL)]
-oL = [getOdds(x) for x in cL]
+cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
+oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    for y in const:
-        print(y.to_string())
+    print(const.to_string())
