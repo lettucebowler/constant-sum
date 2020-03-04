@@ -84,12 +84,14 @@ def swap(n, e, zList):
 
 # Find next element in cList that can be substituted by a pair in zList
 def findNext(n, t, cList, zList):
+    c0 = [v for v in cList if len(v) == 2]
+    print("c0 : {0!r}".format(c0))
     z1 = [x[0] for x in zList]
     z2 = [x[1] for x in zList]
-    c1 = [x for y in cList for x in y]
+    c1 = [x for y in c0 for x in y]
     rL = []
     for c in c1:
-        if c != n // 2 and c != t and c != 0:
+        if c != n // 2 and c != t and c != 0 and c != n - t:
             for a, b in zList:
                 if (c - a in z1 or (c - a) % n in z1) and (c - a) % n != a % n:
                     rL = [a, (c - a) % n]
@@ -114,19 +116,7 @@ def getOdds(const):
             temp.sort(key=len)
             withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))
         else:
-            # print(str(list(range(o, 2, -2))))
-            for q in range(o, 2, -2):
-                # Swap pair with element
-                # Swap compliment pair with element
-                e = findNext(const.n, const.t, c, z)
-                # print("---")
-                # print(str(e))
-                # print(str(z))
-                # print(str([e[1][0], e[3][0]]))
-                # z.append([e[0], e[2]])
-                # z.remove(sorted([e[1][0], e[3][0]]))
-                # z.remove(sorted([e[1][1], e[3][1]]))
-                # swap(n, e, z)
+            print("WIP")
     return withOdds
 
 # Exit if n is odd.
