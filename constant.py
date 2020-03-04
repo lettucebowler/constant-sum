@@ -114,13 +114,18 @@ def getOdds(const):
             temp.sort(key=len)
             withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))
         else:
-            print(str(list(range(o, 2, -2))))
+            # print(str(list(range(o, 2, -2))))
             for q in range(o, 2, -2):
                 # Swap pair with element
                 # Swap compliment pair with element
                 e = findNext(const.n, const.t, c, z)
                 print(str(e))
-                swap(n, e, z)
+                print(str(z))
+                print(str([e[1][0], e[3][0]]))
+                z.append([e[0], e[2]])
+                z.remove(sorted([e[1][0], e[3][0]]))
+                z.remove(sorted([e[1][1], e[3][1]]))
+                # swap(n, e, z)
     return withOdds
 
 # Exit if n is odd.
