@@ -97,8 +97,9 @@ if n % 2 == 1:
     exit()
 
 # Calculate a csp for each partition and possible sum
-pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
-tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
+rL = list(range(1, n // 2 + 1))
+pL = [p for p in rL for t in findSums(n, p)]
+tL = [t for p in rL for t in findSums(n, p)]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
 
