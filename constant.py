@@ -80,7 +80,6 @@ def swap(n, e, zList):
     returnList = []
     b = e[1]
     e = e[0]
-    
     return 0
 
 # Find next element in cList that can be substituted by a pair in zList
