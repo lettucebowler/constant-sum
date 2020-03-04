@@ -75,6 +75,9 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, total, t)
     return gSum(total, t, part, tL, nL, 0)
 
+def swap(e, zList):
+    return 0
+
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
@@ -82,13 +85,21 @@ def getOdds(const):
     if const.p == 1:
         return withOdds
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
+    c = [b for b in const.csp]
+    z = [b for b in const.zsp]
     for o in oddCount:
-        for u in range(o-2, 1, -2):
-            print(str(o))
+        # for u in range(o-2, 1, -2):
+        #     print(str(o))
         if o == 2:
             temp = const.csp[1: -1] + [[const.t], [0] + const.csp[1]]
             temp.sort(key=len)
             withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))
+        else:
+            print(str(list(range(o, 2, -2))))
+            for q in range(o, 2, -2):
+                # Swap pair with element
+                # Swap compliment pair with element
+                swap(2 * const.t, z)
     return withOdds
 
 # Exit if n is odd.
@@ -97,7 +108,7 @@ if n % 2 == 1:
     exit()
 
 # Calculate a csp for each partition and possible sum
-rL = list(range(1, n // 2 + 1))
+rL = list(range(2, n // 2 + 1, 2))
 pL = [p for p in rL for t in findSums(n, p)]
 tL = [t for p in rL for t in findSums(n, p)]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
