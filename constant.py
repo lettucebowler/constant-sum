@@ -75,7 +75,12 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, total, t)
     return gSum(total, t, part, tL, nL, 0)
 
-def swap(e, zList):
+# Swap element in a constant-sum pair for a pair that sums to the element
+def swap(n, e, zList):
+    returnList = []
+    b = e[1]
+    e = e[0]
+    
     return 0
 
 # Find next element in cList that can be substituted by a pair in zList
@@ -87,10 +92,10 @@ def findNext(n, t, cList, zList):
         if c != n // 2 and c != t:
             for b in z1:
                 if c - b in z1:
-                    return c
+                    return [c, b]
             for b in z2:
                 if c - b in z2:
-                    return c
+                    return [c, b]
     return -1
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
@@ -113,11 +118,12 @@ def getOdds(const):
                 # Swap pair with element
                 # Swap compliment pair with element
                 e = findNext(const.n, const.t, c, z)
+                swap(n, e, z)
     return withOdds
 
 # Exit if n is odd.
-if n % 2 == 1:
-    print("This program is only designed for even numbers.")
+if n % 4 != 0:
+    print("This program is only designed for even numbers 0 mod 4")
     exit()
 
 # Calculate a csp for each partition and possible sum
