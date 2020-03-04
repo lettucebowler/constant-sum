@@ -78,6 +78,21 @@ def getCSP(total, part, t, odds):
 def swap(e, zList):
     return 0
 
+# Find next element in cList that can be substituted by a pair in zList
+def findNext(n, t, cList, zList):
+    z1 = [x[0] for x in zList]
+    z2 = [x[1] for x in zList]
+    c1 = [x for y in cList for x in y]
+    for c in c1:
+        if c != n // 2 and c != t:
+            for b in z1:
+                if c - b in z1:
+                    return c
+            for b in z2:
+                if c - b in z2:
+                    return c
+    return -1
+
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
@@ -88,8 +103,6 @@ def getOdds(const):
     c = [b for b in const.csp]
     z = [b for b in const.zsp]
     for o in oddCount:
-        # for u in range(o-2, 1, -2):
-        #     print(str(o))
         if o == 2:
             temp = const.csp[1: -1] + [[const.t], [0] + const.csp[1]]
             temp.sort(key=len)
@@ -99,7 +112,7 @@ def getOdds(const):
             for q in range(o, 2, -2):
                 # Swap pair with element
                 # Swap compliment pair with element
-                swap(2 * const.t, z)
+                e = findNext(const.n, const.t, c, z)
     return withOdds
 
 # Exit if n is odd.
