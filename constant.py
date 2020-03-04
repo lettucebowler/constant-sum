@@ -87,14 +87,17 @@ def findNext(n, t, cList, zList):
     z1 = [x[0] for x in zList]
     z2 = [x[1] for x in zList]
     c1 = [x for y in cList for x in y]
+    rL = []
     for c in c1:
         if c != n // 2 and c != t and c != 0:
             for a, b in zList:
-                if (c - b in z1 or (c - b) % n in z1) and c - b != b:
-                    return [c, [b, (c - b) % n]]
-                if (c - b in z1 or (c - b) % n in z1) and c - b != b:
-                    return [c, [b, (c - b) % n]]
-    return -1
+                if (c - a in z1 or (c - a) % n in z1) and (c - a) % n != a % n:
+                    rL = [a, (c - a) % n]
+                    return [c, rL, n-c, [n - x for x in rL]]
+                if (c - b in z2 or (c - b) % n in z2) and (c - b) % n != b % n:
+                    rL = [b, (c - b) % n]
+                    return [c, rL, n-c, [n - x for x in rL]]
+    return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
@@ -133,5 +136,5 @@ cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
-for const in oL:
-    print(const.to_string())
+# for const in oL:
+#     print(const.to_string())
