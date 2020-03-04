@@ -97,8 +97,6 @@ if n % 2 == 1:
     exit()
 
 # Calculate a csp for each partition and possible sum
-# p : number of groups in a partition
-# t : constant sum of each group
 pL = [p for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 tL = [t for p in range(1, n // 2 + 1) for t in findSums(n, p)]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
