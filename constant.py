@@ -119,12 +119,13 @@ def getOdds(const):
                 # Swap pair with element
                 # Swap compliment pair with element
                 e = findNext(const.n, const.t, c, z)
-                print(str(e))
-                print(str(z))
-                print(str([e[1][0], e[3][0]]))
-                z.append([e[0], e[2]])
-                z.remove(sorted([e[1][0], e[3][0]]))
-                z.remove(sorted([e[1][1], e[3][1]]))
+                # print("---")
+                # print(str(e))
+                # print(str(z))
+                # print(str([e[1][0], e[3][0]]))
+                # z.append([e[0], e[2]])
+                # z.remove(sorted([e[1][0], e[3][0]]))
+                # z.remove(sorted([e[1][1], e[3][1]]))
                 # swap(n, e, z)
     return withOdds
 
