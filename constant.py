@@ -88,13 +88,13 @@ def findNext(n, t, cList, zList):
     z2 = [x[1] for x in zList]
     c1 = [x for y in cList for x in y]
     for c in c1:
-        if c != n // 2 and c != t:
+        if c != n // 2 and c != t and c != 0:
             for b in z1:
-                if c - b in z1:
-                    return [c, b]
+                if (c - b in z1 or (c - b) % n in z1) and c - b != b:
+                    return [c, [b, (c - b) % n]]
             for b in z2:
-                if c - b in z2:
-                    return [c, b]
+                if (c - b in z1 or (c - b) % n in z1) and c - b != b:
+                    return [c, [b, (c - b) % n]]
     return -1
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
@@ -117,6 +117,7 @@ def getOdds(const):
                 # Swap pair with element
                 # Swap compliment pair with element
                 e = findNext(const.n, const.t, c, z)
+                print(str(e))
                 swap(n, e, z)
     return withOdds
 
