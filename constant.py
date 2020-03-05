@@ -77,48 +77,67 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, total, t)
     return gSum(total, t, part, tL, nL, 0)
 
-# Swap element in a constant-sum pair for a pair that sums to the element
-def swap(n, e, zList):
-    returnList = []
-    b = e[1]
-    e = e[0]
-    return 0
-
 # Find next element in cList that can be substituted by a pair in zList
-def findNext(n, t, cList, zList):
-    c0 = [v for v in cList if len(v) == 2]
-    print("c0 : {0!r}".format(c0))
-    z1 = [x[0] for x in zList]
-    z2 = [x[1] for x in zList]
-    c1 = [x for y in c0 for x in y]
-    rL = []
-    for c in c1:
-        if c != n // 2 and c != t and c != 0 and c != n - t:
-            for a, b in zList:
-                if (c - a in z1 or (c - a) % n in z1) and (c - a) % n != a % n:
-                    rL = [a, (c - a) % n]
-                    return [c, rL, n-c, [n - x for x in rL]]
-                if (c - b in z2 or (c - b) % n in z2) and (c - b) % n != b % n:
-                    rL = [b, (c - b) % n]
-                    return [c, rL, n-c, [n - x for x in rL]]
-    return rL
+# def findNext(n, t, cList, zList):
+#     c0 = [v for v in cList if len(v) == 2]
+#     print("c0 : {0!r}".format(c0))
+#     z1 = [x[0] for x in zList]
+#     z2 = [x[1] for x in zList]
+#     c1 = [x for y in c0 for x in y]
+#     rL = []
+#     for c in c1:
+#         if c != n // 2 and c != t and c != 0 and c != n - t:
+#             for a, b in zList:
+#                 if (c - a in z1 or (c - a) % n in z1) and (c - a) % n != a % n:
+#                     rL = [a, (c - a) % n]
+#                     return [c, rL, n-c, [n - x for x in rL]]
+#                 if (c - b in z2 or (c - b) % n in z2) and (c - b) % n != b % n:
+#                     rL = [b, (c - b) % n]
+#                     return [c, rL, n-c, [n - x for x in rL]]
+#     return rL
+
+# Swap element in a constant-sum pair for a pair that sums to the element
+def swap(swapVal, zTemp, cList):
+    return 0
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
     withOdds = [const]
+    z = [b for b in const.zsp]
+    zR = [b[0] for b in z]
+    zL = [b[1] for b in z]
+    zL.reverse()
+    
     if const.p == 1:
         return withOdds
+    
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
-    c = [b for b in const.csp]
-    z = [b for b in const.zsp]
     for o in oddCount:
+        c = [b for b in const.csp]
+        
         if o == 2:
             temp = const.csp[1: -1] + [[const.t], [0] + const.csp[1]]
             temp.sort(key=len)
-            withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))
+            withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))    
         else:
-            print("WIP")
+            if const.t % 2 == 0:
+                tL = [const.t, const.n - const.t]
+                z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
+                s = [(a + b) % const.n for a, b in z1]
+                pL = zip(s, z1)
+                # print(tL)
+                # print(str(z1))
+                # print(str(s))
+                
+                for f in range(o, 2, -2):
+                    # print(str(f))
+                    # print(str(c))
+                    # print(str(z))
+                    x = s.pop(0)
+                    y = s.pop()
+                    swap(x, z1, c)
+                    swap(y, z1, c)        
     return withOdds
 
 # Exit if n is odd.
@@ -134,5 +153,5 @@ cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
-for const in oL:
-    print(const.to_string())
+# for const in oL:
+#     print(const.to_string())
