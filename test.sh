@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 mkdir data
-for i in {0..479001600..1}
+# for i in {0..479001600..1}
+for i in {0..100..1}
 do
 # rm data/$i
 # echo $i&
