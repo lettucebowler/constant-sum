@@ -61,6 +61,9 @@ def getCSP(total, part, t, odds):
     # Generate list of offsets
     lD = lcm(total, t) // (t * 2)
     oL = [(off + lD) // (lD * 2) for off in range(part)]
+    
+    if part <= n // 4:
+        oL = [2 * f for f in oL]
 
     # Combine lists with offset applied
     zL = zip(lL, rL, oL)
