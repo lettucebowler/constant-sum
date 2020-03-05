@@ -97,7 +97,13 @@ def getCSP(total, part, t, odds):
 #     return rL
 
 # Swap element in a constant-sum pair for a pair that sums to the element
-def swap(swapVal, zTemp, cList):
+def swap(pTup, cList):
+    p0 = pTup[0]
+    p1 = pTup[1]
+    for x in cList:
+        if p0 in x:
+            x.remove(p0)
+            x += p1
     return 0
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
@@ -105,6 +111,7 @@ def swap(swapVal, zTemp, cList):
 def getOdds(const):
     withOdds = [const]
     z = [b for b in const.zsp]
+    c = []
     zR = [b[0] for b in z]
     zL = [b[1] for b in z]
     zL.reverse()
@@ -114,6 +121,7 @@ def getOdds(const):
     
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
     for o in oddCount:
+        del c
         c = [b for b in const.csp]
         
         if o == 2:
@@ -125,19 +133,23 @@ def getOdds(const):
                 tL = [const.t, const.n - const.t]
                 z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
                 s = [(a + b) % const.n for a, b in z1]
-                pL = zip(s, z1)
-                # print(tL)
-                # print(str(z1))
-                # print(str(s))
+                pL = list(zip(s, z1))
                 
                 for f in range(o, 2, -2):
-                    # print(str(f))
-                    # print(str(c))
-                    # print(str(z))
-                    x = s.pop(0)
-                    y = s.pop()
-                    swap(x, z1, c)
-                    swap(y, z1, c)        
+                    swap(pL.pop(), c)
+                    swap(pL.pop(0), c)
+                c[0] = [c[0][1]]
+                
+                if 0 not in c[1]:
+                    c[1].append(0) 
+                
+                nL = sorted({tuple(sorted((x, const.n - x))) for x in range(const.n) \
+                    if not any(x in s for s in c)})
+                nL = [[x for x in y] for y in nL]  
+                
+                withOdds.append(gSum(const.n, const.t, const.p, c, nL, o))
+                # print(str(c))
+                # print(str(z)) 
     return withOdds
 
 # Exit if n is odd.
@@ -153,5 +165,6 @@ cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
-# for const in oL:
-#     print(const.to_string())
+for const in oL:
+    if const.p == 6 and const.t == 2:
+        print(const.to_string())
