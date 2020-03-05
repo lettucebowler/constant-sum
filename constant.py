@@ -93,17 +93,12 @@ def swap(pTup, cList):
 def getOdds(const):
     withOdds = [const]
     z = deepcopy(const.zsp)
-    c = []
     zR = [b[0] for b in z]
     zL = [b[1] for b in z]
     zL.reverse()
-    
-    if const.p == 1:
-        return withOdds
-    
+
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
     for o in oddCount:
-        del c
         c = deepcopy(const.csp)
         if const.t % 2 == 0 and o > 2:
             tL = [const.t, const.n - const.t]
