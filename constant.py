@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from math import gcd
+from copy import deepcopy
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -35,13 +36,13 @@ class gSum():
         return message
 
 # Validate list for constant-sum property
-def checkListForErrors(candidate, total, g):
+def checkListForErrors(candidate, total, t):
     checkList = [el for em in candidate for el in em]
     checkSet = set(checkList)
     good = []
     if len(checkSet) != len(checkList):
         good.append("duplicates")
-    if any(sum(k) % total != g for k in candidate):
+    if any(sum(k) % total != t for k in candidate):
         good.append("sum")
     return good
 
@@ -77,25 +78,6 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, total, t)
     return gSum(total, t, part, tL, nL, 0)
 
-# Find next element in cList that can be substituted by a pair in zList
-# def findNext(n, t, cList, zList):
-#     c0 = [v for v in cList if len(v) == 2]
-#     print("c0 : {0!r}".format(c0))
-#     z1 = [x[0] for x in zList]
-#     z2 = [x[1] for x in zList]
-#     c1 = [x for y in c0 for x in y]
-#     rL = []
-#     for c in c1:
-#         if c != n // 2 and c != t and c != 0 and c != n - t:
-#             for a, b in zList:
-#                 if (c - a in z1 or (c - a) % n in z1) and (c - a) % n != a % n:
-#                     rL = [a, (c - a) % n]
-#                     return [c, rL, n-c, [n - x for x in rL]]
-#                 if (c - b in z2 or (c - b) % n in z2) and (c - b) % n != b % n:
-#                     rL = [b, (c - b) % n]
-#                     return [c, rL, n-c, [n - x for x in rL]]
-#     return rL
-
 # Swap element in a constant-sum pair for a pair that sums to the element
 def swap(pTup, cList):
     p0 = pTup[0]
@@ -110,7 +92,7 @@ def swap(pTup, cList):
 # I think it will only work if p <= n // 4
 def getOdds(const):
     withOdds = [const]
-    z = [b for b in const.zsp]
+    z = deepcopy(const.zsp)
     c = []
     zR = [b[0] for b in z]
     zL = [b[1] for b in z]
@@ -122,34 +104,29 @@ def getOdds(const):
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
     for o in oddCount:
         del c
-        c = [b for b in const.csp]
+        c = deepcopy(const.csp)
+        if const.t % 2 == 0 and o > 2:
+            tL = [const.t, const.n - const.t]
+            z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
+            s = [(a + b) % const.n for a, b in z1]
+            pL = list(zip(s, z1))
+            
+            for f in range(o, 2, -2):
+                swap(pL.pop(), c)
+                swap(pL.pop(0), c)
+                    
+        c[0] = [c[0][1]]
+        if 0 not in c[1]:
+            c[1].append(0) 
         
-        if o == 2:
-            temp = const.csp[1: -1] + [[const.t], [0] + const.csp[1]]
-            temp.sort(key=len)
-            withOdds.append(gSum(const.n, const.t, const.p, temp, const.zsp, o))    
-        else:
-            if const.t % 2 == 0:
-                tL = [const.t, const.n - const.t]
-                z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
-                s = [(a + b) % const.n for a, b in z1]
-                pL = list(zip(s, z1))
-                
-                for f in range(o, 2, -2):
-                    swap(pL.pop(), c)
-                    swap(pL.pop(0), c)
-                c[0] = [c[0][1]]
-                
-                if 0 not in c[1]:
-                    c[1].append(0) 
-                
-                nL = sorted({tuple(sorted((x, const.n - x))) for x in range(const.n) \
-                    if not any(x in s for s in c)})
-                nL = [[x for x in y] for y in nL]  
-                
-                withOdds.append(gSum(const.n, const.t, const.p, c, nL, o))
-                # print(str(c))
-                # print(str(z)) 
+        nL = sorted({tuple(sorted((x, const.n - x))) for x in range(const.n) \
+            if not any(x in s for s in c)})
+        nL = [[x for x in y] for y in nL]        
+
+        # Check for errors and output
+        c.sort(key=len)
+        c += checkListForErrors(c, const.n, const.t)  
+        withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
     return withOdds
 
 # Exit if n is odd.
@@ -166,5 +143,4 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    if const.p == 6 and const.t == 2:
-        print(const.to_string())
+    print("{0}\n".format(const.to_string()))
