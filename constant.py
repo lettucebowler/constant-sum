@@ -49,7 +49,7 @@ def checkListForErrors(candidate, zandidate, total, t, o):
     if any(sum(k) % total != t for k in candidate):
         good.append("sum")
     if len([f for f in candidate if len(f) % 2 ==1]) != o:
-        good.append("odds")
+        good.append("oddsoff")
     return good
 
 # Create a constant-sum-partition from supplied partition
@@ -94,6 +94,9 @@ def swap(pTup, cList):
             x += p1
     return 0
 
+def genZList(cList, n):
+    return []
+
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
@@ -107,6 +110,8 @@ def getOdds(const):
         if const.p <= n // 4 and const.t % 2 == 0]
     for o in oddCount:
         c = deepcopy(const.csp)
+        
+        # Fancy substitution currently only works for even t
         if const.t % 2 == 0 and o > 2:
             tL = [const.t, const.n - const.t]
             z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
@@ -116,13 +121,13 @@ def getOdds(const):
             # Actually do the substitution
             cR = list(reversed(c))
             for cc in cR[0:o - 2]:
-                for aa in cc:
-                    if aa in s:
-                        i = s.index(aa)
-                        s.remove(aa)
-                        cc.remove(aa)
-                        cc += pL[i][1]
-                        pL.remove(pL[i])
+                aa = cR.index(cc) % 2
+                bb = cc[aa]
+                i = s.index(bb)
+                s.remove(bb)
+                cc.remove(bb)
+                cc += pL[i][1]
+                pL.remove(pL[i])
             c = list(reversed(cR))
         
         # Final easy substitution                     
@@ -132,12 +137,13 @@ def getOdds(const):
         
         # Generate Zsp list
         temp = reduce(operator.concat, c)
+        print(str(temp))
         nL = list(set([tuple(sorted((x, const.n - x))) for x in range(const.n) \
             if x not in temp]))
         nL = [[x for x in y] for y in nL]        
 
         # Check for errors and output
-        # c.sort(key=len)
+        c.sort(key=len)
         c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
     return withOdds
@@ -156,5 +162,5 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    if const.p == 6:
-        print("{0}\n".format(const.to_string()))
+    # if const.p == 6:
+    print("{0}\n".format(const.to_string()))
