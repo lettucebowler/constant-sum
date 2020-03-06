@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import argparse
+import operator
 from math import gcd
 from copy import deepcopy
+from functools import reduce
+
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
@@ -36,14 +39,17 @@ class gSum():
         return message
 
 # Validate list for constant-sum property
-def checkListForErrors(candidate, total, t):
-    checkList = [el for em in candidate for el in em]
-    checkSet = set(checkList)
+def checkListForErrors(candidate, zandidate, total, t, o):
+    checkList = reduce(operator.concat, candidate)
+    if zandidate != []:
+        checkList += reduce(operator.concat, zandidate)
     good = []
-    if len(checkSet) != len(checkList):
+    if len(checkList) != total:
         good.append("duplicates")
     if any(sum(k) % total != t for k in candidate):
         good.append("sum")
+    if len([f for f in candidate if len(f) % 2 ==1]) != o:
+        good.append("odds")
     return good
 
 # Create a constant-sum-partition from supplied partition
@@ -75,7 +81,7 @@ def getCSP(total, part, t, odds):
     nL = [[x for x in y] for y in nL]
 
     # Check for errors and output results
-    tL += checkListForErrors(tL, total, t)
+    tL += checkListForErrors(tL, nL, total, t, odds)
     return gSum(total, t, part, tL, nL, 0)
 
 # Swap element in a constant-sum pair for a pair that sums to the element
@@ -97,7 +103,8 @@ def getOdds(const):
     zL = [b[1] for b in z]
     zL.reverse()
 
-    oddCount = [2] + [f for f in range(4, const.p + 1, 2) if const.p <= n // 4]
+    oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
+        if const.p <= n // 4 and const.t % 2 == 0]
     for o in oddCount:
         c = deepcopy(const.csp)
         if const.t % 2 == 0 and o > 2:
@@ -106,21 +113,32 @@ def getOdds(const):
             s = [(a + b) % const.n for a, b in z1]
             pL = list(zip(s, z1))
             
-            for f in range(o, 2, -2):
-                swap(pL.pop(), c)
-                swap(pL.pop(0), c)
-                    
+            # Actually do the substitution
+            cR = list(reversed(c))
+            for cc in cR[0:o - 2]:
+                for aa in cc:
+                    if aa in s:
+                        i = s.index(aa)
+                        s.remove(aa)
+                        cc.remove(aa)
+                        cc += pL[i][1]
+                        pL.remove(pL[i])
+            c = list(reversed(cR))
+        
+        # Final easy substitution                     
         c[0] = [c[0][1]]
         if 0 not in c[1]:
             c[1].append(0) 
         
-        nL = sorted({tuple(sorted((x, const.n - x))) for x in range(const.n) \
-            if not any(x in s for s in c)})
+        # Generate Zsp list
+        temp = reduce(operator.concat, c)
+        nL = list(set([tuple(sorted((x, const.n - x))) for x in range(const.n) \
+            if x not in temp]))
         nL = [[x for x in y] for y in nL]        
 
         # Check for errors and output
-        c.sort(key=len)
-        c += checkListForErrors(c, const.n, const.t)  
+        # c.sort(key=len)
+        c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
     return withOdds
 
@@ -138,4 +156,5 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    print("{0}\n".format(const.to_string()))
+    if const.p == 6:
+        print("{0}\n".format(const.to_string()))
