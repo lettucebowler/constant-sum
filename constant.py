@@ -84,16 +84,6 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, nL, total, t, odds)
     return gSum(total, t, part, tL, nL, 0)
 
-# Swap element in a constant-sum pair for a pair that sums to the element
-def swap(pTup, cList):
-    p0 = pTup[0]
-    p1 = pTup[1]
-    for x in cList:
-        if p0 in x:
-            x.remove(p0)
-            x += p1
-    return 0
-
 def genZList(cList, n):
     return []
 
