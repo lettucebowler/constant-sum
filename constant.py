@@ -13,8 +13,7 @@ parser.add_argument("-n", dest='number', default=2, \
 args = parser.parse_args()
 n = args.number
 
-# n : number program is checking
-# part : partition of n to check for potential sums
+# Calculated possible sums for given p
 def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
@@ -40,16 +39,21 @@ class gSum():
 
 # Validate list for constant-sum property
 def checkListForErrors(candidate, zandidate, total, t, o):
+    good = []
     checkList = reduce(operator.concat, candidate)
     if zandidate != []:
         checkList += reduce(operator.concat, zandidate)
-    good = []
+    
     if len(checkList) != total:
         good.append("duplicates")
+        
     if any(sum(k) % total != t for k in candidate):
         good.append("sum")
-    if len([f for f in candidate if len(f) % 2 ==1]) != o:
+        
+    oddCount = [f for f in candidate if len(f) % 2 ==1]
+    if len(oddCount) != o:
         good.append("oddsoff")
+        
     return good
 
 # Create a constant-sum-partition from supplied partition
@@ -98,6 +102,7 @@ def getOdds(const):
 
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
+    
     for o in oddCount:
         c = deepcopy(const.csp)
         
@@ -122,12 +127,10 @@ def getOdds(const):
         
         # Final easy substitution                     
         c[0] = [c[0][1]]
-        if 0 not in c[1]:
-            c[1].append(0) 
+        c[1].append(0) 
         
         # Generate Zsp list
         temp = reduce(operator.concat, c)
-        print(str(temp))
         nL = list(set([tuple(sorted((x, const.n - x))) for x in range(const.n) \
             if x not in temp]))
         nL = [[x for x in y] for y in nL]        
@@ -152,5 +155,4 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    # if const.p == 6:
     print("{0}\n".format(const.to_string()))
