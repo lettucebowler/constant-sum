@@ -92,15 +92,15 @@ def findPairs(n, v, zList):
     rL = []
     for q in zList[:-1]:
         for w in zList[zList.index(q) + 1:]:
-            # print("q:{}\nz:{}\n\n".format(q, w, zList[zList.index(q) + 1:]))
+            print("q:{}\nz:{}\n\n".format(q, w, zList[zList.index(q) + 1:]))
             if (q[0] + w[0]) % n == v:
-                # rL = [[q[0], w[0]], [q[1], w[1]]]
+                rL = [[q[0], w[0]], [q[1], w[1]]]
                 rL = [[q[1], w[1]], [q[0], w[0]]]
                 break
             elif (q[1] + w[1]) % n == v: 
                 rL = [[q[0], w[0]], [q[1], w[1]]]
                 break
-    # print("{}\n{}\n{}\n".format(v, zList, rL))
+    print("{}\n{}\n{}\n".format(v, zList, rL))
     return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
@@ -119,11 +119,11 @@ def getOdds(const):
             cR = list(reversed(c))
             if (cR[0][1] + cR[-3][0]) % n == 0:
                 cR.insert(-2, cR.pop(0))
-            # print("p:{}\nt:{}\nz:{}\n{}\n{}\n".format(const.p, const.t, z, cR, o))
+            print("p:{}\nt:{}\nz:{}\n{}\n{}\n".format(const.p, const.t, z, cR, o))
             for index in range(0, o - 2, 2):
-                # print(str(index))
+                print(str(index))
                 pL = findPairs(n, cR[index][0], z)
-                # print(str(pL))
+                print(str(pL))
                 cR[index] = pL[1] + [cR[index][1]]
                 cR[index + 1] = pL[0] + [cR[index + 1][0]]
             c = list(reversed(cR))
@@ -155,6 +155,7 @@ pL = [p for p in rL if len(findSums(n, p)) != 0]
 tL = [findSums(n, p)[0] for p in pL if len(findSums(n, p)) != 0]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
+
 
 # Output results
 for const in oL:
