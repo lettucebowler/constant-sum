@@ -88,18 +88,26 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, nL, total, t, odds)
     return gSum(total, t, part, tL, nL, 0)
 
-def genZList(cList, n):
-    return []
+def findPairs(n, v, zList):
+    rL = []
+    for q in zList[:-1]:
+        for w in zList[zList.index(q) + 1:]:
+            # print("q:{}\nz:{}\n\n".format(q, w, zList[zList.index(q) + 1:]))
+            if (q[0] + w[0]) % n == v:
+                # rL = [[q[0], w[0]], [q[1], w[1]]]
+                rL = [[q[1], w[1]], [q[0], w[0]]]
+                break
+            elif (q[1] + w[1]) % n == v: 
+                rL = [[q[0], w[0]], [q[1], w[1]]]
+                break
+    # print("{}\n{}\n{}\n".format(v, zList, rL))
+    return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
     withOdds = [const]
     z = deepcopy(const.zsp)
-    # zR = [b[0] for b in z]
-    # zL = [b[1] for b in z]
-    # zL.reverse()
-
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
     
@@ -108,29 +116,16 @@ def getOdds(const):
         
         # Fancy substitution currently only works for even t
         if const.t % 2 == 0 and o > 2:
-            # tL = [const.t, const.n - const.t]
-            # z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
-            s = [(a + b) % const.n for a, b in z]
-            pL = {si: z1i for si, z1i in zip(s, z)}
-            
-            # Actually do the substitution
             cR = list(reversed(c))
             if (cR[0][1] + cR[-3][0]) % n == 0:
                 cR.insert(-2, cR.pop(0))
-            print("{}\n{}\n{}\n{}\n{}\n{}\n".format(const.p, const.t, z, s, cR, o))
-            # for cc in cR:
-            #     aa = cR.index(cc) % 2
-            #     bb = cc[aa]
-            #     i = s.index(bb)
-            #     s.remove(bb)
-            #     cc.remove(bb)
-            #     cc += pL[i][1]
-            #     pL.remove(pL[i])
-            
-            for aa in cR[:o - 2]:
-                bb = aa[(cR.index(aa)) % 2]
-                aa.remove(bb)
-                aa += pL[bb]
+            # print("p:{}\nt:{}\nz:{}\n{}\n{}\n".format(const.p, const.t, z, cR, o))
+            for index in range(0, o - 2, 2):
+                # print(str(index))
+                pL = findPairs(n, cR[index][0], z)
+                # print(str(pL))
+                cR[index] = pL[1] + [cR[index][1]]
+                cR[index + 1] = pL[0] + [cR[index + 1][0]]
             c = list(reversed(cR))
         
         # Final easy substitution                     
@@ -163,5 +158,6 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    # if const.p == 6:
     print("{0}\n".format(const.to_string()))
+    # if const.p == 4:
+    #     print("{0}\n".format(const.to_string()))
