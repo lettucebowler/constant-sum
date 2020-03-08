@@ -108,21 +108,39 @@ def getOdds(const):
         
         # Fancy substitution currently only works for even t
         if const.t % 2 == 0 and o > 2:
-            tL = [const.t, const.n - const.t]
+            # tL = [const.t, const.n - const.t]
+            tL = []
             z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
             s = [(a + b) % const.n for a, b in z1]
-            pL = list(zip(s, z1))
+            pL = {si: z1i for si, z1i in zip(s, z1)}
+            # pL = list(zip(s, z1))
+            
             
             # Actually do the substitution
             cR = list(reversed(c))
-            for cc in cR[0:o - 2]:
-                aa = cR.index(cc) % 2
-                bb = cc[aa]
-                i = s.index(bb)
-                s.remove(bb)
-                cc.remove(bb)
-                cc += pL[i][1]
-                pL.remove(pL[i])
+            # cR = deepcopy(c)
+            # if cR[0][1] in pL:
+            if cR[0][1] + cR[-3][0] == const.n:
+                cR.insert(o - 3, cR.pop(0))
+            # if const.p == 6 and const.t == 6:
+            print("{}\n{}\n{}\n{}\n{}\n".format(const.p, const.t, z1, s, cR))
+            # for cc in cR:
+            #     aa = cR.index(cc) % 2
+            #     bb = cc[aa]
+            #     i = s.index(bb)
+            #     s.remove(bb)
+            #     cc.remove(bb)
+            #     cc += pL[i][1]
+            #     pL.remove(pL[i])
+            
+            for aa in cR[0:o - 2]:
+            # for aa in cR[2:-1]:
+                bb = aa[(cR.index(aa)) % 2]
+                # for bb in aa:
+                #     if bb in pL:
+                aa.remove(bb)
+                aa += pL[bb]
+                        # break
             c = list(reversed(cR))
         
         # Final easy substitution                     
@@ -136,7 +154,7 @@ def getOdds(const):
         nL = [[x for x in y] for y in nL]        
 
         # Check for errors and output
-        c.sort(key=len)
+        # c.sort(key=len)
         c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
     return withOdds
@@ -155,4 +173,5 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    print("{0}\n".format(const.to_string()))
+    if const.p == 6:
+        print("{0}\n".format(const.to_string()))
