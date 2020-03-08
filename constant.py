@@ -118,12 +118,9 @@ def getOdds(const):
             
             # Actually do the substitution
             cR = list(reversed(c))
-            # cR = deepcopy(c)
-            # if cR[0][1] in pL:
-            if cR[0][1] + cR[-3][0] == const.n:
-                cR.insert(o - 3, cR.pop(0))
-            # if const.p == 6 and const.t == 6:
-            print("{}\n{}\n{}\n{}\n{}\n".format(const.p, const.t, z1, s, cR))
+            if (cR[0][1] + cR[-3][0]) % n == 0:
+                cR.insert(-2, cR.pop(0))
+            print("{}\n{}\n{}\n{}\n{}\n{}\n".format(const.p, const.t, z1, s, cR, o))
             # for cc in cR:
             #     aa = cR.index(cc) % 2
             #     bb = cc[aa]
@@ -133,14 +130,10 @@ def getOdds(const):
             #     cc += pL[i][1]
             #     pL.remove(pL[i])
             
-            for aa in cR[0:o - 2]:
-            # for aa in cR[2:-1]:
+            for aa in cR[:o - 2]:
                 bb = aa[(cR.index(aa)) % 2]
-                # for bb in aa:
-                #     if bb in pL:
                 aa.remove(bb)
                 aa += pL[bb]
-                        # break
             c = list(reversed(cR))
         
         # Final easy substitution                     
@@ -166,12 +159,12 @@ if n % 4 != 0:
 
 # Calculate a csp for each partition and possible sum
 rL = list(range(2, n // 2 + 1, 2))
-pL = [p for p in rL for t in findSums(n, p)]
-tL = [t for p in rL for t in findSums(n, p)]
+pL = [p for p in rL if len(findSums(n, p)) != 0]
+tL = [findSums(n, p)[0] for p in pL if len(findSums(n, p)) != 0]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    if const.p == 6:
-        print("{0}\n".format(const.to_string()))
+    # if const.p == 6:
+    print("{0}\n".format(const.to_string()))

@@ -17,7 +17,7 @@ def findPossibleSums(n, p):
     potentialSumList = list(range(1, n))
     return sorted(sum for sum in potentialSumList if sum * p % n == n // 2)
 
-for i in range(8):
+for i in range(0, 8, 2):
     print(str(i) + " MOD 8")
     for q in range(1, n + 1):
         if q % 8 == i:
