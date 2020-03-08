@@ -96,9 +96,9 @@ def genZList(cList, n):
 def getOdds(const):
     withOdds = [const]
     z = deepcopy(const.zsp)
-    zR = [b[0] for b in z]
-    zL = [b[1] for b in z]
-    zL.reverse()
+    # zR = [b[0] for b in z]
+    # zL = [b[1] for b in z]
+    # zL.reverse()
 
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
@@ -109,18 +109,15 @@ def getOdds(const):
         # Fancy substitution currently only works for even t
         if const.t % 2 == 0 and o > 2:
             # tL = [const.t, const.n - const.t]
-            tL = []
-            z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
-            s = [(a + b) % const.n for a, b in z1]
-            pL = {si: z1i for si, z1i in zip(s, z1)}
-            # pL = list(zip(s, z1))
-            
+            # z1 = [[a, b] for a, b in zip(zR, zL) if (a + b) % n not in tL]
+            s = [(a + b) % const.n for a, b in z]
+            pL = {si: z1i for si, z1i in zip(s, z)}
             
             # Actually do the substitution
             cR = list(reversed(c))
             if (cR[0][1] + cR[-3][0]) % n == 0:
                 cR.insert(-2, cR.pop(0))
-            print("{}\n{}\n{}\n{}\n{}\n{}\n".format(const.p, const.t, z1, s, cR, o))
+            print("{}\n{}\n{}\n{}\n{}\n{}\n".format(const.p, const.t, z, s, cR, o))
             # for cc in cR:
             #     aa = cR.index(cc) % 2
             #     bb = cc[aa]
