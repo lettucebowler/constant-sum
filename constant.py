@@ -88,17 +88,22 @@ def getCSP(total, part, t, odds):
     tL += checkListForErrors(tL, nL, total, t, odds)
     return gSum(total, t, part, tL, nL, 0)
 
-def findPairs(n, v, zList):
-    rL = []
-    zL= [bingo for bango in zList for bingo in bango]
-    # print("{}".format(zL))
+def findPairs(n, v, zL):
+    rL = {}
+    
+    print("pairz:{}".format(zL))
     for q in zL:
         for w in zL[zL.index(q) + 1:]:
-            # print("q:{}\nz:{}\n".format(q, w))
+            # print("v:{}\nq:{}\nw:{}\nz:{}\n".format(v, q, w, zL))
+
             if (q + w) % n == v:
-                rL = [[q, w],[n - q, n - w]]
-                break
-    # print("{}\n{}\n{}\n".format(v, zList, rL))
+                rT = [q, w,n - q, n - w]
+                rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+                # print("rT:{}\nzL:{}\n".format(rT, zL))
+                for rem in rT:
+                    print("remove:{}".format(rem))
+                    zL.remove(rem % n)
+                return rL
     
     # return []
     return rL
@@ -108,24 +113,28 @@ def findPairs(n, v, zList):
 def getOdds(const):
     withOdds = [const]
     z = deepcopy(const.zsp)
+    zL = [bingo for bango in z for bingo in bango]
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
     
     for o in oddCount:
         c = deepcopy(const.csp)
+        zL = [bingo for bango in z for bingo in bango]
         
         # Fancy substitution currently only works for even t
         if const.t % 2 == 0 and o > 2:
             cR = list(reversed(c))
             if (cR[0][1] + cR[-3][0]) % n == 0:
                 cR.insert(-2, cR.pop(0))
-            print("p:{}\nt:{}\nz:{}\n{}\n{}\n".format(const.p, const.t, z, cR, o))
+            print("\nzsp:{}".format(zL))
+            print("p:{}\nt:{}\nz:{}\ncR:{}\no:{}\n"\
+                .format(const.p, const.t, zL, cR, o))
             for index in range(0, o - 2, 2):
-                print(str(index))
-                pL = findPairs(n, cR[index][0], z)
-                print(str(pL))
-                cR[index] = pL[1] + [cR[index][1]]
-                cR[index + 1] = pL[0] + [cR[index + 1][0]]
+                print("index:{}".format(index))
+                pL = findPairs(n, cR[index][0], zL)
+                print("pl:{}".format(pL))
+                cR[index] = pL[cR[index][0]] + [cR[index][1]]
+                cR[index + 1] = pL[cR[index + 1][1]] + [cR[index + 1][0]]
             c = list(reversed(cR))
         
         # Final easy substitution                     
@@ -139,7 +148,9 @@ def getOdds(const):
         nL = [[x for x in y] for y in nL]        
 
         # Check for errors and output
-        # c.sort(key=len)
+        for k in c:
+            k.sort()
+        c.sort(key=len)
         c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
     return withOdds
@@ -159,4 +170,5 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    print("{0}\n".format(const.to_string()))
+    if const.p == 16:
+        print("{0}\n".format(const.to_string()))
