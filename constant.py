@@ -104,14 +104,14 @@ def getOdds(const):
     withOdds = [const]
     zT = [bingo for bango in const.zsp for bingo in bango]
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
-        if const.p <= n // 4 and const.t % 2 == 0]
+        if const.p <= n // 3]
     
     for o in oddCount:
         c = deepcopy(const.csp)
         zL = deepcopy(zT)
         
         # Fancy substitution currently only works for even t
-        if const.t % 2 == 0 and o > 2:
+        if o > 2:
             cR = list(reversed(c))
             if (cR[0][1] + cR[-3][0]) % n == 0:
                 cR.insert(-2, cR.pop(0))
