@@ -102,8 +102,7 @@ def findPairs(n, v, zL):
 # I think it will only work if p <= n // 4
 def getOdds(const):
     withOdds = [const]
-    z = deepcopy(const.zsp)
-    zL = [bingo for bango in z for bingo in bango]
+    zL = [bingo for bango in const.zsp for bingo in bango]
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
     
@@ -116,13 +115,8 @@ def getOdds(const):
             cR = list(reversed(c))
             if (cR[0][1] + cR[-3][0]) % n == 0:
                 cR.insert(-2, cR.pop(0))
-            print("\nzsp:{}".format(zL))
-            print("p:{}\nt:{}\nz:{}\ncR:{}\no:{}\n"\
-                .format(const.p, const.t, zL, cR, o))
             for index in range(0, o - 2, 2):
-                print("index:{}".format(index))
                 pL = findPairs(n, cR[index][0], zL)
-                print("pl:{}".format(pL))
                 cR[index] = pL[cR[index][0]] + [cR[index][1]]
                 cR[index + 1] = pL[cR[index + 1][1]] + [cR[index + 1][0]]
             c = list(reversed(cR))
@@ -143,6 +137,7 @@ def getOdds(const):
         c.sort(key=len)
         c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
+
     return withOdds
 
 # Exit if n is odd.
@@ -156,7 +151,6 @@ pL = [p for p in rL if len(findSums(n, p)) != 0]
 tL = [findSums(n, p)[0] for p in pL if len(findSums(n, p)) != 0]
 cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
 oL = [y for x in cL for y in getOdds(x)]
-
 
 # Output results
 for const in oL:
