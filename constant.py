@@ -170,5 +170,5 @@ oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
 for const in oL:
-    if const.p == 16:
-        print("{0}\n".format(const.to_string()))
+    # if const.p == 16:
+    print("{0}\n".format(const.to_string()))
