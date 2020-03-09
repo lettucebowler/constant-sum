@@ -72,8 +72,8 @@ def getCSP(total, part, t, odds):
     # Generate list of offsets
     l = lcm(total, t) // (t * 2)
     oL = [(off + l) // (l * 2) for off in range(part)]
-    if part <= n // 4:
-        oL = [2 * f for f in oL]
+    # if part <= n // 4:
+    #     oL = [2 * f for f in oL]
 
     # Combine lists with offset applied
     zL = zip(lL, rL, oL)
@@ -90,17 +90,17 @@ def getCSP(total, part, t, odds):
 
 def findPairs(n, v, zList):
     rL = []
-    for q in zList[:-1]:
-        for w in zList[zList.index(q) + 1:]:
-            print("q:{}\nz:{}\n\n".format(q, w, zList[zList.index(q) + 1:]))
-            if (q[0] + w[0]) % n == v:
-                rL = [[q[0], w[0]], [q[1], w[1]]]
-                rL = [[q[1], w[1]], [q[0], w[0]]]
+    zL= [bingo for bango in zList for bingo in bango]
+    # print("{}".format(zL))
+    for q in zL:
+        for w in zL[zL.index(q) + 1:]:
+            # print("q:{}\nz:{}\n".format(q, w))
+            if (q + w) % n == v:
+                rL = [[q, w],[n - q, n - w]]
                 break
-            elif (q[1] + w[1]) % n == v: 
-                rL = [[q[0], w[0]], [q[1], w[1]]]
-                break
-    print("{}\n{}\n{}\n".format(v, zList, rL))
+    # print("{}\n{}\n{}\n".format(v, zList, rL))
+    
+    # return []
     return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
