@@ -104,7 +104,7 @@ def getOdds(const):
     withOdds = [const]
     zT = [bingo for bango in const.zsp for bingo in bango]
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
-        if const.p <= n // 3]
+        if const.p <= n // 4 and const.t % 2 == 0]
     
     for o in oddCount:
         c = deepcopy(const.csp)
