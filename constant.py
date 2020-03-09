@@ -102,13 +102,13 @@ def findPairs(n, v, zL):
 # I think it will only work if p <= n // 4
 def getOdds(const):
     withOdds = [const]
-    zL = [bingo for bango in const.zsp for bingo in bango]
+    zT = [bingo for bango in const.zsp for bingo in bango]
     oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
     
     for o in oddCount:
         c = deepcopy(const.csp)
-        zL = [bingo for bango in z for bingo in bango]
+        zL = deepcopy(zT)
         
         # Fancy substitution currently only works for even t
         if const.t % 2 == 0 and o > 2:
