@@ -112,20 +112,14 @@ def getOdds(const):
         
         # Fancy substitution currently only works for even t
         if o > 2:
-            cR = list(reversed(c))
-            sumDict = {v[0]: cR.index(v) for v in cR}
-            sumDict.update({v[1]: cR.index(v) for v in cR})
-            # print("{}".format(sumDict))
-            # if (cR[0][1] + cR[-3][0]) % n == 0:
-            #     cR.insert(-2, cR.pop(0))
-            for index in range(0, o - 2, 2):
-                pL = findPairs(n, cR[index][0], zL)
-                # cR[index] = pL[cR[index][0]] + [cR[index][1]]
-                # cR[index + 1] = pL[cR[index + 1][1]] + [cR[index + 1][0]]
+            sumDict = {v[0]: c.index(v) for v in c}
+            sumDict.update({v[1]: c.index(v) for v in c})
+            for index in range(-1, -1 * (o - 3) - 1, -2):
+                print("{}".format(index))
+                pL = findPairs(n, c[index][0], zL)
                 for key in pL:
-                    cR[sumDict[key]].remove(key)
-                    cR[sumDict[key]] += pL[key]
-            c = list(reversed(cR))
+                    c[sumDict[key]].remove(key)
+                    c[sumDict[key]] += pL[key]
         
         # Final easy substitution                     
         c[0] = [c[0][1]]
@@ -140,7 +134,7 @@ def getOdds(const):
         # Check for errors and output
         for k in c:
             k.sort()
-        c.sort(key=len)
+        # c.sort(key=len)
         c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
 
