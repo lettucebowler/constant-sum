@@ -80,7 +80,6 @@ def getCSP(total, part, t, odds):
     # Construct list of remaining zero-sum pairs
     nL = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in tL)})
-    nL = [[x for x in y] for y in nL]
 
     # Check for errors and output results
     tL += checkListForErrors(tL, nL, total, t, odds)
@@ -106,13 +105,12 @@ def getOdds(const):
     zT = [bingo for bango in const.zsp for bingo in bango]
     withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
     oddCount = [f for f in range(4, const.p + 1, 2) \
-        if const.p <= n // 4 and const.t % 2 == 0]
+        # if const.p <= n // 4 and const.t % 2 == 0]
+        if const.p <= n // 4]
 
     for o in oddCount:
         c = deepcopy(const.csp)
         zL = deepcopy(zT)
-        
-        # Fancy substitution currently only works for even t
         sumDict = {v[0]: c.index(v) for v in c}
         sumDict.update({v[1]: c.index(v) for v in c})
         for index in range(-1, -1 * (o - 3) - 1, -2):
@@ -120,22 +118,14 @@ def getOdds(const):
             for key in pL:
                 c[sumDict[key]].remove(key)
                 c[sumDict[key]] += pL[key]
-        
-        # Final easy substitution                     
-        c[0] = [c[0][1]]
-        c[1].append(0)
+        c = [[c[0][1]], [0] + c[1]] + c[2:]
         
         # Generate Zsp list
-        temp = reduce(operator.concat, c)
         nL = list(set([tuple(sorted((x, const.n - x))) for x in range(const.n) \
-            if x not in temp]))
-        nL = [[x for x in y] for y in nL]        
+            if not any(x in f for f in c)]))      
 
         # Check for errors and output
-        for k in c:
-            k.sort()
-        c.sort(key=len)
-        c.append(checkListForErrors(c, nL, const.n, const.t, o))  
+        c = sorted([sorted(k) for k in c]) + checkListForErrors(c, nL, const.n, const.t, o) 
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
 
     return withOdds
