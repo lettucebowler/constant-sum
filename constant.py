@@ -5,7 +5,6 @@ from math import gcd
 from copy import deepcopy
 from functools import reduce
 
-
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
 parser.add_argument("-n", dest='number', default=2, \
@@ -13,14 +12,12 @@ parser.add_argument("-n", dest='number', default=2, \
 args = parser.parse_args()
 n = args.number
 
-# Calculated possible sums for given p
 def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
 def lcm(a, b):
     return a * b // gcd(a, b)
 
-# Storage object for csp data
 class gSum():
     def __init__(self, n, t, p, csp, zsp, odds):
         self.n = n
@@ -37,7 +34,6 @@ class gSum():
             message += "\n   zsp:{0!r}".format(self.zsp)
         return message
 
-# Validate list for constant-sum property
 def checkListForErrors(candidate, zandidate, total, t, o):
     good = []
     checkList = reduce(operator.concat, candidate)
@@ -58,30 +54,22 @@ def checkListForErrors(candidate, zandidate, total, t, o):
 
 # Create a constant-sum-partition from supplied partition
 def getCSP(total, part, t, odds):
-
-    # Skip processing if result is obvious
     if part == 1:
         return gSum(total, t, part, list(range(total)), [], 0)
 
     # Generate list of left-hand elements in each g-sum pair
     lL = [c for c in range(0, -part * t, -t)]
-
-    # Generate list of right-hand elements in each g-sum pair
     rL = [b for b in range(t, part * t + 1, t)]
 
     # Generate list of offsets
     l = lcm(total, t) // (t * 2)
     oL = [(off + l) // (l * 2) for off in range(part)]
 
-    # Combine lists with offset applied
     zL = zip(lL, rL, oL)
     tL = [[(l + o) % total, (r - o) % total] for l, r, o in zL]
-
-    # Construct list of remaining zero-sum pairs
     nL = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in tL)})
 
-    # Check for errors and output results
     tL += checkListForErrors(tL, nL, total, t, odds)
     return gSum(total, t, part, tL, nL, 0)
 
@@ -98,7 +86,7 @@ def findPairs(n, v, zL):
     return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
-# I think it will only work if p <= n // 4
+# I think it will only work if p <= n // 4 and t even
 def getOdds(const):
     c = deepcopy(const.csp)
     c = [[c[0][1]], [0] + c[1]] + c[2:]
