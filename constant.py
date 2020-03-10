@@ -132,9 +132,8 @@ def getOdds(const):
         nL = [[x for x in y] for y in nL]        
 
         # Check for errors and output
-        for k in c:
-            k.sort()
-        c.sort(key=len)
+        # c.sort(key=len)
+        c = [f.sort() for f in c].sort(key=len)
         c += checkListForErrors(c, nL, const.n, const.t, o)  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
 
