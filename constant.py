@@ -113,12 +113,18 @@ def getOdds(const):
         # Fancy substitution currently only works for even t
         if o > 2:
             cR = list(reversed(c))
-            if (cR[0][1] + cR[-3][0]) % n == 0:
-                cR.insert(-2, cR.pop(0))
+            sumDict = {v[0]: cR.index(v) for v in cR}
+            sumDict.update({v[1]: cR.index(v) for v in cR})
+            # print("{}".format(sumDict))
+            # if (cR[0][1] + cR[-3][0]) % n == 0:
+            #     cR.insert(-2, cR.pop(0))
             for index in range(0, o - 2, 2):
                 pL = findPairs(n, cR[index][0], zL)
-                cR[index] = pL[cR[index][0]] + [cR[index][1]]
-                cR[index + 1] = pL[cR[index + 1][1]] + [cR[index + 1][0]]
+                # cR[index] = pL[cR[index][0]] + [cR[index][1]]
+                # cR[index + 1] = pL[cR[index + 1][1]] + [cR[index + 1][0]]
+                for key in pL:
+                    cR[sumDict[key]].remove(key)
+                    cR[sumDict[key]] += pL[key]
             c = list(reversed(cR))
         
         # Final easy substitution                     
