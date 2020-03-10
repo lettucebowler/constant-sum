@@ -86,7 +86,6 @@ def findPairs(n, v, zL):
     return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
-# I think it will only work if p <= n // 4 and t even
 def getOdds(const):
     c = deepcopy(const.csp)
     c = [[c[0][1]], [0] + c[1]] + c[2:]
@@ -94,7 +93,6 @@ def getOdds(const):
     withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
     oddCount = [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
-        # if const.p <= n // 4]
 
     for o in oddCount:
         c = deepcopy(const.csp)
@@ -124,10 +122,7 @@ if n % 4 != 0:
     exit()
 
 # Calculate a csp for each partition and possible sum
-rL = list(range(2, n // 2 + 1, 2))
-pL = [p for p in rL if len(findSums(n, p)) != 0]
-tL = [findSums(n, p)[0] for p in pL if len(findSums(n, p)) != 0]
-cL = [getCSP(n, p, pSum, 0) for p, pSum in zip(pL, tL)]
+cL = [getCSP(n, p, pSum, 0) for p in range(2, n // 2 + 1, 2) for pSum in findSums(n, p)]
 oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
