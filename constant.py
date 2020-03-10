@@ -101,29 +101,29 @@ def findPairs(n, v, zL):
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 # I think it will only work if p <= n // 4
 def getOdds(const):
-    withOdds = [const]
+    c = deepcopy(const.csp)
+    c = [[c[0][1]], [0] + c[1]] + c[2:]
     zT = [bingo for bango in const.zsp for bingo in bango]
-    oddCount = [2] + [f for f in range(4, const.p + 1, 2) \
+    withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
+    oddCount = [f for f in range(4, const.p + 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
-    
+
     for o in oddCount:
         c = deepcopy(const.csp)
         zL = deepcopy(zT)
         
         # Fancy substitution currently only works for even t
-        if o > 2:
-            sumDict = {v[0]: c.index(v) for v in c}
-            sumDict.update({v[1]: c.index(v) for v in c})
-            for index in range(-1, -1 * (o - 3) - 1, -2):
-                print("{}".format(index))
-                pL = findPairs(n, c[index][0], zL)
-                for key in pL:
-                    c[sumDict[key]].remove(key)
-                    c[sumDict[key]] += pL[key]
+        sumDict = {v[0]: c.index(v) for v in c}
+        sumDict.update({v[1]: c.index(v) for v in c})
+        for index in range(-1, -1 * (o - 3) - 1, -2):
+            pL = findPairs(n, c[index][0], zL)
+            for key in pL:
+                c[sumDict[key]].remove(key)
+                c[sumDict[key]] += pL[key]
         
         # Final easy substitution                     
         c[0] = [c[0][1]]
-        c[1].append(0) 
+        c[1].append(0)
         
         # Generate Zsp list
         temp = reduce(operator.concat, c)
@@ -134,8 +134,8 @@ def getOdds(const):
         # Check for errors and output
         for k in c:
             k.sort()
-        # c.sort(key=len)
-        c += checkListForErrors(c, nL, const.n, const.t, o)  
+        c.sort(key=len)
+        c.append(checkListForErrors(c, nL, const.n, const.t, o))  
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
 
     return withOdds
