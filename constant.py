@@ -74,8 +74,8 @@ def getCSP(total, part, t, odds):
     pairs += checkListForErrors(pairs, leftovers, total, t, odds)
     return gSum(total, t, part, pairs, leftovers, 0)
 
-# def findPairs(n, sum, searchList):
-def findPairs(n, v, zL):
+def findPairs(n, sum, searchList):
+# def findPairs(n, v, zL):
     rL = {}
     # searchList.sort()
     # for q in searchList:
@@ -88,24 +88,24 @@ def findPairs(n, v, zL):
     #         for rem in rT:
     #             searchList.remove(rem)
     #         return rL
-    # for i, q in enumerate(searchList):
-    #     for w in searchList[i + 1:]:
-    #         if (q + w) % n == sum:
-    #             rT = [q, w,n - q, n - w]
-    #             rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-    #             for rem in rT:
-    #                 searchList.remove(rem)
-    #             return rL
-    # return rL
-    for q in zL:
-        for w in zL[zL.index(q) + 1:]:
-            if (q + w) % n == v:
+    for i, q in enumerate(searchList):
+        for w in searchList[i + 1:]:
+            if (q + w) % n == sum:
                 rT = [q, w,n - q, n - w]
                 rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
                 for rem in rT:
-                    zL.remove(rem % n)
-            return rL
+                    searchList.remove(rem)
+                return rL
     return rL
+    # for q in zL:
+    #     for w in zL[zL.index(q) + 1:]:
+    #         if (q + w) % n == v:
+    #             rT = [q, w,n - q, n - w]
+    #             rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+    #             for rem in rT:
+    #                 zL.remove(rem % n)
+    #         return rL
+    # return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 def getOdds(const):
@@ -113,7 +113,7 @@ def getOdds(const):
     c = [[c[0][1]], [0] + c[1]] + c[2:]
     zT = [bingo for bango in const.zsp for bingo in bango]
     withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
-    oddCount = [f for f in range(4, const.p + 1, 2) \
+    oddCount = [f for f in range(4, const.p - 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
 
     for o in oddCount:
