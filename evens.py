@@ -33,7 +33,7 @@ class gSum():
             message += "\n   zsp:{0!r}".format(self.zsp)
         return message
 
-def checkListForErrors(candidate, zandidate, total, t, o):
+def checkListForErrors(candidate, zandidate, total, t):
     good = []
     checkList = reduce(operator.concat, candidate)
     if zandidate != []:
@@ -44,15 +44,11 @@ def checkListForErrors(candidate, zandidate, total, t, o):
         
     if any(sum(k) % total != t for k in candidate):
         good.append("sum")
-
-    oddCount = [f for f in candidate if len(f) % 2 == 1]
-    if len(oddCount) != o:
-        good.append("oddsoff")
         
     return good
 
 # Create a constant-sum-partition from supplied partition
-def getCSP(total, part, t, odds):
+def getCSP(total, part, t):
     if part == 1:
         return gSum(total, t, part, list(range(total)), [], 0)
 
@@ -71,72 +67,8 @@ def getCSP(total, part, t, odds):
         if not any(x in s for s in pairs)})
 
     # Check for errors
-    pairs += checkListForErrors(pairs, leftovers, total, t, odds)
+    pairs += checkListForErrors(pairs, leftovers, total, t)
     return gSum(total, t, part, pairs, leftovers, 0)
-
-def findPairs(n, sum, searchList):
-# def findPairs(n, v, zL):
-    rL = {}
-    # searchList.sort()
-    # for q in searchList:
-    #     modDict = {(q + w) % n: w for w in searchList if w != q}
-    #     print("q:{} {} {}".format(q, sum, modDict))
-    #     if sum in modDict:
-    #         w = modDict[sum]
-    #         rT = [q, w,n - q, n - w]
-    #         rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-    #         for rem in rT:
-    #             searchList.remove(rem)
-    #         return rL
-    for i, q in enumerate(searchList):
-        for w in searchList[i + 1:]:
-            if (q + w) % n == sum:
-                rT = [q, w,n - q, n - w]
-                rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-                for rem in rT:
-                    searchList.remove(rem)
-                return rL
-    return rL
-    # for q in zL:
-    #     for w in zL[zL.index(q) + 1:]:
-    #         if (q + w) % n == v:
-    #             rT = [q, w,n - q, n - w]
-    #             rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-    #             for rem in rT:
-    #                 zL.remove(rem % n)
-    #         return rL
-    # return rL
-
-# Derive possible odd-cardinality csp from a given even-cardinality csp
-def getOdds(const):
-    c = deepcopy(const.csp)
-    c = [[c[0][1]], [0] + c[1]] + c[2:]
-    zT = [bingo for bango in const.zsp for bingo in bango]
-    withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
-    oddCount = [f for f in range(4, const.p - 1, 2) \
-        if const.p <= n // 4 and const.t % 2 == 0]
-
-    for o in oddCount:
-        c = deepcopy(const.csp)
-        zL = deepcopy(zT)
-        sumDict = {v[0]: c.index(v) for v in c}
-        sumDict.update({v[1]: c.index(v) for v in c})
-        for index in range(-1, -1 * (o - 3) - 1, -2):
-            pL = findPairs(n, c[index][0], zL)
-            for key in pL:
-                c[sumDict[key]].remove(key)
-                c[sumDict[key]] += pL[key]
-        c = [[c[0][1]], [0] + c[1]] + c[2:]
-        
-        # Generate Zsp list
-        nL = list(set([tuple(sorted((x, const.n - x))) for x in range(const.n) \
-            if not any(x in f for f in c)]))      
-
-        # Check for errors and output
-        c = sorted([sorted(k) for k in c]) + checkListForErrors(c, nL, const.n, const.t, o) 
-        withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
-
-    return withOdds
 
 # Exit if n is odd.
 if n % 4 != 0:
@@ -144,9 +76,9 @@ if n % 4 != 0:
     exit()
 
 # Calculate a csp for each partition and possible sum
-cL = [getCSP(n, p, pSum, 0) for p in range(2, n // 2 + 1, 2) for pSum in findSums(n, p)]
-oL = [y for x in cL for y in getOdds(x)]
+nums = range(2, n // 2 + 1, 2)
+cL = [getCSP(n, p, pSum) for p in nums for pSum in findSums(n, p)]
 
 # Output results
-for const in oL:
+for const in cL:
     print("{}\n".format(const.to_string()))
