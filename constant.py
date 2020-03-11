@@ -77,24 +77,24 @@ def getCSP(total, part, t, odds):
 def findPairs(n, sum, searchList):
     rL = {}
     searchList.sort()
-    for q in searchList:
-        modDict = {(q + w) % n: w for w in searchList if w != q}
-        print("q:{} {} {}".format(q, sum, modDict))
-        if sum in modDict:
-            w = modDict[sum]
-            rT = [q, w,n - q, n - w]
-            rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-            for rem in rT:
-                searchList.remove(rem)
-            return rL
-    # for i, q in enumerate(searchList):
-    #     for w in searchList[i + 1:]:
-    #         if (q + w) % n == sum:
-    #             rT = [q, w,n - q, n - w]
-    #             rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-    #             for rem in rT:
-    #                 searchList.remove(rem)
-    #             return rL
+    # for q in searchList:
+    #     modDict = {(q + w) % n: w for w in searchList if w != q}
+    #     print("q:{} {} {}".format(q, sum, modDict))
+    #     if sum in modDict:
+    #         w = modDict[sum]
+    #         rT = [q, w,n - q, n - w]
+    #         rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+    #         for rem in rT:
+    #             searchList.remove(rem)
+    #         return rL
+    for i, q in enumerate(searchList):
+        for w in searchList[i + 1:]:
+            if (q + w) % n == sum:
+                rT = [q, w,n - q, n - w]
+                rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+                for rem in rT:
+                    searchList.remove(rem)
+                return rL
     return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
