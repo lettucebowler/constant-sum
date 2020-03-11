@@ -7,8 +7,7 @@ from functools import reduce
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='A parser')
-parser.add_argument("-n", dest='number', default=2, \
-    help='number to partition', type=int)
+parser.add_argument("-n", dest='number', default=2, type=int)
 args = parser.parse_args()
 n = args.number
 
@@ -45,8 +44,8 @@ def checkListForErrors(candidate, zandidate, total, t, o):
         
     if any(sum(k) % total != t for k in candidate):
         good.append("sum")
-        
-    oddCount = [f for f in candidate if len(f) % 2 ==1]
+
+    oddCount = [f for f in candidate if len(f) % 2 == 1]
     if len(oddCount) != o:
         good.append("oddsoff")
         
@@ -58,31 +57,40 @@ def getCSP(total, part, t, odds):
         return gSum(total, t, part, list(range(total)), [], 0)
 
     # Generate list of left-hand elements in each g-sum pair
-    lL = [c for c in range(0, -part * t, -t)]
-    rL = [b for b in range(t, part * t + 1, t)]
+    lefts = [c for c in range(0, -part * t, -t)]
+    rights = [b for b in range(t, part * t + 1, t)]
 
     # Generate list of offsets
-    l = lcm(total, t) // (t * 2)
-    oL = [(off + l) // (l * 2) for off in range(part)]
+    order = lcm(total, t) // (t * 2)
+    offsets = [(off + order) // (order * 2) for off in range(part)]
 
-    zL = zip(lL, rL, oL)
-    tL = [[(l + o) % total, (r - o) % total] for l, r, o in zL]
-    nL = sorted({tuple(sorted((x, total - x))) for x in range(total) \
-        if not any(x in s for s in tL)})
+    # Glue it all together
+    zipped = zip(lefts, rights, offsets)
+    pairs = [[(l + o) % total, (r - o) % total] for l, r, o in zipped]
+    leftovers = sorted({tuple(sorted((x, total - x))) for x in range(total) \
+        if not any(x in s for s in pairs)})
 
-    tL += checkListForErrors(tL, nL, total, t, odds)
-    return gSum(total, t, part, tL, nL, 0)
+    # Check for errors
+    pairs += checkListForErrors(pairs, leftovers, total, t, odds)
+    return gSum(total, t, part, pairs, leftovers, 0)
 
-def findPairs(n, v, zL):
+def findPairs(n, sum, searchList):
     rL = {}
-    for q in zL:
-        for w in zL[zL.index(q) + 1:]:
-            if (q + w) % n == v:
-                rT = [q, w,n - q, n - w]
-                rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-                for rem in rT:
-                    zL.remove(rem % n)
-                return rL
+    for q in searchList:
+        modDict = {(q + w) % n: w for w in searchList if w != q}
+        print("q:{} {} {}".format(q, sum, modDict))
+        if sum in modDict:
+            w = modDict[sum]
+            rT = [q, w,n - q, n - w]
+            rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+            for rem in rT:
+                searchList.remove(rem)
+        # for w in searchList[i + 1:]:
+        #     if (q + w) % n == sum:
+        #         rT = [q, w,n - q, n - w]
+        #         rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+        #         for rem in rT:
+        #             searchList.remove(rem)
     return rL
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
