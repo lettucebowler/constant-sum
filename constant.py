@@ -102,11 +102,11 @@ def findPairs(n, v, zL):
             if (q + w) % n == v:
                 rT = [q, w,n - q, n - w]
                 rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-            for rem in rT:
-                zL.remove(rem % n)
+                for rem in rT:
+                    zL.remove(rem % n)
             return rL
     return rL
-    
+
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 def getOdds(const):
     c = deepcopy(const.csp)
