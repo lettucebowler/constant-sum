@@ -74,9 +74,10 @@ def getCSP(total, part, t, odds):
     pairs += checkListForErrors(pairs, leftovers, total, t, odds)
     return gSum(total, t, part, pairs, leftovers, 0)
 
-def findPairs(n, sum, searchList):
+# def findPairs(n, sum, searchList):
+def findPairs(n, v, zL):
     rL = {}
-    searchList.sort()
+    # searchList.sort()
     # for q in searchList:
     #     modDict = {(q + w) % n: w for w in searchList if w != q}
     #     print("q:{} {} {}".format(q, sum, modDict))
@@ -87,16 +88,25 @@ def findPairs(n, sum, searchList):
     #         for rem in rT:
     #             searchList.remove(rem)
     #         return rL
-    for i, q in enumerate(searchList):
-        for w in searchList[i + 1:]:
-            if (q + w) % n == sum:
+    # for i, q in enumerate(searchList):
+    #     for w in searchList[i + 1:]:
+    #         if (q + w) % n == sum:
+    #             rT = [q, w,n - q, n - w]
+    #             rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
+    #             for rem in rT:
+    #                 searchList.remove(rem)
+    #             return rL
+    # return rL
+    for q in zL:
+        for w in zL[zL.index(q) + 1:]:
+            if (q + w) % n == v:
                 rT = [q, w,n - q, n - w]
                 rL = {(q + w) % n: [q, w], (2 * n - q - w) % n: [n - q, n - w]}
-                for rem in rT:
-                    searchList.remove(rem)
-                return rL
+            for rem in rT:
+                zL.remove(rem % n)
+            return rL
     return rL
-
+    
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 def getOdds(const):
     c = deepcopy(const.csp)
