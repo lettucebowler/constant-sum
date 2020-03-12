@@ -85,6 +85,11 @@ def findPairs(n, sum, searchList):
                 return rL
     return rL
 
+def get_orders(n, t):
+    order_t = [t for t in range(0, n, t)]
+    print("{}".format(order_t))
+    # orders = 
+
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 def getOdds(const):
     c = deepcopy(const.csp)
