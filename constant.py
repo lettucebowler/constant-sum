@@ -14,11 +14,20 @@ n = args.number
 def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
-def lcm(a, b):
-    return a * b // gcd(a, b)
-
 def get_order_t(n, t):
     return n * t // gcd(n, t) // t 
+
+def gen_orders(n, t):
+    order_t = [0]
+    i = t
+    while i != 0:
+        order_t.append(i)
+        i = (i + t) % n
+
+    orders = dict()
+    for i, num in enumerate(range(n // len(order_t))):
+        orders.update({i: [num + i for num in order_t]})
+    return orders
 
 class gSum():
     def __init__(self, n, t, p, csp, zsp, odds):
@@ -126,8 +135,8 @@ if n % 4 != 0:
 
 # Calculate a csp for each partition and possible sum
 cL = [getCSP(n, p, pSum, 0) for p in range(2, n // 2 + 1, 2) for pSum in findSums(n, p)]
-oL = [y for x in cL for y in getOdds(x)]
+# oL = [y for x in cL for y in getOdds(x)]
 
 # Output results
-for const in oL:
+for const in cL:
     print("{}\n".format(const.to_string()))
