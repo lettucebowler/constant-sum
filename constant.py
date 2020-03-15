@@ -61,7 +61,7 @@ def checkListForErrors(candidate, zandidate, total, t, o):
 
 def get_order_list(n, t, d):
     order_t = [d]
-    i = t + d
+    i = (t + d) % n
     while i != d:
         order_t.append(i)
         i = (i + t) % n
