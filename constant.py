@@ -71,7 +71,7 @@ def get_order_list(n, t, d):
 def getCSP(total, part, t, odds):
     if part == 1:
         return gSum(total, t, part, list(range(total)), [], 0)
-    o_num = 2 * p // get_order_t(n, t) - 1
+    o_num = 2 * part // get_order_t(n, t) - 1
     left = get_order_list(n, t, t)
     right = get_order_list(n, n - t, 0)  
     pairs = [[lefty, righty] for lefty, righty in zip(left, right)][:get_order_t(n, t) // 2]
