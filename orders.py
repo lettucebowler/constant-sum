@@ -34,4 +34,4 @@ def gen_orders(n, t):
     return orders
 
 sums = findSums(n, p)
-print("{}".format(gen_orders(n, t)))
+print("{}".format(gen_orders(n, sums[0])))

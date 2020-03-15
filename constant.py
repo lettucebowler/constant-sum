@@ -34,22 +34,22 @@ class gSum():
         return message
 
 def checkListForErrors(candidate, zandidate, total, t, o):
-    good = []
+    errors = []
     checkList = reduce(operator.concat, candidate)
     if zandidate != []:
         checkList += reduce(operator.concat, zandidate)
     
     if len(checkList) != total:
-        good.append("duplicates")
+        errors.append("duplicates")
         
     if any(sum(k) % total != t for k in candidate):
-        good.append("sum")
+        errors.append("sum")
 
     oddCount = [f for f in candidate if len(f) % 2 == 1]
     if len(oddCount) != o:
-        good.append("oddsoff")
+        errors.append("oddsoff")
         
-    return good
+    return errors
 
 # Create a constant-sum-partition from supplied partition
 def getCSP(total, part, t, odds):
