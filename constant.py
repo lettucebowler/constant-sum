@@ -72,13 +72,13 @@ def getCSP(total, part, t, odds):
     if part == 1:
         return gSum(total, t, part, list(range(total)), [], 0)
     o_num = 2 * part // get_order_t(n, t) - 1
-    left = get_order_list(n, t, t)
-    right = get_order_list(n, n - t, 0)  
-    pairs = [[lefty, righty] for lefty, righty in zip(left, right)][:get_order_t(n, t) // 2]
+    lefts = get_order_list(n, t, t)[:get_order_t(n, t) // 2]
+    rights = get_order_list(n, n - t, 0)[:get_order_t(n, t) // 2] 
+    pairs = [[lefty, righty] for lefty, righty in zip(lefts, rights)]
     for offset in range(1, o_num // 2 + 1):
-        left = get_order_list(n, t, offset)
-        right = get_order_list(n, n - t, (-1 * offset) % t)
-        pairs += [[lefty, righty] for lefty, righty in zip(left, right)]
+        lefts = get_order_list(n, t, offset)
+        rights = get_order_list(n, n - t, (-1 * offset) % t)
+        pairs.extend([[lefty, righty] for lefty, righty in zip(lefts, rights)])
     leftovers = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in pairs)})
     pairs += checkListForErrors(pairs, leftovers, total, t, odds)
