@@ -50,39 +50,37 @@ def checkListForErrors(candidate, zandidate, total, t, o):
     checkList = reduce(operator.concat, candidate)
     if zandidate != []:
         checkList += reduce(operator.concat, zandidate)
-    
     if len(checkList) != total:
         errors.append("duplicates")
-        
     if any(sum(k) % total != t for k in candidate):
         errors.append("sum")
-
     oddCount = [f for f in candidate if len(f) % 2 == 1]
     if len(oddCount) != o:
         errors.append("oddsoff")
-        
     return errors
+
+def get_order_list(n, t, d):
+    order_t = [d]
+    i = t + d
+    while i != d:
+        order_t.append(i)
+        i = (i + t) % n
+    return order_t
 
 # Create a constant-sum-partition from supplied partition
 def getCSP(total, part, t, odds):
     if part == 1:
         return gSum(total, t, part, list(range(total)), [], 0)
-
-    # Generate list of left-hand elements in each g-sum pair
-    lefts = [c for c in range(0, -part * t, -t)]
-    rights = [b for b in range(t, part * t + 1, t)]
-
-    # Generate list of offsets
-    order = get_order_t(n, t) // 2
-    offsets = [(off + order) // (order * 2) for off in range(part)]
-
-    # Glue it all together
-    zipped = zip(lefts, rights, offsets)
-    pairs = [[(l + o) % total, (r - o) % total] for l, r, o in zipped]
+    o_num = 2 * p // get_order_t(n, t) - 1
+    left = get_order_list(n, t, t)
+    right = get_order_list(n, n - t, 0)  
+    pairs = [[lefty, righty] for lefty, righty in zip(left, right)][:get_order_t(n, t) // 2]
+    for offset in range(1, o_num // 2 + 1):
+        left = get_order_list(n, t, offset)
+        right = get_order_list(n, n - t, (-1 * offset) % t)
+        pairs += [[lefty, righty] for lefty, righty in zip(left, right)]
     leftovers = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in pairs)})
-
-    # Check for errors
     pairs += checkListForErrors(pairs, leftovers, total, t, odds)
     return gSum(total, t, part, pairs, leftovers, 0)
 
@@ -105,7 +103,6 @@ def getOdds(const):
     withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
     oddCount = [f for f in range(4, const.p - 1, 2) \
         if const.p <= n // 4 and const.t % 2 == 0]
-
     for o in oddCount:
         c = deepcopy(const.csp)
         zL = deepcopy(zT)
@@ -117,15 +114,10 @@ def getOdds(const):
                 c[sumDict[key]].remove(key)
                 c[sumDict[key]] += pL[key]
         c = [[c[0][1]], [0] + c[1]] + c[2:]
-        
-        # Generate Zsp list
         nL = list(set([tuple(sorted((x, const.n - x))) for x in range(const.n) \
-            if not any(x in f for f in c)]))      
-
-        # Check for errors and output
+            if not any(x in f for f in c)]))
         c = sorted([sorted(k) for k in c]) + checkListForErrors(c, nL, const.n, const.t, o) 
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
-
     return withOdds
 
 # Exit if n is odd.
