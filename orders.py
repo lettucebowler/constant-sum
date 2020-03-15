@@ -18,7 +18,7 @@ t = args.sum
 def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
-def get_order(n, t):
+def get_order_t(n, t):
     return n * t // gcd(n, t) // t
 
 def gen_orders(n, t):

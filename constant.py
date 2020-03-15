@@ -17,6 +17,9 @@ def findSums(n, p):
 def lcm(a, b):
     return a * b // gcd(a, b)
 
+def get_order_t(n, t):
+    return n * t // gcd(n, t) // t 
+
 class gSum():
     def __init__(self, n, t, p, csp, zsp, odds):
         self.n = n
@@ -61,7 +64,7 @@ def getCSP(total, part, t, odds):
     rights = [b for b in range(t, part * t + 1, t)]
 
     # Generate list of offsets
-    order = lcm(total, t) // (t * 2)
+    order = get_order_t(n, t) // 2
     offsets = [(off + order) // (order * 2) for off in range(part)]
 
     # Glue it all together
@@ -84,11 +87,6 @@ def findPairs(n, sum, searchList):
                     searchList.remove(rem)
                 return rL
     return rL
-
-def get_orders(n, t):
-    order_t = [t for t in range(0, n, t)]
-    print("{}".format(order_t))
-    # orders = 
 
 # Derive possible odd-cardinality csp from a given even-cardinality csp
 def getOdds(const):
