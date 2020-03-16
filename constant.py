@@ -8,19 +8,18 @@ from functools import reduce
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='Generates a constant-sum partition with \
     each grouping having an even number of elements.')
-parser.add_argument("-n", dest='number', default=2, type=int)
+parser.add_argument("-n", dest='number', default=4, type=int)
 args = parser.parse_args()
 n = args.number
 
-
-
 class gSum():
-    def __init__(self, n, t, p, csp, zsp, odds):
+    def __init__(self, n, t, p, csp, zsp, orders, odds):
         self.n = n
         self.p = p
         self.t = t
         self.csp = csp
         self.zsp = zsp
+        self.orders = orders
         self.odds = odds
 
     def to_string(self):
@@ -34,19 +33,15 @@ def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
 def get_order_t(n, t):
-    return n * t // gcd(n, t) // t 
+    return n * t // gcd(n, t) // t
 
-def gen_orders(n, t):
-    order_t = [0]
-    i = t
-    while i != 0:
+def get_order_list(n, t, d):
+    order_t = [d]
+    i = (t + d) % n
+    while i != d:
         order_t.append(i)
         i = (i + t) % n
-
-    orders = dict()
-    for i, num in enumerate(range(n // len(order_t))):
-        orders.update({i: [num + i for num in order_t]})
-    return orders
+    return order_t   
 
 def checkListForErrors(candidate, zandidate, total, t, o):
     errors = []
@@ -62,15 +57,6 @@ def checkListForErrors(candidate, zandidate, total, t, o):
         errors.append("oddsoff")
     return errors
 
-def get_order_list(n, t, d):
-    order_t = [d]
-    i = (t + d) % n
-    while i != d:
-        order_t.append(i)
-        i = (i + t) % n
-    return order_t
-
-# Create a constant-sum-partition from supplied partition
 def getCSP(total, part, t, odds):
     if part == 1:
         return gSum(total, t, part, list(range(total)), [], 0)
@@ -82,10 +68,11 @@ def getCSP(total, part, t, odds):
         lefts = get_order_list(n, t, offset)
         rights = get_order_list(n, n - t, (-1 * offset) % t)
         pairs.extend([[lefty, righty] for lefty, righty in zip(lefts, rights)])
+    unused_orders = [v for v in range(1, t) if v >= o_num + 1]
     leftovers = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in pairs)})
     pairs += checkListForErrors(pairs, leftovers, total, t, odds)
-    return gSum(total, t, part, pairs, leftovers, 0)
+    return gSum(total, t, part, pairs, leftovers, unused_orders, 0)
 
 def findPairs(n, sum, searchList):
     for i, q in enumerate(searchList):
@@ -98,7 +85,6 @@ def findPairs(n, sum, searchList):
                 return rL
     return rL
 
-# Derive possible odd-cardinality csp from a given even-cardinality csp
 def getOdds(const):
     c = deepcopy(const.csp)
     c = [[c[0][1]], [0] + c[1]] + c[2:]
@@ -123,15 +109,13 @@ def getOdds(const):
         withOdds.append(gSum(const.n, const.t, const.p, c, nL, o)) 
     return withOdds
 
-# Exit if n is odd.
+# Main Driver Program
 if n % 4 != 0:
     print("This program is only designed for even numbers 0 mod 4")
     exit()
 
-# Calculate a csp for each partition and possible sum
 cL = [getCSP(n, p, pSum, 0) for p in range(2, n // 2 + 1, 2) for pSum in findSums(n, p)]
 # oL = [y for x in cL for y in getOdds(x)]
 
-# Output results
 for const in cL:
     print("{}\n".format(const.to_string()))
