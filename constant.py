@@ -12,6 +12,24 @@ parser.add_argument("-n", dest='number', default=2, type=int)
 args = parser.parse_args()
 n = args.number
 
+
+
+class gSum():
+    def __init__(self, n, t, p, csp, zsp, odds):
+        self.n = n
+        self.p = p
+        self.t = t
+        self.csp = csp
+        self.zsp = zsp
+        self.odds = odds
+
+    def to_string(self):
+        message = "Partitions:{0!r} Sum:{1!r} Odds:{2!r}\n   csp:{3!r}"\
+            .format(self.p, self.t, self.odds, self.csp)
+        if len(self.zsp) > 0:
+            message += "\n   zsp:{0!r}".format(self.zsp)
+        return message
+
 def findSums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
@@ -29,22 +47,6 @@ def gen_orders(n, t):
     for i, num in enumerate(range(n // len(order_t))):
         orders.update({i: [num + i for num in order_t]})
     return orders
-
-class gSum():
-    def __init__(self, n, t, p, csp, zsp, odds):
-        self.n = n
-        self.p = p
-        self.t = t
-        self.csp = csp
-        self.zsp = zsp
-        self.odds = odds
-
-    def to_string(self):
-        message = "Partitions:{0!r} Sum:{1!r} Odds:{2!r}\n   csp:{3!r}"\
-            .format(self.p, self.t, self.odds, self.csp)
-        if len(self.zsp) > 0:
-            message += "\n   zsp:{0!r}".format(self.zsp)
-        return message
 
 def checkListForErrors(candidate, zandidate, total, t, o):
     errors = []
