@@ -6,7 +6,8 @@ from copy import deepcopy
 from functools import reduce
 
 # Parser to get base number for computations
-parser = argparse.ArgumentParser(description='A parser')
+parser = argparse.ArgumentParser(description='Generates a constant-sum partition with \
+    each grouping having an even number of elements.')
 parser.add_argument("-n", dest='number', default=2, type=int)
 args = parser.parse_args()
 n = args.number
