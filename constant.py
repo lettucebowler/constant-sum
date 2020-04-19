@@ -13,13 +13,12 @@ args = parser.parse_args()
 n = args.number
 
 class gSum():
-    def __init__(self, n, t, p, csp, zsp, orders, odds):
+    def __init__(self, n, t, p, csp, zsp, odds):
         self.n = n
         self.p = p
         self.t = t
         self.csp = csp
         self.zsp = zsp
-        self.orders = orders
         self.odds = odds
 
     def to_string(self):
@@ -72,7 +71,7 @@ def getCSP(total, part, t, odds):
     leftovers = sorted({tuple(sorted((x, total - x))) for x in range(total) \
         if not any(x in s for s in pairs)})
     pairs += checkListForErrors(pairs, leftovers, total, t, odds)
-    return gSum(total, t, part, pairs, leftovers, unused_orders, 0)
+    return gSum(total, t, part, pairs, leftovers, 0)
 
 def findPairs(n, sum, searchList):
     for i, q in enumerate(searchList):
