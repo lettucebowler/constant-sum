@@ -19,7 +19,7 @@ def findPossibleSums(n, p):
 
 for i in range(0, 8, 2):
     print(str(i) + " MOD 8")
-    for q in range(1, n + 1):
+    for q in range(1, n // 2 + 1):
         if q % 8 == i:
             if q <= n // 2:
                 print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
