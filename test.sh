@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-for i in {0..128..4}
+mkdir data
+for i in {0..512..4}
 do
-./constant.py -n $i&
+./constant.py -n $i >> data/$i&
 done
