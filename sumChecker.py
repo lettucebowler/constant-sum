@@ -18,10 +18,8 @@ def findPossibleSums(n, p):
     return sorted(sum for sum in potentialSumList if sum * p % n == n // 2)
 
 for i in range(0, 8, 2):
-    print(str(i) + " MOD 8")
+    print("--------------------\n" + str(i) + " MOD 8")
     for q in range(1, n // 2 + 1):
         if q % 8 == i:
             if q <= n // 2:
                 print("p:" + str(q) + " " + str(findPossibleSums(n, q)))
-            else:
-                print("p:" + str(q) + " " + str(list()))
