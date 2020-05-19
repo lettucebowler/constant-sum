@@ -12,7 +12,7 @@ parser.add_argument("-n", dest='number', default=4, type=int)
 args = parser.parse_args()
 n = args.number
 
-class gSum():
+class constant_sum_partition():
     def __init__(self, n, t, p, csp, zsp, odds):
         self.n = n
         self.p = p
@@ -28,13 +28,13 @@ class gSum():
             message += "\n   zsp:{0!r}".format(self.zsp)
         return message
 
-def findSums(n, p):
+def find_sums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
 def lcm(a, b):
     return a * b // gcd(a, b)  
 
-def checkListForErrors(candidate, zandidate, total, t, o):
+def check_list_for_errors(candidate, zandidate, total, t, o):
     errors = []
     checkList = reduce(operator.concat, candidate)
     if zandidate != []:
@@ -48,9 +48,9 @@ def checkListForErrors(candidate, zandidate, total, t, o):
         errors.append("oddsoff")
     return errors
 
-def getCSP(total, part, t, odds):
+def get_csp(total, part, t, odds):
     if part == 1:
-        return gSum(total, t, part, list(range(total)), [], 0)
+        return constant_sum_partition(total, t, part, list(range(total)), [], 0)
 
     # Generate list of left-hand elements in each g-sum pair
     lefts = [c for c in range(0, -part * t, -t)]
@@ -67,14 +67,14 @@ def getCSP(total, part, t, odds):
         if not any(x in s for s in pairs)})
 
     # Check for errors
-    pairs += checkListForErrors(pairs, leftovers, total, t, odds)
-    return gSum(total, t, part, pairs, leftovers, 0)
+    pairs += check_list_for_errors(pairs, leftovers, total, t, odds)
+    return constant_sum_partition(total, t, part, pairs, leftovers, 0)
 
-def getOdds(const):
-    c = deepcopy(const.csp)
-    c = [[c[0][1]], [0] + c[1]] + c[2:]
-    zT = [bingo for bango in const.zsp for bingo in bango]
-    withOdds = [const, gSum(const.n, const.t, const.p, c, const.zsp, 2)]
+def get_odds(const):
+    const_copy = deepcopy(const.csp)
+    const_copy = [[const_copy[0][1]], [0] + const_copy[1]] + const_copy[2:]
+    withOdds = [const, constant_sum_partition(const.n, const.t, const.p, \
+        const_copy, const.zsp, 2)]
     return withOdds
 
 # Main Driver Program
@@ -82,8 +82,9 @@ if n % 4 != 0:
     print("This program is only designed for even numbers 0 mod 4")
     exit()
 
-cL = [getCSP(n, p, pSum, 0) for p in range(2, n // 2 + 1, 2) for pSum in findSums(n, p)]
-oL = [y for x in cL for y in getOdds(x)]
+csp_list = [get_csp(n, p, p_sum, 0) for p in range(2, n // 2 + 1, 2) \
+    for p_sum in find_sums(n, p)]
+odd_list = [y for x in csp_list for y in get_odds(x)]
 
-for const in oL:
-    print("{}\n".format(const.to_string()))
+for const in odd_list:
+    print("{}".format(const.to_string()))
