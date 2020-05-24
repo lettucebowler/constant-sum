@@ -34,15 +34,19 @@ def find_sums(n, p):
 def lcm(a, b):
     return a * b // gcd(a, b)  
 
-def check_list_for_errors(candidate, zandidate, total, t, o):
+def check_list_for_errors(constant_pairs, unused_numbers, total, t, o):
     errors = []
-    checkList = reduce(operator.concat, candidate)
-    if zandidate != []:
-        for pair in zandidate:
-            checkList.append(pair)
-    if len(checkList) != total:
+    check_list = reduce(operator.concat, constant_pairs)
+    if unused_numbers != []:
+        for pair in unused_numbers:
+            check_list.append(pair)
+
+    # If there are no duplicates, then check_list will have n elements
+    if len(check_list) != total:
         errors.append("duplicates")
-    if any(sum(k) % total != t for k in candidate):
+
+    # All pairs should sum to 0 (MOD n)
+    if any(sum(pair) % total != t for pair in constant_pairs):
         errors.append("sum")
     return errors
 
@@ -58,7 +62,7 @@ def get_csp(total, part, t, odds):
     order = lcm(total, t) // (t * 2)
     offsets = [(off + order) // (order * 2) for off in range(part)]
 
-    # Glue it all together
+    # Combine elements from each list to form constant pairs
     zipped = zip(lefts, rights, offsets)
     leftovers = list(range(total))
     pairs = []
@@ -76,7 +80,9 @@ def get_csp(total, part, t, odds):
 
 def get_odds(const):
     const_copy = deepcopy(const.csp)
-    const_copy = [[const_copy[0][1]], [0] + const_copy[1]] + const_copy[2:]
+
+    # Shift zero to make some odd-cardinality groupings
+    const_with_2_odds = [[const_copy[0][1]], [0] + const_copy[1]].extend(const_copy[2:])
     return(constant_sum_partition(const.n, const.t, const.p, \
         const_copy, const.zsp, 2))
 
