@@ -44,10 +44,6 @@ def check_list_for_errors(candidate, zandidate, total, t, o):
         errors.append("duplicates")
     if any(sum(k) % total != t for k in candidate):
         errors.append("sum")
-    oddCount = [f for f in candidate if len(f) % 2 == 1]
-    if len(oddCount) != o:
-        errors.append("oddsoff")
-    # print("check: " + str(checkList))
     return errors
 
 def get_csp(total, part, t, odds):
@@ -81,11 +77,8 @@ def get_csp(total, part, t, odds):
 def get_odds(const):
     const_copy = deepcopy(const.csp)
     const_copy = [[const_copy[0][1]], [0] + const_copy[1]] + const_copy[2:]
-    # withOdds = [const, constant_sum_partition(const.n, const.t, const.p, \
-    #     const_copy, const.zsp, 2)]
     return(constant_sum_partition(const.n, const.t, const.p, \
         const_copy, const.zsp, 2))
-    # return withOdds
 
 # Main Driver Program
 if n % 4 != 0:
@@ -96,9 +89,3 @@ for p in range(2, n // 2 + 1, 2):
     for p_sum in find_sums(n, p):
         csp = get_csp(n, p, p_sum, 0)
         print("{}\n{}".format(csp.to_string(), get_odds(csp).to_string()))
-# csp_list = [get_csp(n, p, p_sum, 0) for p in range(2, n // 2 + 1, 2) \
-#     for p_sum in find_sums(n, p)]
-# odd_list = [y for x in csp_list for y in get_odds(x)]
-
-# for const in odd_list:
-#     print("{}".format(const.to_string()))
