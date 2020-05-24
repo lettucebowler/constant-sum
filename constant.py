@@ -38,7 +38,8 @@ def check_list_for_errors(candidate, zandidate, total, t, o):
     errors = []
     checkList = reduce(operator.concat, candidate)
     if zandidate != []:
-        checkList += reduce(operator.concat, zandidate)
+        for pair in zandidate:
+            checkList.append(pair)
     if len(checkList) != total:
         errors.append("duplicates")
     if any(sum(k) % total != t for k in candidate):
@@ -46,6 +47,7 @@ def check_list_for_errors(candidate, zandidate, total, t, o):
     oddCount = [f for f in candidate if len(f) % 2 == 1]
     if len(oddCount) != o:
         errors.append("oddsoff")
+    print("check: " + str(checkList))
     return errors
 
 def get_csp(total, part, t, odds):
@@ -53,8 +55,8 @@ def get_csp(total, part, t, odds):
         return constant_sum_partition(total, t, part, list(range(total)), [], 0)
 
     # Generate list of left-hand elements in each g-sum pair
-    lefts = [c for c in range(0, -part * t, -t)]
-    rights = [b for b in range(t, part * t + 1, t)]
+    lefts = list(range(0, -part * t, -t))
+    rights = list(range(t, part * t + 1, t))
 
     # Generate list of offsets
     order = lcm(total, t) // (t * 2)
@@ -62,13 +64,17 @@ def get_csp(total, part, t, odds):
 
     # Glue it all together
     zipped = zip(lefts, rights, offsets)
-    pairs = [[(l + o) % total, (r - o) % total] for l, r, o in zipped]
-    leftovers = sorted({tuple(sorted((x, total - x))) for x in range(total) \
-        if not any(x in s for s in pairs)})
+    leftovers = list(range(total))
+    pairs = []
+    for left_elem, right_elem, offset in zipped:
+        pairs.append([(left_elem + offset) % total, (right_elem - offset) % total])
+        for element in pairs[-1]:
+            leftovers.remove(element)
+    zero_sum_pairs = [sorted([h, total - h]) for h in leftovers][::2]
 
     # Check for errors
     pairs += check_list_for_errors(pairs, leftovers, total, t, odds)
-    return constant_sum_partition(total, t, part, pairs, leftovers, 0)
+    return constant_sum_partition(total, t, part, pairs, zero_sum_pairs, 0)
 
 def get_odds(const):
     const_copy = deepcopy(const.csp)
