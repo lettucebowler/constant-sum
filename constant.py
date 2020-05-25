@@ -5,13 +5,6 @@ from math import gcd
 from copy import deepcopy
 from functools import reduce
 
-# Parser to get base number for computations
-parser = argparse.ArgumentParser(description='Generates a constant-sum partition with \
-    each grouping having an even number of elements.')
-parser.add_argument("-n", dest='number', default=4, type=int)
-args = parser.parse_args()
-n = args.number
-
 class constant_sum_partition():
     def __init__(self, n, t, p, csp, zsp, odds):
         self.n = n
@@ -85,6 +78,13 @@ def get_odds(const):
     const_with_2_odds = [[const_copy[0][1]], [0] + const_copy[1]].extend(const_copy[2:])
     return(constant_sum_partition(const.n, const.t, const.p, \
         const_copy, const.zsp, 2))
+
+# Parser to get base number for computations
+parser = argparse.ArgumentParser(description='Generates a constant-sum partition with \
+    each grouping having an even number of elements.')
+parser.add_argument("-n", dest='number', default=4, type=int)
+args = parser.parse_args()
+n = args.number
 
 # Main Driver Program
 if n % 4 != 0:
