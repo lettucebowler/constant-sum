@@ -25,7 +25,7 @@ def find_sums(n, p):
     return sorted(sum for sum in range(1, n) if sum * p % n == n // 2)
 
 def lcm(a, b):
-    return a * b // gcd(a, b)  
+    return a * b // gcd(a, b)
 
 def check_list_for_errors(constant_pairs, unused_numbers, total, t):
     errors = []
@@ -75,9 +75,10 @@ def get_odds(const):
     const_copy = deepcopy(const.csp)
 
     # Shift zero to make some odd-cardinality groupings
-    const_with_2_odds = [[const_copy[0][1]], [0] + const_copy[1]].extend(const_copy[2:])
+    const_with_2_odds = [[const_copy[0][1]], [0] + const_copy[1]]
+    const_with_2_odds.extend(const_copy[2:])
     return(constant_sum_partition(const.n, const.t, const.p, \
-        const_copy, const.zsp, 2))
+        const_with_2_odds, const.zsp, 2))
 
 # Parser to get base number for computations
 parser = argparse.ArgumentParser(description='Generates a constant-sum partition with \
