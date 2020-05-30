@@ -27,10 +27,10 @@ def find_sums(n, p):
 def lcm(a, b):
     return a * b // gcd(a, b)  
 
-def check_list_for_errors(constant_pairs, unused_numbers, total, t, o):
+def check_list_for_errors(constant_pairs, unused_numbers, total, t):
     errors = []
     check_list = reduce(operator.concat, constant_pairs)
-    if unused_numbers != []:
+    if len(unused_numbers) > 0:
         for pair in unused_numbers:
             check_list.append(pair)
 
@@ -38,12 +38,12 @@ def check_list_for_errors(constant_pairs, unused_numbers, total, t, o):
     if len(check_list) != total:
         errors.append("duplicates")
 
-    # All pairs should sum to 0 (MOD n)
+    # All pairs should sum to t (MOD n)
     if any(sum(pair) % total != t for pair in constant_pairs):
         errors.append("sum")
     return errors
 
-def get_csp(total, part, t, odds):
+def get_csp(total, part, t):
     if part == 1:
         return constant_sum_partition(total, t, part, list(range(total)), [], 0)
 
@@ -68,7 +68,7 @@ def get_csp(total, part, t, odds):
     zero_sum_pairs = [sorted([h, total - h]) for h in leftovers][::2]
 
     # Check for errors
-    pairs += check_list_for_errors(pairs, leftovers, total, t, odds)
+    pairs += check_list_for_errors(pairs, leftovers, total, t)
     return constant_sum_partition(total, t, part, pairs, zero_sum_pairs, 0)
 
 def get_odds(const):
@@ -93,5 +93,5 @@ if n % 4 != 0:
 
 for p in range(2, n // 2 + 1, 2):
     for p_sum in find_sums(n, p):
-        csp = get_csp(n, p, p_sum, 0)
+        csp = get_csp(n, p, p_sum)
         print("{}\n{}".format(csp.to_string(), get_odds(csp).to_string()))
