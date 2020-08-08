@@ -14,7 +14,7 @@ class constant_sum_partition():
         self.zsp = zsp
         self.odds = odds
 
-    def to_string(self):
+    def __repr__(self):
         message = "Partitions:{0!r} Sum:{1!r} Odds:{2!r}\n   csp:{3!r}"\
             .format(self.p, self.t, self.odds, self.csp)
         if len(self.zsp) > 0:
@@ -95,4 +95,4 @@ if n % 4 != 0:
 for p in range(2, n // 2 + 1, 2):
     for p_sum in find_sums(n, p):
         csp = get_csp(n, p, p_sum)
-        print("{}\n{}".format(csp.to_string(), get_odds(csp).to_string()))
+        print("{}\n{}".format(repr(csp), repr(csp)))
